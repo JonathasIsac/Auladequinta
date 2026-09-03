@@ -87,29 +87,6 @@
   .brand-name{font-size:18px;font-weight:700;color:#fff;}
   .brand-name span{color:var(--lime);}
 
-  .role-toggle{
-    display:flex;
-    background:var(--navy-2);
-    border-radius:10px;
-    padding:4px;
-    margin-bottom:20px;
-  }
-  .role-toggle button{
-    flex:1;
-    background:transparent;
-    color:var(--slate-light);
-    font-size:12.5px;
-    font-weight:600;
-    padding:10px 6px;
-    min-height:38px;
-    border-radius:8px;
-    transition:all .18s ease;
-  }
-  .role-toggle button.active{
-    background:var(--lime);
-    color:var(--navy);
-  }
-
   .nav-label{
     font-size:10.5px;
     text-transform:uppercase;
@@ -309,7 +286,6 @@
   .login-brand .brand-dot{background:var(--navy); box-shadow:none;}
   .login-brand .brand-name{color:var(--navy); font-size:19px;}
   .login-brand .brand-name span{color:#9FD923;}
-  .login-foot{margin-top:18px; font-size:12px; color:var(--slate); text-align:center;}
 
   /* Timeline */
   .tl{position:relative; padding-left:26px;}
@@ -395,10 +371,6 @@
       <a href="#" onclick="mostrarTela('cadastro'); return false;" style="font-size:13px; font-weight:600; color:var(--navy); padding:6px 0;">Criar conta</a>
       <a href="#" onclick="mostrarTela('esqueci'); return false;" style="font-size:13px; font-weight:600; color:var(--slate); padding:6px 0;">Esqueci a senha</a>
     </div>
-    <div class="login-foot">
-      <b>Conta de demonstração (interna):</b><br>
-      admin@nexta.com / admin123
-    </div>
   </div>
 
   <!-- ---- TELA: CRIAR CONTA ---- -->
@@ -419,7 +391,7 @@
     <input type="text" id="cadPergunta" placeholder="Ex: azul">
     <div id="cadError" style="display:none; color:var(--danger); font-size:12.5px; font-weight:600; margin:-8px 0 14px;"></div>
     <button class="btn btn-lime btn-block" onclick="criarConta()">Criar minha conta</button>
-    <div class="login-foot">
+    <div style="margin-top:18px; font-size:12px; text-align:center;">
       <a href="#" onclick="mostrarTela('login'); return false;" style="color:var(--navy); font-weight:600; padding:6px 0; display:inline-block;">← Voltar para o login</a>
     </div>
   </div>
@@ -449,7 +421,7 @@
       <button class="btn btn-lime btn-block" onclick="redefinirSenha()">Redefinir senha</button>
     </div>
 
-    <div class="login-foot">
+    <div style="margin-top:18px; font-size:12px; text-align:center;">
       <a href="#" onclick="mostrarTela('login'); return false;" style="color:var(--navy); font-weight:600; padding:6px 0; display:inline-block;">← Voltar para o login</a>
     </div>
   </div>
@@ -465,11 +437,7 @@
       <div class="brand-name">Nexta<span>Finance</span></div>
     </div>
 
-    <div class="role-toggle" id="roleToggleBox">
-      <button id="roleClienteBtn" class="active" onclick="setRole('cliente')">Cliente</button>
-      <button id="roleAdminBtn" onclick="setRole('admin')">Interno</button>
-    </div>
-
+    <!-- NAVEGAÇÃO CLIENTE -->
     <div id="navClienteGroup">
       <div class="nav-label">Minha conta</div>
       <div class="nav-item active" data-page="dashboard" onclick="go('dashboard')">
@@ -486,6 +454,7 @@
       </div>
     </div>
 
+    <!-- NAVEGAÇÃO INTERNA / ADMIN -->
     <div id="navAdminGroup" style="display:none;">
       <div class="nav-label">Operação interna</div>
       <div class="nav-item" data-page="credito" onclick="go('credito')">
@@ -503,7 +472,7 @@
     </div>
 
     <div class="sidebar-foot">
-      <span id="loggedAs">Jonathas</span><br>
+      <span id="loggedAs">Usuário</span><br>
       <a href="#" onclick="sair(); return false;" style="color:#C6CEDB; text-decoration:underline; display:inline-block; padding:4px 0;">Sair</a><br><br>
       Projeto Prático em Sistemas<br>UNINOVE · Prof. Anderson Barros
     </div>
@@ -521,37 +490,38 @@
       </div>
       <div class="status-pill"><span class="pulse"></span> Sistema Nexta ativo</div>
     </div>
+
     <div class="content" id="content">
 
       <!-- ===== DASHBOARD (CLIENTE) ===== -->
       <section class="page active" id="page-dashboard">
         <div class="page-head">
-          <h1 id="welcomeUser">Olá, Jonathas 👋</h1>
+          <h1 id="welcomeUser">Olá 👋</h1>
           <p>Aqui está o resumo do seu empréstimo e da sua conta na Nexta.</p>
         </div>
         <div class="grid grid-3" style="margin-bottom:16px;">
           <div class="card">
             <div class="card-label">Saldo devedor</div>
-            <div class="card-value mono">R$ 4.320,00</div>
-            <div class="card-sub">de R$ 6.000,00 contratados</div>
+            <div class="card-value mono" id="dashSaldoDevedor">R$ 0,00</div>
+            <div class="card-sub" id="dashSubDevedor">nenhum contrato ativo</div>
           </div>
           <div class="card">
             <div class="card-label">Próxima parcela</div>
-            <div class="card-value mono">R$ 480,00</div>
-            <div class="card-sub">vence em 5 de setembro</div>
+            <div class="card-value mono" id="dashProximaParcela">R$ 0,00</div>
+            <div class="card-sub" id="dashSubParcela">sem vencimentos pendentes</div>
           </div>
           <div class="card">
             <div class="card-label">Situação</div>
-            <div class="card-value" style="font-size:18px; margin-top:4px;"><span class="tag up">Em dia</span></div>
-            <div class="card-sub">nenhuma pendência no momento</div>
+            <div class="card-value" style="font-size:18px; margin-top:4px;" id="dashStatusTag"><span class="tag gold">Sem contrato</span></div>
+            <div class="card-sub" id="dashSubStatus">faça uma simulação abaixo</div>
           </div>
         </div>
 
         <div class="grid grid-2">
           <div class="card">
             <div class="card-label">Progresso do contrato</div>
-            <div style="margin:14px 0 6px; font-size:13px; color:var(--slate);">8 de 12 parcelas pagas</div>
-            <div class="progress-bar"><div class="progress-fill" style="width:66%"></div></div>
+            <div style="margin:14px 0 6px; font-size:13px; color:var(--slate);" id="dashProgressoTexto">0 de 0 parcelas pagas</div>
+            <div class="progress-bar"><div class="progress-fill" id="dashProgressBar" style="width:0%"></div></div>
             <div class="divider"></div>
             <div class="card-label">Transparência total</div>
             <p style="font-size:13px; color:var(--slate); line-height:1.6; margin:8px 0 14px;">Toda cobrança de juros e cada etapa do seu empréstimo fica visível aqui — sem letras miúdas.</p>
@@ -574,11 +544,11 @@
         <div class="grid grid-2">
           <div class="card">
             <label>Valor solicitado</label>
-            <input type="range" id="valorRange" min="500" max="20000" step="100" value="6000" oninput="atualizarSimulacao()">
+            <input type="range" id="valorRange" min="1000" max="100000" step="1000" value="10000" oninput="atualizarSimulacao()">
             <div class="row-flex" style="justify-content:space-between; margin-bottom:16px;">
-              <span class="mono" style="font-size:13px; color:var(--slate);">R$ 500</span>
-              <span class="mono" id="valorAtual" style="font-weight:700; color:var(--navy);">R$ 6.000</span>
-              <span class="mono" style="font-size:13px; color:var(--slate);">R$ 20.000</span>
+              <span class="mono" style="font-size:13px; color:var(--slate);">R$ 1.000</span>
+              <span class="mono" id="valorAtual" style="font-weight:700; color:var(--navy);">R$ 10.000</span>
+              <span class="mono" style="font-size:13px; color:var(--slate);">R$ 100.000</span>
             </div>
             <label>Número de parcelas</label>
             <select id="parcelasSelect" onchange="atualizarSimulacao()">
@@ -586,10 +556,18 @@
               <option value="12" selected>12x</option>
               <option value="18">18x</option>
               <option value="24">24x</option>
+              <option value="36">36x</option>
+              <option value="48">48x</option>
+              <option value="60">60x</option>
+              <option value="72">72x</option>
+              <option value="96">96x</option>
+              <option value="120">120x</option>
+              <option value="144">144x</option>
+              <option value="180">180x</option>
             </select>
             <button class="btn btn-lime btn-block" onclick="analisarCredito()">Analisar crédito agora</button>
           </div>
-          <div class="card" style="display:flex; flex-direction:column; align-items:center; justify-content:center;">
+          <div class="card" style="display:flex; flex-direction:column; align-items:center; justify-content:center; text-align:center;">
             <div class="gauge-wrap">
               <svg width="180" height="100" viewBox="0 0 180 100">
                 <path d="M10,95 A80,80 0 0,1 170,95" fill="none" stroke="#E4E1D8" stroke-width="14" stroke-linecap="round"/>
@@ -598,7 +576,10 @@
               <div class="gauge-score" id="gaugeScore">—</div>
               <div class="gauge-caption">Score de aprovação estimado<br><span id="gaugeTime" class="mono"></span></div>
             </div>
-            <div id="resultadoSim" style="margin-top:14px; text-align:center; font-size:13px; color:var(--slate);">Ajuste os valores e clique em "Analisar crédito agora".</div>
+            <div id="resultadoSim" style="margin-top:14px; font-size:13px; color:var(--slate);">Ajuste os valores e clique em "Analisar crédito agora".</div>
+            <div id="solicitarBox" style="display:none; width:100%; margin-top:18px;">
+              <button class="btn btn-lime btn-block" onclick="solicitarEmprestimo()">Solicitar este empréstimo</button>
+            </div>
           </div>
         </div>
       </section>
@@ -611,101 +592,50 @@
         </div>
         <div class="grid grid-2">
           <div class="card">
-            <div class="tl">
-              <div class="tl-item done">
-                <div class="tl-dot"></div>
-                <div class="tl-title">Solicitação enviada</div>
-                <div class="tl-sub">12/06/2026 — valor solicitado R$ 6.000,00</div>
-              </div>
-              <div class="tl-item done">
-                <div class="tl-dot"></div>
-                <div class="tl-title">Análise de crédito aprovada</div>
-                <div class="tl-sub">12/06/2026 às 14:32 — resposta em 40 segundos</div>
-              </div>
-              <div class="tl-item done">
-                <div class="tl-dot"></div>
-                <div class="tl-title">Contrato assinado digitalmente</div>
-                <div class="tl-sub">13/06/2026 — taxa de 2,3% a.m., 12 parcelas</div>
-              </div>
+            <div class="tl" id="timelineList">
               <div class="tl-item active">
                 <div class="tl-dot"></div>
-                <div class="tl-title">8ª parcela paga — em dia</div>
-                <div class="tl-sub">Próxima parcela: R$ 480,00 em 05/09/2026</div>
-              </div>
-              <div class="tl-item">
-                <div class="tl-dot"></div>
-                <div class="tl-title">Quitação prevista</div>
-                <div class="tl-sub">Fevereiro de 2027</div>
+                <div class="tl-title">Sem contratos ativos</div>
+                <div class="tl-sub">Faça uma simulação e solicite seu empréstimo para começar.</div>
               </div>
             </div>
           </div>
           <div class="card">
-            <div class="card-label">Detalhamento da taxa</div>
+            <div class="card-label">Detalhamento financeiro</div>
             <div class="table-responsive">
               <table style="margin-top:10px; min-width:auto;">
-                <tr><td>Valor contratado</td><td class="mono" style="text-align:right;">R$ 6.000,00</td></tr>
-                <tr><td>Taxa de juros</td><td class="mono" style="text-align:right;">2,3% a.m.</td></tr>
-                <tr><td>Total de juros no contrato</td><td class="mono" style="text-align:right;">R$ 780,00</td></tr>
-                <tr><td>Valor total a pagar</td><td class="mono" style="text-align:right; font-weight:700;">R$ 6.780,00</td></tr>
+                <tr><td>Valor contratado</td><td class="mono" id="detValor" style="text-align:right;">R$ 0,00</td></tr>
+                <tr><td>Taxa de juros</td><td class="mono" id="detTaxa" style="text-align:right;">0,0% a.m.</td></tr>
+                <tr><td>Total de juros</td><td class="mono" id="detJuros" style="text-align:right;">R$ 0,00</td></tr>
+                <tr><td>Valor total a pagar</td><td class="mono" id="detTotal" style="text-align:right; font-weight:700;">R$ 0,00</td></tr>
               </table>
             </div>
             <div class="divider"></div>
-            <p style="font-size:12.5px; color:var(--slate); line-height:1.6;">Cada parcela paga é refletida aqui em tempo real — o cliente nunca precisa ligar para saber "quanto falta".</p>
+            <p style="font-size:12.5px; color:var(--slate); line-height:1.6;">Cada parcela paga é refletida aqui em tempo real — você acompanha tudo online com clareza total.</p>
           </div>
         </div>
       </section>
 
-      <!-- ===== ANÁLISE DE CRÉDITO (INTERNO) ===== -->
+      <!-- ===== ANÁLISE DE CRÉDITO (INTERNO / ADMIN) ===== -->
       <section class="page" id="page-credito">
         <div class="page-head">
           <h1>Análise de crédito</h1>
-          <p>Fila de solicitações com score automático — decisões em segundos, não em dias.</p>
+          <p>Fila de solicitações de clientes e simulações com score automático.</p>
         </div>
         <div class="card">
           <div class="table-responsive">
             <table>
-              <thead><tr><th>Cliente</th><th>Valor</th><th>Score</th><th>Tempo de análise</th><th>Status</th><th></th></tr></thead>
-              <tbody>
-                <tr>
-                  <td class="row-flex"><span class="avatar">MC</span>Marina Castro</td>
-                  <td class="mono">R$ 3.500</td>
-                  <td><span class="tag up">812</span></td>
-                  <td class="mono">38s</td>
-                  <td><span class="tag up">Aprovado</span></td>
-                  <td><button class="btn btn-outline btn-sm">Ver</button></td>
-                </tr>
-                <tr>
-                  <td class="row-flex"><span class="avatar">RP</span>Rodrigo Paes</td>
-                  <td class="mono">R$ 12.000</td>
-                  <td><span class="tag warn">540</span></td>
-                  <td class="mono">42s</td>
-                  <td><span class="tag warn">Revisão manual</span></td>
-                  <td><button class="btn btn-outline btn-sm">Ver</button></td>
-                </tr>
-                <tr>
-                  <td class="row-flex"><span class="avatar">LA</span>Luiza Andrade</td>
-                  <td class="mono">R$ 8.000</td>
-                  <td><span class="tag up">755</span></td>
-                  <td class="mono">29s</td>
-                  <td><span class="tag up">Aprovado</span></td>
-                  <td><button class="btn btn-outline btn-sm">Ver</button></td>
-                </tr>
-                <tr>
-                  <td class="row-flex"><span class="avatar">DS</span>Diego Souza</td>
-                  <td class="mono">R$ 2.000</td>
-                  <td><span class="tag gold">Pendente</span></td>
-                  <td class="mono">—</td>
-                  <td><span class="tag gold">Em análise</span></td>
-                  <td><button class="btn btn-outline btn-sm">Ver</button></td>
-                </tr>
+              <thead><tr><th>Cliente</th><th>Valor Solicitado</th><th>Score</th><th>Data / Status</th><th>Ação</th></tr></thead>
+              <tbody id="creditoTableBody">
+                <!-- RENDERIZADO DINAMICAMENTE -->
               </tbody>
             </table>
           </div>
         </div>
         <div class="grid grid-3" style="margin-top:16px;">
-          <div class="card"><div class="card-label">Tempo médio de análise</div><div class="card-value mono">41s</div><div class="card-sub">antes: 2 a 3 dias úteis</div></div>
-          <div class="card"><div class="card-label">Aprovação automática</div><div class="card-value mono">78%</div><div class="card-sub">sem intervenção humana</div></div>
-          <div class="card"><div class="card-label">Em revisão manual</div><div class="card-value mono">14</div><div class="card-sub">casos limítrofes hoje</div></div>
+          <div class="card"><div class="card-label">Tempo médio de análise</div><div class="card-value mono">35s</div><div class="card-sub">processamento em tempo real</div></div>
+          <div class="card"><div class="card-label">Aprovação automática</div><div class="card-value mono">84%</div><div class="card-sub">baseado no algoritmo Nexta</div></div>
+          <div class="card"><div class="card-label">Total de cadastros</div><div class="card-value mono" id="totalCadastrosCount">0</div><div class="card-sub">usuários cadastrados</div></div>
         </div>
       </section>
 
@@ -716,9 +646,9 @@
           <p>Estágios de cobrança organizados — do lembrete amigável à ação judicial.</p>
         </div>
         <div class="grid grid-3" style="margin-bottom:16px;">
-          <div class="card"><div class="card-label">Índice de inadimplência</div><div class="card-value mono">4,2%</div><div class="card-sub tag up" style="display:inline-flex; margin-top:8px;">↓ 1,8 p.p. no mês</div></div>
-          <div class="card"><div class="card-label">Em negociação</div><div class="card-value mono">27</div><div class="card-sub">contratos ativos</div></div>
-          <div class="card"><div class="card-label">Recuperado este mês</div><div class="card-value mono">R$ 38.400</div><div class="card-sub">via cobrança automatizada</div></div>
+          <div class="card"><div class="card-label">Índice de inadimplência</div><div class="card-value mono">3,8%</div><div class="card-sub tag up" style="display:inline-flex; margin-top:8px;">↓ 2,1 p.p. no mês</div></div>
+          <div class="card"><div class="card-label">Em negociação</div><div class="card-value mono">29</div><div class="card-sub">contratos ativos</div></div>
+          <div class="card"><div class="card-label">Recuperado este mês</div><div class="card-value mono">R$ 42.100</div><div class="card-sub">via cobrança automatizada</div></div>
         </div>
         <div class="card">
           <div class="table-responsive">
@@ -759,9 +689,9 @@
           <p>Monitoramento e alertas de divergências e atipicidades em tempo real.</p>
         </div>
         <div class="grid grid-3" style="margin-bottom:16px;">
-          <div class="card"><div class="card-label">Alertas pendentes</div><div class="card-value mono">3</div><div class="card-sub tag warn" style="display:inline-flex; margin-top:8px;">Requer atenção</div></div>
-          <div class="card"><div class="card-label">Tentativas bloqueadas</div><div class="card-value mono">18</div><div class="card-sub">últimos 30 dias</div></div>
-          <div class="card"><div class="card-label">Precisão do modelo</div><div class="card-value mono">99,1%</div><div class="card-sub">Machine Learning</div></div>
+          <div class="card"><div class="card-label">Alertas pendentes</div><div class="card-value mono">2</div><div class="card-sub tag warn" style="display:inline-flex; margin-top:8px;">Requer atenção</div></div>
+          <div class="card"><div class="card-label">Tentativas bloqueadas</div><div class="card-value mono">24</div><div class="card-sub">últimos 30 dias</div></div>
+          <div class="card"><div class="card-label">Precisão do modelo</div><div class="card-value mono">99,4%</div><div class="card-sub">Machine Learning</div></div>
         </div>
         <div class="card">
           <div class="table-responsive">
@@ -794,21 +724,114 @@
 
 <script>
   let currentUser = null;
-  let currentRole = 'cliente';
+  let latestSimulation = null;
 
+  // Usuários padrão pré-cadastrados
   const defaultUsers = [
-    { email: 'admin@nexta.com', senha: 'admin123', nome: 'Administrador', pergunta: 'azul', role: 'admin' },
-    { email: 'jonathas@email.com', senha: '123', nome: 'Jonathas', pergunta: 'verde', role: 'cliente' }
+    {
+      email: 'admin@nexta.com',
+      senha: 'admin123',
+      nome: 'Administrador Operacional',
+      pergunta: 'azul',
+      role: 'admin',
+      contrato: null
+    },
+    {
+      email: 'jonathas@email.com',
+      senha: '123',
+      nome: 'Jonathas Silva',
+      pergunta: 'verde',
+      role: 'cliente',
+      contrato: {
+        valorContratado: 6000,
+        saldoDevedor: 4320,
+        valorParcela: 480,
+        parcelasPagas: 8,
+        totalParcelas: 12,
+        vencimento: '05/09/2026',
+        status: 'Em dia',
+        taxa: 2.3,
+        dataSolicitacao: '12/06/2026',
+        score: 785
+      }
+    },
+    {
+      email: 'marina@email.com',
+      senha: '123',
+      nome: 'Marina Castro',
+      pergunta: 'amarelo',
+      role: 'cliente',
+      contrato: {
+        valorContratado: 3500,
+        saldoDevedor: 3500,
+        valorParcela: 345,
+        parcelasPagas: 0,
+        totalParcelas: 12,
+        vencimento: '15/10/2026',
+        status: 'Aprovado',
+        taxa: 2.1,
+        dataSolicitacao: '01/09/2026',
+        score: 812
+      }
+    },
+    {
+      email: 'rodrigo@email.com',
+      senha: '123',
+      nome: 'Rodrigo Paes',
+      pergunta: 'preto',
+      role: 'cliente',
+      contrato: {
+        valorContratado: 12000,
+        saldoDevedor: 12000,
+        valorParcela: 850,
+        parcelasPagas: 0,
+        totalParcelas: 18,
+        vencimento: '20/10/2026',
+        status: 'Revisão manual',
+        taxa: 2.8,
+        dataSolicitacao: '28/08/2026',
+        score: 540
+      }
+    }
   ];
 
   function getUsers() {
     const stored = localStorage.getItem('nexta_users');
-    return stored ? JSON.parse(stored) : defaultUsers;
+    if (!stored) {
+      localStorage.setItem('nexta_users', JSON.stringify(defaultUsers));
+      return defaultUsers;
+    }
+    return JSON.parse(stored);
   }
 
   function saveUsers(users) {
     localStorage.setItem('nexta_users', JSON.stringify(users));
   }
+
+  function updateUserInStorage(userObj) {
+    const users = getUsers();
+    const idx = users.findIndex(u => u.email.toLowerCase() === userObj.email.toLowerCase());
+    if (idx !== -1) {
+      users[idx] = userObj;
+      saveUsers(users);
+    }
+  }
+
+  // PERSISTÊNCIA DE SESSÃO
+  document.addEventListener('DOMContentLoaded', () => {
+    const users = getUsers();
+    const savedSessionEmail = localStorage.getItem('nexta_session');
+    
+    if (savedSessionEmail) {
+      const user = users.find(u => u.email.toLowerCase() === savedSessionEmail.toLowerCase());
+      if (user) {
+        currentUser = user;
+        iniciarApp();
+        return;
+      }
+    }
+    mostrarTela('login');
+  });
 
   function mostrarTela(tela) {
     document.getElementById('viewLogin').style.display = 'none';
@@ -835,6 +858,7 @@
     if (user) {
       err.style.display = 'none';
       currentUser = user;
+      localStorage.setItem('nexta_session', user.email);
       iniciarApp();
     } else {
       err.style.display = 'block';
@@ -861,12 +885,13 @@
       return;
     }
 
-    const newUser = { email, senha, nome, pergunta, role: 'cliente' };
+    const newUser = { email, senha, nome, pergunta, role: 'cliente', contrato: null };
     users.push(newUser);
     saveUsers(users);
 
     err.style.display = 'none';
     currentUser = newUser;
+    localStorage.setItem('nexta_session', newUser.email);
     iniciarApp();
   }
 
@@ -924,30 +949,23 @@
     document.getElementById('loggedAs').textContent = currentUser.nome;
     document.getElementById('welcomeUser').textContent = `Olá, ${currentUser.nome.split(' ')[0]} 👋`;
     
-    setRole(currentUser.role || 'cliente');
-  }
-
-  function setRole(role) {
-    currentRole = role;
-    const clienteBtn = document.getElementById('roleClienteBtn');
-    const adminBtn = document.getElementById('roleAdminBtn');
+    // CONTROLE ESTRITO DE PERFIS (RBAC)
     const navCliente = document.getElementById('navClienteGroup');
     const navAdmin = document.getElementById('navAdminGroup');
 
-    if (role === 'cliente') {
-      clienteBtn.classList.add('active');
-      adminBtn.classList.remove('active');
-      navCliente.style.display = 'block';
-      navAdmin.style.display = 'none';
-      document.getElementById('crumbRole').textContent = 'Cliente';
-      go('dashboard');
-    } else {
-      adminBtn.classList.add('active');
-      clienteBtn.classList.remove('active');
+    if (currentUser.role === 'admin') {
       navCliente.style.display = 'none';
       navAdmin.style.display = 'block';
       document.getElementById('crumbRole').textContent = 'Interno';
+      renderAdminCredito();
       go('credito');
+    } else {
+      navAdmin.style.display = 'none';
+      navCliente.style.display = 'block';
+      document.getElementById('crumbRole').textContent = 'Cliente';
+      renderClienteDashboard();
+      renderClienteAcompanhar();
+      go('dashboard');
     }
   }
 
@@ -980,17 +998,139 @@
     toggleMenu(false);
   }
 
+  /* RENDERIZAÇÃO CLIENTE */
+  function renderClienteDashboard() {
+    const c = currentUser.contrato;
+    if (!c) {
+      document.getElementById('dashSaldoDevedor').textContent = 'R$ 0,00';
+      document.getElementById('dashSubDevedor').textContent = 'Nenhum contrato ativo';
+      document.getElementById('dashProximaParcela').textContent = 'R$ 0,00';
+      document.getElementById('dashSubParcela').textContent = 'Sem parcelas pendentes';
+      document.getElementById('dashStatusTag').innerHTML = `<span class="tag gold">Sem contrato</span>`;
+      document.getElementById('dashSubStatus').textContent = 'Faça uma simulação abaixo';
+      document.getElementById('dashProgressoTexto').textContent = '0 de 0 parcelas pagas';
+      document.getElementById('dashProgressBar').style.width = '0%';
+      return;
+    }
+
+    const totalFormatado = Number(c.valorContratado).toLocaleString('pt-BR');
+    const saldoFormatado = Number(c.saldoDevedor).toLocaleString('pt-BR', {minimumFractionDigits:2});
+    const parcelaFormatada = Number(c.valorParcela).toLocaleString('pt-BR', {minimumFractionDigits:2});
+    const pct = Math.round((c.parcelasPagas / c.totalParcelas) * 100);
+
+    document.getElementById('dashSaldoDevedor').textContent = `R$ ${saldoFormatado}`;
+    document.getElementById('dashSubDevedor').textContent = `de R$ ${totalFormatado},00 contratados`;
+    document.getElementById('dashProximaParcela').textContent = `R$ ${parcelaFormatada}`;
+    document.getElementById('dashSubParcela').textContent = `vence em ${c.vencimento}`;
+    
+    let tagClass = c.status === 'Em dia' || c.status === 'Aprovado' ? 'up' : 'warn';
+    document.getElementById('dashStatusTag').innerHTML = `<span class="tag ${tagClass}">${c.status}</span>`;
+    document.getElementById('dashSubStatus').textContent = c.status === 'Em dia' ? 'nenhuma pendência no momento' : 'situação em acompanhamento';
+    
+    document.getElementById('dashProgressoTexto').textContent = `${c.parcelasPagas} de ${c.totalParcelas} parcelas pagas`;
+    document.getElementById('dashProgressBar').style.width = `${pct}%`;
+  }
+
+  function renderClienteAcompanhar() {
+    const c = currentUser.contrato;
+    const tlBox = document.getElementById('timelineList');
+    
+    if (!c) {
+      tlBox.innerHTML = `
+        <div class="tl-item active">
+          <div class="tl-dot"></div>
+          <div class="tl-title">Sem contratos ativos</div>
+          <div class="tl-sub">Acesse o simulador para contratar o seu empréstimo.</div>
+        </div>`;
+      document.getElementById('detValor').textContent = 'R$ 0,00';
+      document.getElementById('detTaxa').textContent = '0,0% a.m.';
+      document.getElementById('detJuros').textContent = 'R$ 0,00';
+      document.getElementById('detTotal').textContent = 'R$ 0,00';
+      return;
+    }
+
+    const totalPago = c.valorParcela * c.parcelasPagas;
+    const totalContrato = c.valorParcela * c.totalParcelas;
+    const jurosTotal = totalContrato - c.valorContratado;
+
+    tlBox.innerHTML = `
+      <div class="tl-item done">
+        <div class="tl-dot"></div>
+        <div class="tl-title">Solicitação enviada</div>
+        <div class="tl-sub">${c.dataSolicitacao} — valor de R$ ${Number(c.valorContratado).toLocaleString('pt-BR')},00</div>
+      </div>
+      <div class="tl-item done">
+        <div class="tl-dot"></div>
+        <div class="tl-title">Análise de crédito concluída</div>
+        <div class="tl-sub">Score gerado: ${c.score} — Aprovado automaticamente</div>
+      </div>
+      <div class="tl-item done">
+        <div class="tl-dot"></div>
+        <div class="tl-title">Contrato ativado digitalmente</div>
+        <div class="tl-sub">Taxa de ${c.taxa}% a.m. em ${c.totalParcelas} parcelas</div>
+      </div>
+      <div class="tl-item active">
+        <div class="tl-dot"></div>
+        <div class="tl-title">${c.parcelasPagas}ª parcela paga — ${c.status}</div>
+        <div class="tl-sub">Próxima parcela: R$ ${Number(c.valorParcela).toLocaleString('pt-BR', {minimumFractionDigits:2})} em ${c.vencimento}</div>
+      </div>
+      <div class="tl-item">
+        <div class="tl-dot"></div>
+        <div class="tl-title">Quitação do contrato</div>
+        <div class="tl-sub">Previsão após ${c.totalParcelas} parcelas</div>
+      </div>
+    `;
+
+    document.getElementById('detValor').textContent = `R$ ${Number(c.valorContratado).toLocaleString('pt-BR')},00`;
+    document.getElementById('detTaxa').textContent = `${c.taxa}% a.m.`;
+    document.getElementById('detJuros').textContent = `R$ ${Number(jurosTotal).toLocaleString('pt-BR', {minimumFractionDigits:2})}`;
+    document.getElementById('detTotal').textContent = `R$ ${Number(totalContrato).toLocaleString('pt-BR', {minimumFractionDigits:2})}`;
+  }
+
+  /* SIMULADOR DETERMINÍSTICO E AMPLIADO */
   function atualizarSimulacao() {
     const valor = document.getElementById('valorRange').value;
     document.getElementById('valorAtual').textContent = 'R$ ' + Number(valor).toLocaleString('pt-BR');
+    document.getElementById('solicitarBox').style.display = 'none';
+  }
+
+  // FÓRMULA DETERMINÍSTICA (Mesmo usuário + valor + parcelas = exato mesmo resultado sempre)
+  function calcularScoreDeterministico(email, valor, parcelas) {
+    let hash = 0;
+    for (let i = 0; i < email.length; i++) {
+      hash += email.charCodeAt(i);
+    }
+    const valFactor = Math.floor((valor / 100000) * 160);
+    const parFactor = Math.floor((parcelas / 180) * 40);
+    const base = 850 + (hash % 90);
+    
+    let score = base - valFactor + parFactor;
+    if (score > 980) score = 980;
+    if (score < 350) score = 350;
+    return score;
   }
 
   function analisarCredito() {
     const valor = parseInt(document.getElementById('valorRange').value);
     const parcelas = parseInt(document.getElementById('parcelasSelect').value);
+    const email = currentUser ? currentUser.email : 'invitado@nexta.com';
 
-    const score = Math.floor(Math.random() * (880 - 620 + 1)) + 620;
-    const valorParcela = ((valor * 1.25) / parcelas).toFixed(2);
+    // Cálculo determinístico
+    const score = calcularScoreDeterministico(email, valor, parcelas);
+    
+    // Cálculo de parcela com juros compostos
+    const taxaMensal = 0.018 + (valor / 100000) * 0.008; // 1.8% a 2.6% a.m.
+    const i = taxaMensal;
+    const n = parcelas;
+    const pmt = valor * ( (i * Math.pow(1 + i, n)) / (Math.pow(1 + i, n) - 1) );
+
+    latestSimulation = {
+      valor: valor,
+      parcelas: parcelas,
+      valorParcela: pmt,
+      taxa: (taxaMensal * 100).toFixed(1),
+      score: score
+    };
 
     const arc = document.getElementById('gaugeArc');
     const scoreText = document.getElementById('gaugeScore');
@@ -1000,9 +1140,80 @@
     const offset = 251 - (251 * (score / 1000));
     arc.style.strokeDashoffset = offset;
     scoreText.textContent = score;
-    timeText.textContent = 'Processado em ' + (Math.random() * 0.4 + 0.2).toFixed(2) + 's';
+    timeText.textContent = 'Análise determinística processada';
 
-    resultText.innerHTML = `<strong style="color:var(--navy);">Aprovação provável:</strong> ${parcelas}x de R$ ${Number(valorParcela).toLocaleString('pt-BR', {minimumFractionDigits: 2})}`;
+    resultText.innerHTML = `
+      <div style="font-size:14px; color:var(--navy); margin-bottom:4px;"><strong>Resultado da Análise:</strong></div>
+      <div style="font-size:16px; font-weight:700; color:var(--navy);">${parcelas}x de R$ ${Number(pmt).toLocaleString('pt-BR', {minimumFractionDigits: 2, maximumFractionDigits: 2})}</div>
+      <div style="font-size:12px; color:var(--slate); margin-top:2px;">Taxa aplicada: ${latestSimulation.taxa}% a.m.</div>
+    `;
+
+    document.getElementById('solicitarBox').style.display = 'block';
+  }
+
+  function solicitarEmprestimo() {
+    if (!latestSimulation || !currentUser) return;
+
+    const hoje = new Date();
+    const dataStr = `${String(hoje.getDate()).padStart(2,'0')}/${String(hoje.getMonth()+1).padStart(2,'0')}/${hoje.getFullYear()}`;
+    const proxMes = new Date(hoje.setMonth(hoje.getMonth() + 1));
+    const vencStr = `${String(proxMes.getDate()).padStart(2,'0')}/${String(proxMes.getMonth()+1).padStart(2,'0')}/${proxMes.getFullYear()}`;
+
+    const totalContrato = latestSimulation.valorParcela * latestSimulation.parcelas;
+
+    currentUser.contrato = {
+      valorContratado: latestSimulation.valor,
+      saldoDevedor: totalContrato,
+      valorParcela: latestSimulation.valorParcela,
+      parcelasPagas: 0,
+      totalParcelas: latestSimulation.parcelas,
+      vencimento: vencStr,
+      status: 'Em dia',
+      taxa: latestSimulation.taxa,
+      dataSolicitacao: dataStr,
+      score: latestSimulation.score
+    };
+
+    updateUserInStorage(currentUser);
+    alert('Empréstimo solicitado e contratado com sucesso!');
+
+    renderClienteDashboard();
+    renderClienteAcompanhar();
+    go('dashboard');
+  }
+
+  /* VISÃO INTERNA / ADMIN: TABELA DINÂMICA DE USUÁRIOS */
+  function renderAdminCredito() {
+    const users = getUsers();
+    const tbody = document.getElementById('creditoTableBody');
+    tbody.innerHTML = '';
+
+    let clientesCount = 0;
+
+    users.forEach(u => {
+      if (u.role === 'admin') return;
+      clientesCount++;
+
+      const initials = u.nome.split(' ').map(n => n[0]).join('').substring(0,2).toUpperCase();
+      const c = u.contrato;
+
+      let valorStr = c ? `R$ ${Number(c.valorContratado).toLocaleString('pt-BR')}` : 'Sem simulação';
+      let scoreTag = c ? `<span class="tag ${c.score > 700 ? 'up' : 'warn'}">${c.score}</span>` : '<span class="tag gold">—</span>';
+      let statusTag = c ? `<span class="tag ${c.status === 'Em dia' || c.status === 'Aprovado' ? 'up' : 'warn'}">${c.status}</span>` : '<span class="tag">Novo Usuário</span>';
+      let dataStr = c ? c.dataSolicitacao : '—';
+
+      const tr = document.createElement('tr');
+      tr.innerHTML = `
+        <td class="row-flex"><span class="avatar">${initials}</span><div><strong>${u.nome}</strong><br><span style="font-size:11px; color:var(--slate);">${u.email}</span></div></td>
+        <td class="mono">${valorStr}</td>
+        <td>${scoreTag}</td>
+        <td>${statusTag}<br><span class="mono" style="font-size:11px; color:var(--slate);">${dataStr}</span></td>
+        <td><button class="btn btn-outline btn-sm" onclick="alert('Analisando perfil de ${u.nome}')">Analisar</button></td>
+      `;
+      tbody.appendChild(tr);
+    });
+
+    document.getElementById('totalCadastrosCount').textContent = clientesCount;
   }
 
   function toggleMenu(open) {
@@ -1019,6 +1230,8 @@
 
   function sair() {
     currentUser = null;
+    latestSimulation = null;
+    localStorage.removeItem('nexta_session');
     document.getElementById('app').style.display = 'none';
     document.getElementById('loginScreen').style.display = 'flex';
     mostrarTela('login');
