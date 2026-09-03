@@ -87,7 +87,7 @@
   button { cursor: pointer; border: none; }
   button:disabled { opacity: 0.5; cursor: not-allowed; }
 
-  /* ---------- BLOCO 3.10: MICRO-INTERAÇÃO RIPPLE NOS BOTÕES ---------- */
+  /* ---------- MICRO-INTERAÇÃO RIPPLE NOS BOTÕES ---------- */
   .btn {
     position: relative;
     overflow: hidden;
@@ -166,7 +166,6 @@
     position: relative;
   }
 
-  /* BLOCO 3.1: INDICADOR DE NAVEGAÇÃO ANIMADO (DESLIZANTE) */
   .nav-pill {
     position: absolute;
     left: 0;
@@ -221,6 +220,8 @@
     flex-direction: column;
     min-width: 0;
     background: var(--cream);
+    position: relative;
+    overflow: hidden;
   }
 
   .topbar {
@@ -232,6 +233,8 @@
     padding: 0 28px;
     border-bottom: 1px solid var(--line);
     background: var(--card-bg);
+    position: relative;
+    z-index: 5;
   }
 
   .topbar-title { font-size: 15px; font-weight: 600; color: var(--ink); }
@@ -298,7 +301,35 @@
     overflow-y: auto;
     -webkit-overflow-scrolling: touch;
     padding: 28px 32px 60px;
+    position: relative;
+    z-index: 2;
   }
+
+  /* ITEM 5: FUNDO TEMÁTICO DECORATIVO EM SVG */
+  .fintech-bg-layer {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    overflow: hidden;
+    z-index: 1;
+  }
+
+  .bg-svg {
+    position: absolute;
+    color: var(--navy);
+    opacity: 0.05;
+    transition: color 0.3s ease, opacity 0.3s ease;
+  }
+
+  [data-theme="dark"] .bg-svg {
+    color: var(--lime);
+    opacity: 0.07;
+  }
+
+  .bg-svg-1 { top: 4%; right: 4%; width: 280px; }
+  .bg-svg-2 { top: 42%; left: 2%; width: 180px; }
+  .bg-svg-3 { bottom: 8%; right: 6%; width: 220px; }
+  .bg-svg-4 { top: 68%; left: 32%; width: 160px; }
 
   .page { display: none; }
   .page.active { display: block; }
@@ -312,7 +343,6 @@
   .grid-3 { grid-template-columns: repeat(3, 1fr); }
   .grid-2 { grid-template-columns: 1.3fr 1fr; }
 
-  /* BLOCO 3.2: ENTRADA ESCALONADA DOS CARDS (STAGGERED) & TILT 3D */
   .card {
     background: var(--card-bg);
     border: 1px solid var(--line);
@@ -322,24 +352,30 @@
     will-change: transform, opacity;
   }
 
-  .page.active .card {
-    opacity: 0;
-    transform: translateY(16px);
-    animation: cardStaggerIn 0.45s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  /* ITEM 3: CARDS CLICÁVEIS */
+  .card.card-clickable {
+    cursor: pointer;
+    position: relative;
+  }
+  .card.card-clickable:hover {
+    border-color: var(--lime-dark);
+    transform: translateY(-2px);
+    box-shadow: 0 8px 20px rgba(0,0,0,0.06);
   }
 
-  .page.active .card:nth-child(1) { animation-delay: 0.04s; }
-  .page.active .card:nth-child(2) { animation-delay: 0.10s; }
-  .page.active .card:nth-child(3) { animation-delay: 0.16s; }
-  .page.active .card:nth-child(4) { animation-delay: 0.22s; }
-  .page.active .card:nth-child(5) { animation-delay: 0.28s; }
-  .page.active .card:nth-child(6) { animation-delay: 0.34s; }
+  /* ITEM 4: ANIMACÕES DE ENTRADA VIA SCROLL NA DASHBOARD */
+  .card-scroll-in {
+    opacity: 0;
+    will-change: transform, opacity;
+    transition: opacity 0.65s cubic-bezier(0.16, 1, 0.3, 1), transform 0.65s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+  .dash-card-left { transform: translateX(-35px); }
+  .dash-card-right { transform: translateX(35px); }
+  .dash-card-bottom { transform: translateY(35px); }
 
-  @keyframes cardStaggerIn {
-    to {
-      opacity: 1;
-      transform: translateY(0);
-    }
+  .card-scroll-in.in-view {
+    opacity: 1;
+    transform: translate(0, 0);
   }
 
   .card-label { font-size: 11px; text-transform: uppercase; letter-spacing: .07em; color: var(--slate); font-weight: 600; margin-bottom: 8px; }
@@ -362,7 +398,6 @@
   .btn:hover { background: var(--navy-3); }
   .btn:active { transform: scale(.98); }
   
-  /* BLOCO 1.1: CLASSE btn-navy CORRIGIDA E DEFINIDA */
   .btn-navy { background: var(--navy); color: #FFFFFF; }
   .btn-navy:hover { background: var(--navy-3); }
   
@@ -474,7 +509,6 @@
   @keyframes loading { 0% { background-position: 200% 0; } 100% { background-position: -200% 0; } }
 
   .empty-state { text-align: center; padding: 40px 20px; color: var(--slate); }
-  .empty-state svg { width: 48px; height: 48px; margin-bottom: 12px; opacity: 0.5; }
 
   /* Timeline */
   .tl { position: relative; padding-left: 26px; }
@@ -487,7 +521,7 @@
   .tl-title { font-size: 13.5px; font-weight: 600; color: var(--ink); }
   .tl-sub { font-size: 12px; color: var(--slate); margin-top: 2px; }
 
-  /* BLOCO 3.5: FUNDO ANIMADO NA TELA DE LOGIN */
+  /* FUNDO ANIMADO NA TELA DE LOGIN */
   .login-screen {
     height: 100vh; height: 100dvh; width: 100vw;
     background: var(--navy);
@@ -532,7 +566,7 @@
   }
   .sidebar-overlay.open { display: block; }
 
-  /* BLOCO 3.9: SCROLL REVEAL CLASS */
+  /* SCROLL REVEAL CLASS */
   .scroll-reveal {
     opacity: 0;
     transform: translateY(24px);
@@ -543,7 +577,7 @@
     transform: translateY(0);
   }
 
-  /* ESTILOS DO MODAL DE AMORTIZAÇÃO (BLOCO 2) */
+  /* ESTILOS DO MODAL DE AMORTIZAÇÃO */
   .amort-option-card {
     border: 1.5px solid var(--line);
     border-radius: 12px;
@@ -560,7 +594,7 @@
     background: rgba(198, 255, 61, 0.08);
   }
 
-  /* ESTILOS DO MENU DE COMANDO RÁPIDO (BLOCO 3.8) */
+  /* ESTILOS DO MENU DE COMANDO RÁPIDO */
   .cmd-search-input {
     width: 100%;
     padding: 14px 16px;
@@ -632,7 +666,6 @@
 
 <!-- ================= LOGIN / AUTENTICAÇÃO ================= -->
 <div class="login-screen" id="loginScreen">
-  <!-- BLOCO 3.5: BLOBS ANIMADOS DO FUNDO -->
   <div class="login-bg-blob blob-1"></div>
   <div class="login-bg-blob blob-2"></div>
 
@@ -658,7 +691,7 @@
 
     <button class="btn btn-lime btn-block" id="btnLoginSubmit" onclick="tentarLogin()" disabled>Entrar</button>
     
-    <div class="row-flex" style="justify-content: space-between; margin-top:16px;">
+    <div class="row-flex" style="justify-space-between; margin-top:16px;">
       <a href="#" onclick="mostrarTela('cadastro'); return false;" style="font-size:13px; font-weight:600; color:var(--navy);">Criar conta</a>
       <a href="#" onclick="mostrarTela('esqueci'); return false;" style="font-size:13px; font-weight:600; color:var(--slate);">Esqueci a senha</a>
     </div>
@@ -718,7 +751,6 @@
       <button class="btn btn-lime btn-block" onclick="buscarConta()">Continuar</button>
     </div>
 
-    <!-- BLOCO 1.2: PERGUNTA DE SEGURANÇA DINÂMICA DO USUÁRIO -->
     <div id="esqueciPasso2" style="display:none;">
       <div class="form-group">
         <label id="perguntaLabel">Pergunta de segurança:</label>
@@ -823,7 +855,6 @@
       </div>
       
       <div class="row-flex" style="gap:12px;">
-        <!-- BLOCO 3.8: ATALHO CMD/CTRL + K -->
         <button class="cmd-k-badge" onclick="abrirMenuComando()" title="Menu de busca rápida">
           🔍 Busca <span style="font-size:9px; background:var(--line); padding:1px 4px; border-radius:3px; margin-left:3px;">⌘K</span>
         </button>
@@ -834,48 +865,97 @@
       </div>
     </div>
 
+    <!-- ITEM 5: CAMADA DE FUNDO TEMÁTICO DECORATIVO EM SVG -->
+    <div class="fintech-bg-layer" aria-hidden="true">
+      <!-- SVG 1: Linha de Gráfico Ascendente (Parallax) -->
+      <svg class="bg-svg bg-svg-1 parallax-elem" viewBox="0 0 200 100" fill="none" stroke="currentColor">
+        <path d="M10 85 Q 50 70 80 40 T 150 30 T 190 10" stroke-width="2.5" stroke-linecap="round"/>
+        <polyline points="175,10 190,10 190,25" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+      <!-- SVG 2: Contorno do Cifrão -->
+      <svg class="bg-svg bg-svg-2" viewBox="0 0 100 100" fill="none" stroke="currentColor">
+        <path d="M50 10 v80 M35 28 c0-12 30-12 30 0 c0 18-30 18-30 36 c0 12 30 12 30 0" stroke-width="2.5" stroke-linecap="round"/>
+      </svg>
+      <!-- SVG 3: Escudo de Segurança -->
+      <svg class="bg-svg bg-svg-3" viewBox="0 0 100 100" fill="none" stroke="currentColor">
+        <path d="M50 15 L80 28 V55 C80 72 50 88 50 88 C50 88 20 72 20 55 V28 Z" stroke-width="2.5" stroke-linejoin="round"/>
+      </svg>
+      <!-- SVG 4: Conexões de Rede Fintech -->
+      <svg class="bg-svg bg-svg-4" viewBox="0 0 100 100" fill="none" stroke="currentColor">
+        <circle cx="20" cy="20" r="6" stroke-width="2"/>
+        <circle cx="80" cy="30" r="6" stroke-width="2"/>
+        <circle cx="50" cy="80" r="6" stroke-width="2"/>
+        <line x1="20" y1="20" x2="80" y2="30" stroke-width="1.8"/>
+        <line x1="80" y1="30" x2="50" y2="80" stroke-width="1.8"/>
+        <line x1="20" y1="20" x2="50" y2="80" stroke-width="1.8"/>
+      </svg>
+    </div>
+
     <div class="content" id="content">
 
-      <!-- ===== PÁGINA: DASHBOARD (CLIENTE) ===== -->
+      <!-- ===== PÁGINA: DASHBOARD (CLIENTE REESTRUTURADO) ===== -->
       <section class="page active" id="page-dashboard">
         <div class="page-head">
           <h1 id="welcomeUser">Olá 👋</h1>
-          <p>Resumo em tempo real da sua conta e empréstimos contratados.</p>
+          <p>Seu Hub financeiro central de simulação, acompanhamento e transparência.</p>
         </div>
+
+        <!-- ITEM 3 & 4: CARDS DO PAINEL CLICÁVEIS E COM ANIMAÇÃO SCROLL DIRECIONAL -->
         <div class="grid grid-3" style="margin-bottom:16px;">
-          <div class="card">
+          <!-- Card 1: Saldo Devedor -> Acompanhar -->
+          <div class="card card-clickable card-scroll-in dash-card-left" onclick="go('acompanhar')">
             <div class="card-label">Saldo devedor</div>
             <div class="card-value mono" id="dashSaldoDevedor">R$ 0,00</div>
             <div class="card-sub" id="dashSubDevedor">nenhum contrato ativo</div>
+            <div style="margin-top:12px; font-size:11.5px; font-weight:600; color:var(--lime-dark); display:flex; align-items:center; gap:4px;">Ver detalhes do contrato →</div>
           </div>
-          <div class="card">
+
+          <!-- Card 2: Próxima Parcela -> Acompanhar -->
+          <div class="card card-clickable card-scroll-in dash-card-bottom" onclick="go('acompanhar')">
             <div class="card-label">Próxima parcela</div>
             <div class="card-value mono" id="dashProximaParcela">R$ 0,00</div>
             <div class="card-sub" id="dashSubParcela">sem vencimentos pendentes</div>
+            <div style="margin-top:12px; font-size:11.5px; font-weight:600; color:var(--lime-dark); display:flex; align-items:center; gap:4px;">Histórico de pagamentos →</div>
           </div>
-          <div class="card">
+
+          <!-- Card 3: Situação do Contrato -> Acompanhar -->
+          <div class="card card-clickable card-scroll-in dash-card-right" onclick="go('acompanhar')">
             <div class="card-label">Situação do Contrato</div>
             <div class="card-value" style="font-size:18px; margin-top:4px;" id="dashStatusTag"><span class="tag gold">Sem contrato</span></div>
             <div class="card-sub" id="dashSubStatus">faça uma simulação abaixo</div>
+            <div style="margin-top:12px; font-size:11.5px; font-weight:600; color:var(--lime-dark); display:flex; align-items:center; gap:4px;">Status da proposta →</div>
           </div>
         </div>
 
         <div class="grid grid-2">
-          <div class="card">
-            <div class="card-label">Progresso de quitação</div>
-            <div style="margin:14px 0 6px; font-size:13px; color:var(--slate);" id="dashProgressoTexto">0 de 0 parcelas pagas</div>
+          <!-- Card 4: Hub de Progresso & Mini-Timeline -->
+          <div class="card card-clickable card-scroll-in dash-card-left" onclick="go('acompanhar')">
+            <div class="card-label">Progresso de Quitação & Timeline Recent</div>
+            <div style="margin:10px 0 6px; font-size:13px; color:var(--slate);" id="dashProgressoTexto">0 de 0 parcelas pagas</div>
             <div class="progress-bar" style="height:8px; background:var(--line); border-radius:99px; overflow:hidden;">
               <div class="progress-fill" id="dashProgressBar" style="height:100%; background:var(--lime-dark); width:0%; transition:width 0.8s ease;"></div>
             </div>
-            <div style="height:1px; background:var(--line); margin:18px 0;"></div>
-            <div class="card-label">Transparência Nexta</div>
-            <p style="font-size:13px; color:var(--slate); line-height:1.6; margin:8px 0 14px;">Sem taxas ocultas ou surpresas nas parcelas. Acompanhe a evolução do seu contrato em tempo real.</p>
-            <button class="btn btn-outline btn-sm" onclick="go('acompanhar')">Ver linha do tempo completa</button>
+            
+            <div style="height:1px; background:var(--line); margin:16px 0;"></div>
+            
+            <!-- ITEM 3: MINI RESUMO DA TIMELINE -->
+            <div class="card-label">Eventos Recentes do Contrato</div>
+            <div class="tl" id="dashMiniTimeline" style="margin-top:10px;">
+              <!-- Preenchido via JS com os 2 eventos mais recentes -->
+            </div>
+
+            <div style="margin-top:14px;">
+              <button class="btn btn-outline btn-sm btn-block" onclick="event.stopPropagation(); go('acompanhar');">Acessar linha do tempo completa</button>
+            </div>
           </div>
-          <div class="card">
-            <div class="card-label">Simulação Rápida</div>
-            <p style="font-size:13px; color:var(--slate); line-height:1.6; margin:8px 0 16px;">Precisa de capital? Simule novos prazos e receba pré-aprovação instantânea.</p>
-            <button class="btn btn-lime btn-block" onclick="go('simulador')">Ir para o Simulador</button>
+
+          <!-- Card 5: Hub da Última Simulação Salva -->
+          <div class="card card-clickable card-scroll-in dash-card-right" onclick="go('simulador')">
+            <div class="card-label">Sua Última Simulação</div>
+            <div id="dashSimulacaoResumoBox" style="margin:12px 0;">
+              <!-- Preenchido dinamicamente via JS -->
+            </div>
+            <button class="btn btn-lime btn-block" id="dashBtnSimular" onclick="event.stopPropagation(); go('simulador');">Ir para o Simulador</button>
           </div>
         </div>
       </section>
@@ -891,22 +971,29 @@
             <div class="form-group">
               <label for="valorRange">Valor solicitado</label>
               <input type="range" id="valorRange" min="1000" max="100000" step="1000" value="10000" oninput="atualizarSimulacao()">
-              <div class="row-flex" style="justify-space-between; margin-bottom:12px;">
+              <div class="row-flex" style="justify-content:space-between; margin-bottom:12px;">
                 <span class="mono" style="font-size:12px; color:var(--slate);">R$ 1.000</span>
                 <span class="mono" id="valorAtual" style="font-weight:700; color:var(--ink); font-size:16px;">R$ 10.000</span>
                 <span class="mono" style="font-size:12px; color:var(--slate);">R$ 100.000</span>
               </div>
             </div>
 
+            <!-- ITEM 2: PARCELAMENTO COMPLETO (ATÉ 180X) -->
             <div class="form-group">
               <label for="parcelasSelect">Número de parcelas</label>
               <select id="parcelasSelect" onchange="atualizarSimulacao()">
-                <option value="6">6 parcelas</option>
-                <option value="12" selected>12 parcelas</option>
-                <option value="18">18 parcelas</option>
-                <option value="24">24 parcelas</option>
-                <option value="36">36 parcelas</option>
-                <option value="48">48 parcelas</option>
+                <option value="6">6x</option>
+                <option value="12" selected>12x</option>
+                <option value="18">18x</option>
+                <option value="24">24x</option>
+                <option value="36">36x</option>
+                <option value="48">48x</option>
+                <option value="60">60x</option>
+                <option value="72">72x</option>
+                <option value="96">96x</option>
+                <option value="120">120x</option>
+                <option value="144">144x</option>
+                <option value="180">180x</option>
               </select>
             </div>
 
@@ -915,19 +1002,16 @@
 
           <div class="card" style="display:flex; flex-direction:column; align-items:center; justify-content:center; text-align:center; position:relative;">
             
-            <!-- Estado de Skeleton/Loading -->
             <div id="simLoadingState" style="display:none; width:100%; padding:20px;">
               <div class="skeleton" style="height:100px; width:180px; margin:0 auto 16px; border-radius:50px 50px 0 0;"></div>
               <div class="skeleton" style="height:20px; width:60%; margin:0 auto 8px;"></div>
               <div class="skeleton" style="height:14px; width:80%; margin:0 auto;"></div>
             </div>
 
-            <!-- Estado Normal do Simulador -->
             <div id="simNormalState" style="width:100%;">
               <div class="gauge-wrap" style="display:flex; flex-direction:column; align-items:center;">
                 <svg width="180" height="100" viewBox="0 0 180 100">
                   <path d="M10,95 A80,80 0 0,1 170,95" fill="none" stroke="var(--line)" stroke-width="14" stroke-linecap="round"/>
-                  <!-- BLOCO 3.6: COR DINÂMICA DO GAUGE -->
                   <path id="gaugeArc" d="M10,95 A80,80 0 0,1 170,95" fill="none" stroke="var(--lime-dark)" stroke-width="14" stroke-linecap="round" stroke-dasharray="251" stroke-dashoffset="251" style="transition: stroke-dashoffset 1s ease, stroke 0.5s ease;"/>
                 </svg>
                 <div class="gauge-score mono" id="gaugeScore" style="font-size:32px; font-weight:700; margin-top:-46px; color:var(--ink);">—</div>
@@ -972,7 +1056,6 @@
               </table>
             </div>
             
-            <!-- BLOCO 2: BOTÃO DE AMORTIZAÇÃO ANTECIPADA -->
             <div style="height:1px; background:var(--line); margin:16px 0;"></div>
             <div class="row-flex" style="gap:10px;">
               <button class="btn btn-lime btn-sm" id="btnAbrirAmortizacao" onclick="abrirModalAmortizacao()" style="flex:1;">⚡ Amortizar Parcela</button>
@@ -1010,7 +1093,6 @@
           <div class="card"><div class="card-label">Total de cadastros</div><div class="card-value mono" id="totalCadastrosCount">0</div><div class="card-sub">clientes ativos</div></div>
         </div>
 
-        <!-- Gráfico de Automação -->
         <div class="card" style="margin-bottom:16px;">
           <div class="card-label">Desempenho: Tempo Médio de Análise (Antes vs Depois da Automação)</div>
           <div style="height:200px; position:relative;"><canvas id="chartCredito"></canvas></div>
@@ -1042,7 +1124,6 @@
           <div class="card"><div class="card-label">Recuperado (Mês)</div><div class="card-value mono" id="metricRecuperado">R$ 42.100</div><div class="card-sub">cobrança automatizada</div></div>
         </div>
 
-        <!-- Gráfico de Inadimplência -->
         <div class="card" style="margin-bottom:16px;">
           <div class="card-label">Evolução da Inadimplência (Últimos 6 meses)</div>
           <div style="height:200px; position:relative;"><canvas id="chartCobranca"></canvas></div>
@@ -1136,7 +1217,6 @@
               <div class="strength-meter"><div class="strength-fill" id="perfilMeter"></div></div>
             </div>
 
-            <!-- BLOCO 1.1: USO DA CLASSE btn-navy -->
             <button class="btn btn-navy btn-sm" onclick="alterarSenhaPerfil()">Atualizar Senha</button>
           </div>
         </div>
@@ -1150,7 +1230,6 @@
         </div>
 
         <div class="grid grid-2">
-          <!-- BLOCO 3.9: SCROLL REVEAL CARDS -->
           <div class="card scroll-reveal">
             <h3 style="margin-top:0; color:var(--ink);">Proposta de Valor</h3>
             <p style="font-size:13.5px; color:var(--slate); line-height:1.6;">
@@ -1188,9 +1267,9 @@
   let chartCreditoInstance = null;
   let chartCobrancaInstance = null;
   let chartFraudeInstance = null;
-  let selectedAmortType = 'prazo'; // 'prazo' ou 'parcela'
+  let selectedAmortType = 'prazo';
 
-  // Usuários Padrão para Iniciar o Sistema
+  // Usuários Padrão
   const defaultUsers = [
     {
       email: 'admin@nexta.com',
@@ -1344,7 +1423,7 @@
     if (e.key === 'Escape') closeModal();
   });
 
-  /* ---------- BLOCO 3.10: MICRO-INTERAÇÃO DE RIPPLE NOS BOTÕES ---------- */
+  /* ---------- MICRO-INTERAÇÃO DE RIPPLE NOS BOTÕES ---------- */
   document.addEventListener('click', (e) => {
     const btn = e.target.closest('.btn');
     if (!btn) return;
@@ -1363,7 +1442,7 @@
     btn.appendChild(circle);
   });
 
-  /* ---------- BLOCO 3.3: NÚMEROS ANIMADOS (COUNT-UP) ---------- */
+  /* ---------- NÚMEROS ANIMADOS (COUNT-UP) ---------- */
   function animateCountUp(element, targetValue, prefix = '', suffix = '', isCurrency = false, duration = 1000) {
     if (!element) return;
     const startValue = 0;
@@ -1390,7 +1469,7 @@
     requestAnimationFrame(updateCount);
   }
 
-  /* ---------- BLOCO 3.4: TILT 3D SUTIL NOS CARDS ---------- */
+  /* ---------- TILT 3D SUTIL NOS CARDS ---------- */
   function init3DTilt() {
     if (window.matchMedia('(hover: hover) and (pointer: fine)').matches) {
       document.querySelectorAll('.card').forEach(card => {
@@ -1419,7 +1498,7 @@
     card.style.boxShadow = '';
   }
 
-  /* ---------- BLOCO 3.7: CELEBRAÇÃO VISUAL (CONFETES) ---------- */
+  /* ---------- CELEBRAÇÃO VISUAL (CONFETES) ---------- */
   function dispararConfetes() {
     const canvas = document.createElement('canvas');
     canvas.style.position = 'fixed';
@@ -1477,7 +1556,7 @@
     requestAnimationFrame(render);
   }
 
-  /* ---------- BLOCO 3.8: MENU DE COMANDO RÁPIDO (CMD+K) ---------- */
+  /* ---------- MENU DE COMANDO RÁPIDO (CMD+K) ---------- */
   document.addEventListener('keydown', (e) => {
     if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === 'k') {
       e.preventDefault();
@@ -1540,7 +1619,7 @@
     if (page) go(page);
   }
 
-  /* ---------- BLOCO 3.9: SCROLL REVEAL ---------- */
+  /* ---------- SCROLL REVEAL & ITEM 4: INTERATIVIDADE DE SCROLL E PARALLAX ---------- */
   function initScrollReveal() {
     const observer = new IntersectionObserver((entries) => {
       entries.forEach(entry => {
@@ -1557,6 +1636,41 @@
     });
   }
 
+  function initDashboardScrollObserver() {
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('in-view');
+        }
+      });
+    }, { threshold: 0.15 });
+
+    document.querySelectorAll('.card-scroll-in').forEach(card => {
+      card.classList.remove('in-view');
+      observer.observe(card);
+    });
+  }
+
+  function initParallaxAndScrollListeners() {
+    const content = document.getElementById('content');
+    const parallaxElem = document.querySelector('.parallax-elem');
+    let ticking = false;
+
+    if (!content || !parallaxElem) return;
+
+    content.addEventListener('scroll', () => {
+      if (!ticking) {
+        window.requestAnimationFrame(() => {
+          const scrollTop = content.scrollTop;
+          // Move o gráfico SVG decorativo numa velocidade mais lenta que a rolagem normal
+          parallaxElem.style.transform = `translateY(${scrollTop * 0.22}px) rotate(${scrollTop * 0.02}deg)`;
+          ticking = false;
+        });
+        ticking = true;
+      }
+    });
+  }
+
   /* ---------- INICIALIZAÇÃO & SESSÃO ---------- */
   document.addEventListener('DOMContentLoaded', () => {
     const savedTheme = localStorage.getItem('nexta_theme') || 'light';
@@ -1565,6 +1679,8 @@
     const users = getUsers();
     const savedSessionEmail = localStorage.getItem('nexta_session');
     
+    initParallaxAndScrollListeners();
+
     if (savedSessionEmail) {
       const user = users.find(u => u.email.toLowerCase() === savedSessionEmail.toLowerCase());
       if (user) {
@@ -1697,6 +1813,7 @@
       email, senha, nome, pergunta,
       role: 'cliente',
       contrato: null,
+      ultimaSimulacao: null,
       cobrancaEstagio: 'Em dia',
       cobrancaDiasAtraso: 0,
       fraudeOcorrencia: 'Conta nova sem histórico',
@@ -1715,7 +1832,6 @@
 
   let emailRecuperacao = '';
   
-  /* BLOCO 1.2: BUSCAR CONTA E MOSTRAR PERGUNTA REAL */
   function buscarConta() {
     const email = document.getElementById('recEmail').value.trim();
     const users = getUsers();
@@ -1750,6 +1866,26 @@
       saveUsers(users);
       showToast('Senha redefinida com sucesso! Faça login.');
       mostrarTela('login');
+    }
+  }
+
+  function confirmarSair() {
+    localStorage.removeItem('nexta_session');
+    currentUser = null;
+    document.getElementById('app').style.display = 'none';
+    mostrarTela('login');
+    showToast('Você saiu da sua conta.');
+  }
+
+  function toggleMenu(open) {
+    const sidebar = document.getElementById('sidebar');
+    const overlay = document.getElementById('sidebarOverlay');
+    if (open) {
+      sidebar.classList.add('open');
+      overlay.classList.add('open');
+    } else {
+      sidebar.classList.remove('open');
+      overlay.classList.remove('open');
     }
   }
 
@@ -1802,8 +1938,10 @@
     }
   }
 
-  /* BLOCO 3.1: ATUALIZAR POSIÇÃO DA PÍLULA FLUTUANTE DA NAV */
+  /* ITEM 1 — CORREÇÃO DO BUG NA PÍLULA DE NAVEGAÇÃO DA SIDEBAR */
   function atualizarNavPill(pageId) {
+    document.querySelectorAll('.nav-pill').forEach(p => p.style.opacity = '0');
+    
     const activeItem = document.querySelector(`.nav-item[data-page="${pageId}"]`);
     if (!activeItem) return;
 
@@ -1812,8 +1950,6 @@
 
     const pill = parentGroup.querySelector('.nav-pill');
     if (!pill) return;
-
-    document.querySelectorAll('.nav-pill').forEach(p => p.style.opacity = '0');
 
     const itemOffsetTop = activeItem.offsetTop;
     const itemHeight = activeItem.offsetHeight;
@@ -1853,6 +1989,10 @@
 
     init3DTilt();
 
+    if (pageId === 'dashboard') {
+      renderClienteDashboard();
+      initDashboardScrollObserver();
+    }
     if (pageId === 'credito') renderChartCredito();
     if (pageId === 'cobranca') renderChartCobranca();
     if (pageId === 'fraude') renderChartFraude();
@@ -1861,9 +2001,11 @@
     toggleMenu(false);
   }
 
-  /* ---------- CLIENTE: DASHBOARD & ACOMPANHAMENTO ---------- */
+  /* ITEM 3 — PAINEL DO CLIENTE REESTRUTURADO (HUB DE RESUMO COMPLETO) */
   function renderClienteDashboard() {
     const c = currentUser.contrato;
+    
+    // 1. Métricas principais
     if (!c) {
       document.getElementById('dashSaldoDevedor').textContent = 'R$ 0,00';
       document.getElementById('dashSubDevedor').textContent = 'Nenhum contrato ativo';
@@ -1873,25 +2015,75 @@
       document.getElementById('dashSubStatus').textContent = 'Faça uma simulação abaixo';
       document.getElementById('dashProgressoTexto').textContent = '0 de 0 parcelas pagas';
       document.getElementById('dashProgressBar').style.width = '0%';
-      return;
+    } else {
+      const totalFormatado = Number(c.valorContratado).toLocaleString('pt-BR');
+      const pct = Math.round((c.parcelasPagas / c.totalParcelas) * 100);
+
+      animateCountUp(document.getElementById('dashSaldoDevedor'), c.saldoDevedor, 'R$ ', '', true);
+      animateCountUp(document.getElementById('dashProximaParcela'), c.valorParcela, 'R$ ', '', true);
+
+      document.getElementById('dashSubDevedor').textContent = `de R$ ${totalFormatado},00 contratados`;
+      document.getElementById('dashSubParcela').textContent = `vence em ${c.vencimento}`;
+      
+      let tagClass = (c.status === 'Em dia' || c.status === 'Aprovado') ? 'up' : 'warn';
+      document.getElementById('dashStatusTag').innerHTML = `<span class="tag ${tagClass}">${c.status}</span>`;
+      document.getElementById('dashSubStatus').textContent = c.status === 'Em dia' ? 'nenhuma pendência no momento' : 'situação sob análise';
+      
+      document.getElementById('dashProgressoTexto').textContent = `${c.parcelasPagas} de ${c.totalParcelas} parcelas pagas (${pct}%)`;
+      document.getElementById('dashProgressBar').style.width = `${pct}%`;
     }
 
-    const totalFormatado = Number(c.valorContratado).toLocaleString('pt-BR');
-    const pct = Math.round((c.parcelasPagas / c.totalParcelas) * 100);
+    // 2. Mini-resumo da Timeline (2 mais recentes)
+    const miniTl = document.getElementById('dashMiniTimeline');
+    if (!c) {
+      miniTl.innerHTML = `
+        <div class="tl-item active">
+          <div class="tl-dot"></div>
+          <div class="tl-title">Sem contratos ativos</div>
+          <div class="tl-sub">Nenhum evento recente registrado.</div>
+        </div>
+      `;
+    } else {
+      miniTl.innerHTML = `
+        <div class="tl-item done">
+          <div class="tl-dot"></div>
+          <div class="tl-title">Solicitação Processada</div>
+          <div class="tl-sub">${c.dataSolicitacao} — R$ ${Number(c.valorContratado).toLocaleString('pt-BR')},00</div>
+        </div>
+        <div class="tl-item active">
+          <div class="tl-dot"></div>
+          <div class="tl-title">Contrato Vigente (${c.status})</div>
+          <div class="tl-sub">${c.parcelasPagas}/${c.totalParcelas} pagas · Taxa ${c.taxa}% a.m.</div>
+        </div>
+      `;
+    }
 
-    /* BLOCO 3.3: ANIMAR NÚMEROS */
-    animateCountUp(document.getElementById('dashSaldoDevedor'), c.saldoDevedor, 'R$ ', '', true);
-    animateCountUp(document.getElementById('dashProximaParcela'), c.valorParcela, 'R$ ', '', true);
+    // 3. Card do Simulador com a Última Simulação Salva
+    const simBox = document.getElementById('dashSimulacaoResumoBox');
+    const simBtn = document.getElementById('dashBtnSimular');
+    const simSaved = currentUser.ultimaSimulacao;
 
-    document.getElementById('dashSubDevedor').textContent = `de R$ ${totalFormatado},00 contratados`;
-    document.getElementById('dashSubParcela').textContent = `vence em ${c.vencimento}`;
-    
-    let tagClass = (c.status === 'Em dia' || c.status === 'Aprovado') ? 'up' : 'warn';
-    document.getElementById('dashStatusTag').innerHTML = `<span class="tag ${tagClass}">${c.status}</span>`;
-    document.getElementById('dashSubStatus').textContent = c.status === 'Em dia' ? 'nenhuma pendência no momento' : 'situação sob análise';
-    
-    document.getElementById('dashProgressoTexto').textContent = `${c.parcelasPagas} de ${c.totalParcelas} parcelas pagas (${pct}%)`;
-    document.getElementById('dashProgressBar').style.width = `${pct}%`;
+    if (simSaved) {
+      simBox.innerHTML = `
+        <div style="background:var(--cream); padding:12px 14px; border-radius:10px; border:1px solid var(--line);">
+          <div style="font-size:11px; text-transform:uppercase; font-weight:700; color:var(--slate);">Última Simulação Salva</div>
+          <div style="font-size:18px; font-weight:700; color:var(--ink); margin:4px 0;">
+            ${simSaved.parcelas}x de R$ ${Number(simSaved.valorParcela).toLocaleString('pt-BR', {minimumFractionDigits: 2, maximumFractionDigits: 2})}
+          </div>
+          <div style="font-size:12px; color:var(--slate);">
+            Valor Solicitado: <strong>R$ ${Number(simSaved.valor).toLocaleString('pt-BR')}</strong> · Taxa: <strong>${simSaved.taxa}% a.m.</strong>
+          </div>
+        </div>
+      `;
+      simBtn.textContent = 'Refazer / Nova Simulação';
+    } else {
+      simBox.innerHTML = `
+        <p style="font-size:13px; color:var(--slate); line-height:1.5; margin:0 0 10px;">
+          Você ainda não realizou simulações. Calcule taxas personalizadas em tempo real.
+        </p>
+      `;
+      simBtn.textContent = 'Simular pela Primeira Vez';
+    }
   }
 
   function renderClienteAcompanhar() {
@@ -1978,7 +2170,7 @@
     renderClienteAcompanhar();
   }
 
-  /* ---------- BLOCO 2: AMORTIZAÇÃO DE EMPRÉSTIMO ---------- */
+  /* ---------- AMORTIZAÇÃO DE EMPRÉSTIMO ---------- */
   function abrirModalAmortizacao() {
     const c = currentUser.contrato;
     if (!c || c.saldoDevedor <= 0) {
@@ -2061,9 +2253,7 @@
     }
 
     const parcelasRestantes = c.totalParcelas - c.parcelasPagas;
-    const i = (c.taxa / 100);
 
-    // Reduzir Prazo:
     const saldoAtualEstimado = c.saldoDevedor;
     const novoSaldoPrazo = Math.max(0, saldoAtualEstimado - valorExtra);
     const novasParcelasRestantes = Math.max(1, Math.ceil(novoSaldoPrazo / c.valorParcela));
@@ -2074,7 +2264,6 @@
       <strong style="color:var(--lime-dark);">${novasParcelasRestantes} parcelas</strong> de R$ ${c.valorParcela.toFixed(2)}.
     `;
 
-    // Reduzir Parcela:
     const novoSaldoParcela = Math.max(0, saldoAtualEstimado - valorExtra);
     const novaParcelaValor = novoSaldoParcela / Math.max(1, parcelasRestantes);
     const economiaParcela = Math.max(0, (parcelasRestantes * c.valorParcela) - (parcelasRestantes * novaParcelaValor + valorExtra));
@@ -2084,7 +2273,6 @@
       <strong style="color:var(--lime-dark);">R$ ${novaParcelaValor.toFixed(2)}</strong>, mantendo ${parcelasRestantes} parcelas.
     `;
 
-    // Exibir Economia Estimada
     const economiaAtual = selectedAmortType === 'prazo' ? economiaPrazo : economiaParcela;
     econBox.style.display = 'block';
     econValor.textContent = `R$ ${economiaAtual.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
@@ -2164,11 +2352,12 @@
     document.getElementById('solicitarBox').style.display = 'none';
   }
 
+  /* ITEM 2 — REAJUSTE DO DIVISOR DE SCORE PARA RANGE ATÉ 180 */
   function calcularScoreDeterministico(email, valor, parcelas) {
     let hash = 0;
     for (let i = 0; i < email.length; i++) hash += email.charCodeAt(i);
     const valFactor = Math.floor((valor / 100000) * 160);
-    const parFactor = Math.floor((parcelas / 48) * 40);
+    const parFactor = Math.floor((parcelas / 180) * 40); // Ajustado para 180
     let score = (850 + (hash % 90)) - valFactor + parFactor;
     return Math.min(Math.max(score, 350), 980);
   }
@@ -2197,21 +2386,25 @@
 
     latestSimulation = { valor, parcelas, valorParcela: pmt, taxa: (taxaMensal * 100).toFixed(1), score };
 
+    /* ITEM 3: REGISTRA A ÚLTIMA SIMULAÇÃO NO OBJETO DO USUÁRIO */
+    if (currentUser) {
+      currentUser.ultimaSimulacao = latestSimulation;
+      updateUserInStorage(currentUser);
+    }
+
     const arc = document.getElementById('gaugeArc');
     
-    /* BLOCO 3.3: NUMERO DO SCORE ANIMADO */
     animateCountUp(document.getElementById('gaugeScore'), score);
 
     const offset = 251 - (251 * (score / 1000));
     arc.style.strokeDashoffset = offset;
 
-    /* BLOCO 3.6: COR REATIVA DO ARCO DO GAUGE DE SCORE */
     if (score < 600) {
-      arc.style.stroke = '#E4572E'; // Vermelho / Laranja
+      arc.style.stroke = '#E4572E';
     } else if (score < 750) {
-      arc.style.stroke = '#D4A54A'; // Dourado
+      arc.style.stroke = '#D4A54A';
     } else {
-      arc.style.stroke = '#9FD923'; // Verde-Lima
+      arc.style.stroke = '#9FD923';
     }
 
     document.getElementById('resultadoSim').innerHTML = `
@@ -2245,8 +2438,6 @@
     };
 
     updateUserInStorage(currentUser);
-
-    /* BLOCO 3.7: CELEBRAÇÃO COM CONFETES AO APROVAR */
     dispararConfetes();
 
     showToast('Empréstimo contratado com sucesso!');
@@ -2262,6 +2453,7 @@
   function renderAdminCredito() {
     const users = getUsers();
     const tbody = document.getElementById('creditoTableBody');
+    if (!tbody) return;
     tbody.innerHTML = '';
 
     let clientesCount = 0;
@@ -2273,209 +2465,180 @@
       const c = u.contrato;
 
       let valorStr = c ? `R$ ${Number(c.valorContratado).toLocaleString('pt-BR')}` : 'Sem proposta';
-      let scoreTag = c ? `<span class="tag ${c.score > 700 ? 'up' : 'warn'}">${c.score}</span>` : '<span class="tag gold">—</span>';
-      let statusTag = c ? `<span class="tag ${c.status === 'Em dia' || c.status === 'Aprovado' ? 'up' : 'warn'}">${c.status}</span>` : '<span class="tag">Sem dados</span>';
+      let scoreTag = c ? `<span class="tag ${c.score > 700 ? 'up' : 'warn'}">${c.score} pts</span>` : '<span class="tag">—</span>';
+      let statusTag = c ? `<span class="tag ${c.status === 'Em dia' ? 'up' : 'gold'}">${c.status}</span>` : '<span class="tag">Novo</span>';
 
       const tr = document.createElement('tr');
       tr.innerHTML = `
-        <td class="row-flex"><span class="avatar" style="background:${stringToColor(u.email)}">${initials}</span><div><strong>${u.nome}</strong><br><span style="font-size:11px; color:var(--slate);">${u.email}</span></div></td>
+        <td><div class="row-flex"><span class="avatar" style="background:${stringToColor(u.email)}">${initials}</span><strong>${u.nome}</strong></div></td>
         <td class="mono">${valorStr}</td>
         <td>${scoreTag}</td>
         <td>${statusTag}</td>
-        <td><button class="btn btn-outline btn-sm" onclick="modalAnalisarCredito('${u.email}')">Analisar</button></td>
+        <td><button class="btn btn-outline btn-sm" onclick="showToast('Proposta de ${u.nome.split(' ')[0]} revisada.')">Analisar</button></td>
       `;
       tbody.appendChild(tr);
     });
 
-    /* BLOCO 3.3: METRICAS ANIMADAS */
-    animateCountUp(document.getElementById('totalCadastrosCount'), clientesCount);
-  }
-
-  function modalAnalisarCredito(email) {
-    const users = getUsers();
-    const u = users.find(user => user.email.toLowerCase() === email.toLowerCase());
-    if (!u) return;
-
-    const c = u.contrato || { valorContratado: 0, score: 'N/A', status: 'Sem Proposta' };
-
-    const body = `
-      <div style="font-size:13.5px; line-height:1.6;">
-        <p><strong>Cliente:</strong> ${u.nome}</p>
-        <p><strong>E-mail:</strong> ${u.email}</p>
-        <p><strong>Valor Solicitado:</strong> R$ ${Number(c.valorContratado).toLocaleString('pt-BR')}</p>
-        <p><strong>Score Calculado:</strong> ${c.score}</p>
-        <p><strong>Status Atual:</strong> ${c.status}</p>
-      </div>
-    `;
-
-    const actions = `
-      <button class="btn btn-outline btn-sm" onclick="closeModal()">Cancelar</button>
-      <button class="btn btn-danger btn-sm" onclick="decidirCredito('${u.email}', 'Recusado')">Recusar</button>
-      <button class="btn btn-lime btn-sm" onclick="decidirCredito('${u.email}', 'Em dia')">Aprovar Proposta</button>
-    `;
-
-    openModal('Análise de Proposta de Crédito', body, actions);
-  }
-
-  function decidirCredito(email, novoStatus) {
-    const users = getUsers();
-    const u = users.find(user => user.email.toLowerCase() === email.toLowerCase());
-    if (u && u.contrato) {
-      u.contrato.status = novoStatus;
-      saveUsers(users);
-      showToast(`Proposta de ${u.nome} alterada para: ${novoStatus}`);
-      renderAdminCredito();
-    } else {
-      showToast('Usuário sem contrato ativo.', 'warn');
-    }
-    closeModal();
+    document.getElementById('totalCadastrosCount').textContent = clientesCount;
   }
 
   function renderAdminCobranca() {
     const users = getUsers();
     const tbody = document.getElementById('cobrancaTableBody');
+    if (!tbody) return;
     tbody.innerHTML = '';
 
     let emRisco = 0;
+
     users.forEach(u => {
       if (u.role === 'admin') return;
 
-      if (u.cobrancaEstagio !== 'Em dia') emRisco++;
+      if (u.cobrancaDiasAtraso > 0) emRisco++;
 
       const initials = u.nome.split(' ').map(n => n[0]).join('').substring(0,2).toUpperCase();
-      const valorAtraso = u.contrato ? `R$ ${Number(u.contrato.valorParcela).toLocaleString('pt-BR', {minimumFractionDigits:2})}` : 'R$ 0,00';
+      const c = u.contrato;
+      const valorAtraso = c ? c.valorParcela * Math.max(1, Math.floor(u.cobrancaDiasAtraso / 30)) : 0;
 
       const tr = document.createElement('tr');
       tr.innerHTML = `
-        <td class="row-flex"><span class="avatar" style="background:${stringToColor(u.email)}">${initials}</span><div><strong>${u.nome}</strong></div></td>
-        <td class="mono">${valorAtraso}</td>
-        <td>${u.cobrancaDiasAtraso} dias</td>
-        <td><span class="tag ${u.cobrancaDiasAtraso > 15 ? 'warn' : 'gold'}">${u.cobrancaEstagio}</span></td>
-        <td><button class="btn btn-outline btn-sm" onclick="modalGerenciarCobranca('${u.email}')">Gerenciar</button></td>
+        <td><div class="row-flex"><span class="avatar" style="background:${stringToColor(u.email)}">${initials}</span><strong>${u.nome}</strong></div></td>
+        <td class="mono">R$ ${Number(valorAtraso).toLocaleString('pt-BR', {minimumFractionDigits:2})}</td>
+        <td><span class="tag ${u.cobrancaDiasAtraso > 15 ? 'warn' : (u.cobrancaDiasAtraso > 0 ? 'gold' : 'up')}">${u.cobrancaDiasAtraso} dias</span></td>
+        <td>${u.cobrancaEstagio}</td>
+        <td><button class="btn btn-outline btn-sm" onclick="showToast('Notificação enviada para ${u.nome.split(' ')[0]}')">Notificar</button></td>
       `;
       tbody.appendChild(tr);
     });
 
-    animateCountUp(document.getElementById('cobrancaEmRiscoCount'), emRisco);
-  }
-
-  function modalGerenciarCobranca(email) {
-    const users = getUsers();
-    const u = users.find(user => user.email.toLowerCase() === email.toLowerCase());
-    if (!u) return;
-
-    const body = `
-      <div class="form-group">
-        <label>Estágio de Cobrança</label>
-        <select id="selectEstagioCobranca">
-          <option value="Em dia" ${u.cobrancaEstagio === 'Em dia' ? 'selected' : ''}>Em dia</option>
-          <option value="Lembrete enviado" ${u.cobrancaEstagio === 'Lembrete enviado' ? 'selected' : ''}>Lembrete Enviado</option>
-          <option value="Negociação iniciada" ${u.cobrancaEstagio === 'Negociação iniciada' ? 'selected' : ''}>Negociação Iniciada</option>
-          <option value="Cobrança extrajudicial" ${u.cobrancaEstagio === 'Cobrança extrajudicial' ? 'selected' : ''}>Cobrança Extrajudicial</option>
-        </select>
-      </div>
-      <div class="form-group">
-        <label>Dias em Atraso</label>
-        <input type="number" id="inputDiasAtraso" value="${u.cobrancaDiasAtraso}">
-      </div>
-    `;
-
-    const actions = `
-      <button class="btn btn-outline btn-sm" onclick="closeModal()">Cancelar</button>
-      <button class="btn btn-lime btn-sm" onclick="salvarCobranca('${u.email}')">Salvar Estágio</button>
-    `;
-
-    openModal(`Gerenciar Cobrança — ${u.nome}`, body, actions);
-  }
-
-  function salvarCobranca(email) {
-    const estagio = document.getElementById('selectEstagioCobranca').value;
-    const dias = parseInt(document.getElementById('inputDiasAtraso').value) || 0;
-
-    const users = getUsers();
-    const u = users.find(user => user.email.toLowerCase() === email.toLowerCase());
-    if (u) {
-      u.cobrancaEstagio = estagio;
-      u.cobrancaDiasAtraso = dias;
-      saveUsers(users);
-      showToast('Cobrança atualizada com sucesso!');
-      renderAdminCobranca();
-    }
-    closeModal();
+    document.getElementById('cobrancaEmRiscoCount').textContent = emRisco;
   }
 
   function renderAdminFraude() {
     const users = getUsers();
     const tbody = document.getElementById('fraudeTableBody');
+    if (!tbody) return;
     tbody.innerHTML = '';
 
     let alertasCount = 0;
+
     users.forEach(u => {
       if (u.role === 'admin') return;
-
-      if (u.fraudeStatus === 'Analisar' || u.fraudeRisco === 'Alto') alertasCount++;
+      if (u.fraudeRisco === 'Medio' || u.fraudeRisco === 'Alto') alertasCount++;
 
       const initials = u.nome.split(' ').map(n => n[0]).join('').substring(0,2).toUpperCase();
+      let riscoTag = `<span class="tag ${u.fraudeRisco === 'Alto' ? 'warn' : (u.fraudeRisco === 'Medio' ? 'gold' : 'up')}">${u.fraudeRisco}</span>`;
 
       const tr = document.createElement('tr');
       tr.innerHTML = `
-        <td class="row-flex"><span class="avatar" style="background:${stringToColor(u.email)}">${initials}</span><div><strong>${u.nome}</strong></div></td>
+        <td><div class="row-flex"><span class="avatar" style="background:${stringToColor(u.email)}">${initials}</span><strong>${u.nome}</strong></div></td>
         <td>${u.fraudeOcorrencia}</td>
-        <td><span class="tag ${u.fraudeRisco === 'Alto' ? 'warn' : 'gold'}">${u.fraudeRisco}</span></td>
-        <td><span class="tag">${u.fraudeStatus}</span></td>
-        <td><button class="btn btn-outline btn-sm" onclick="modalAnalisarFraude('${u.email}')">Tratar</button></td>
+        <td>${riscoTag}</td>
+        <td>${u.fraudeStatus}</td>
+        <td><button class="btn btn-outline btn-sm" onclick="showToast('Status antifraude verificado para ${u.nome.split(' ')[0]}')">Auditar</button></td>
       `;
       tbody.appendChild(tr);
     });
 
-    animateCountUp(document.getElementById('fraudeAlertasCount'), alertasCount);
+    document.getElementById('fraudeAlertasCount').textContent = alertasCount;
   }
 
-  function modalAnalisarFraude(email) {
-    const users = getUsers();
-    const u = users.find(user => user.email.toLowerCase() === email.toLowerCase());
-    if (!u) return;
+  /* ---------- RENDERIZAÇÃO DOS GRÁFICOS (CHART.JS) ---------- */
+  function renderChartCredito() {
+    const ctx = document.getElementById('chartCredito');
+    if (!ctx) return;
+    if (chartCreditoInstance) chartCreditoInstance.destroy();
 
-    const body = `
-      <p style="font-size:13px;">Ocorrência: <strong>${u.fraudeOcorrencia}</strong></p>
-      <div class="form-group">
-        <label>Ação Antifraude</label>
-        <select id="selectFraudeStatus">
-          <option value="Normal">Resolvido / Falso Positivo</option>
-          <option value="Analisar">Manter em Análise</option>
-          <option value="Bloqueado">Bloquear Acesso Preventivamente</option>
-        </select>
-      </div>
-    `;
+    const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
+    const gridColor = isDark ? 'rgba(255,255,255,0.08)' : 'rgba(0,0,0,0.06)';
+    const textColor = isDark ? '#94A3B8' : '#6B7280';
 
-    const actions = `
-      <button class="btn btn-outline btn-sm" onclick="closeModal()">Cancelar</button>
-      <button class="btn btn-lime btn-sm" onclick="salvarFraude('${u.email}')">Confirmar Ação</button>
-    `;
-
-    openModal(`Tratar Ocorrência — ${u.nome}`, body, actions);
+    chartCreditoInstance = new Chart(ctx, {
+      type: 'bar',
+      data: {
+        labels: ['Triagem Inicial', 'Score Engine', 'Verificação Antifraude', 'Emissão do Contrato'],
+        datasets: [
+          { label: 'Processo Manual (Minutos)', data: [45, 120, 90, 60], backgroundColor: '#E4572E' },
+          { label: 'Nexta Automação (Segundos)', data: [2, 5, 8, 3], backgroundColor: '#9FD923' }
+        ]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        scales: {
+          x: { grid: { color: gridColor }, ticks: { color: textColor } },
+          y: { grid: { color: gridColor }, ticks: { color: textColor } }
+        },
+        plugins: { legend: { labels: { color: textColor } } }
+      }
+    });
   }
 
-  function salvarFraude(email) {
-    const st = document.getElementById('selectFraudeStatus').value;
-    const users = getUsers();
-    const u = users.find(user => user.email.toLowerCase() === email.toLowerCase());
-    if (u) {
-      u.fraudeStatus = st;
-      if (st === 'Normal') u.fraudeRisco = 'Baixo';
-      if (st === 'Bloqueado') u.fraudeRisco = 'Alto';
-      saveUsers(users);
-      showToast('Ocorrência antifraude atualizada!');
-      renderAdminFraude();
-    }
-    closeModal();
+  function renderChartCobranca() {
+    const ctx = document.getElementById('chartCobranca');
+    if (!ctx) return;
+    if (chartCobrancaInstance) chartCobrancaInstance.destroy();
+
+    const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
+    const gridColor = isDark ? 'rgba(255,255,255,0.08)' : 'rgba(0,0,0,0.06)';
+    const textColor = isDark ? '#94A3B8' : '#6B7280';
+
+    chartCobrancaInstance = new Chart(ctx, {
+      type: 'line',
+      data: {
+        labels: ['Mai', 'Jun', 'Jul', 'Ago', 'Set', 'Out'],
+        datasets: [{
+          label: 'Inadimplência (%)',
+          data: [6.8, 5.9, 5.2, 4.4, 4.1, 3.8],
+          borderColor: '#C6FF3D',
+          backgroundColor: 'rgba(198, 255, 61, 0.15)',
+          fill: true,
+          tension: 0.35,
+          pointRadius: 5
+        }]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        scales: {
+          x: { grid: { color: gridColor }, ticks: { color: textColor } },
+          y: { grid: { color: gridColor }, ticks: { color: textColor } }
+        },
+        plugins: { legend: { labels: { color: textColor } } }
+      }
+    });
   }
 
-  /* ---------- PERFIL DE USUÁRIO ---------- */
+  function renderChartFraude() {
+    const ctx = document.getElementById('chartFraude');
+    if (!ctx) return;
+    if (chartFraudeInstance) chartFraudeInstance.destroy();
+
+    const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
+    const textColor = isDark ? '#F0F4F8' : '#14181F';
+
+    chartFraudeInstance = new Chart(ctx, {
+      type: 'doughnut',
+      data: {
+        labels: ['Acesso de Dispositivo Suspeito', 'Multi-IP Geográfico', 'Documentação Divergente', 'Padrão Normal'],
+        datasets: [{
+          data: [12, 5, 3, 80],
+          backgroundColor: ['#D4A54A', '#E4572E', '#3B82F6', '#9FD923'],
+          borderWidth: 0
+        }]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: { legend: { position: 'right', labels: { color: textColor, font: { size: 11 } } } }
+      }
+    });
+  }
+
+  /* ---------- EDICÃO DE PERFIL E SEGURANÇA ---------- */
   function salvarDadosPerfil() {
     const nome = document.getElementById('perfilNome').value.trim();
     if (!nome) {
-      showToast('O nome não pode ficar em branco.', 'warn');
+      showToast('O nome não pode estar em branco.', 'warn');
       return;
     }
 
@@ -2483,7 +2646,11 @@
     updateUserInStorage(currentUser);
     document.getElementById('loggedAs').textContent = nome;
     document.getElementById('welcomeUser').textContent = `Olá, ${nome.split(' ')[0]} 👋`;
-    showToast('Perfil atualizado com sucesso!');
+
+    const initials = nome.split(' ').map(n => n[0]).join('').substring(0,2).toUpperCase();
+    document.getElementById('sidebarAvatar').textContent = initials;
+
+    showToast('Dados salvos com sucesso!');
   }
 
   function alterarSenhaPerfil() {
@@ -2496,7 +2663,7 @@
     }
 
     if (nova.length < 6) {
-      showToast('A nova senha deve ter no mínimo 6 caracteres.', 'warn');
+      showToast('A nova senha deve ter pelo menos 6 caracteres.', 'warn');
       return;
     }
 
@@ -2504,108 +2671,8 @@
     updateUserInStorage(currentUser);
     document.getElementById('senhaAtual').value = '';
     document.getElementById('novaSenha').value = '';
+    document.getElementById('perfilMeter').style.width = '0%';
     showToast('Senha alterada com sucesso!');
-  }
-
-  /* ---------- RENDERIZAÇÃO DE GRÁFICOS (CHART.JS) ---------- */
-  function renderChartCredito() {
-    const ctx = document.getElementById('chartCredito');
-    if (!ctx) return;
-
-    if (chartCreditoInstance) chartCreditoInstance.destroy();
-
-    chartCreditoInstance = new Chart(ctx, {
-      type: 'bar',
-      data: {
-        labels: ['Análise Manual (Antes)', 'Algoritmo Nexta Engine (Depois)'],
-        datasets: [{
-          label: 'Tempo Médio em Segundos',
-          data: [1800, 35],
-          backgroundColor: ['#6B7280', '#9FD923'],
-          borderRadius: 8
-        }]
-      },
-      options: {
-        responsive: true,
-        maintainAspectRatio: false,
-        plugins: { legend: { display: false } }
-      }
-    });
-  }
-
-  function renderChartCobranca() {
-    const ctx = document.getElementById('chartCobranca');
-    if (!ctx) return;
-
-    if (chartCobrancaInstance) chartCobrancaInstance.destroy();
-
-    chartCobrancaInstance = new Chart(ctx, {
-      type: 'line',
-      data: {
-        labels: ['Mar', 'Abr', 'Mai', 'Jun', 'Jul', 'Ago'],
-        datasets: [{
-          label: 'Taxa de Inadimplência (%)',
-          data: [6.2, 5.8, 5.1, 4.5, 4.1, 3.8],
-          borderColor: '#E4572E',
-          tension: 0.3,
-          fill: false
-        }]
-      },
-      options: {
-        responsive: true,
-        maintainAspectRatio: false
-      }
-    });
-  }
-
-  function renderChartFraude() {
-    const ctx = document.getElementById('chartFraude');
-    if (!ctx) return;
-
-    if (chartFraudeInstance) chartFraudeInstance.destroy();
-
-    chartFraudeInstance = new Chart(ctx, {
-      type: 'doughnut',
-      data: {
-        labels: ['Troca de Dispositivo', 'IPs Distantes', 'Inconsistência OCR', 'Falso Positivo'],
-        datasets: [{
-          data: [40, 25, 20, 15],
-          backgroundColor: ['#0F1B2D', '#D4A54A', '#E4572E', '#9FD923']
-        }]
-      },
-      options: {
-        responsive: true,
-        maintainAspectRatio: false
-      }
-    });
-  }
-
-  /* ---------- AUXILIARES DE INTERFACE & NAVEGAÇÃO ---------- */
-  function toggleMenu(open) {
-    const sidebar = document.getElementById('sidebar');
-    const overlay = document.getElementById('sidebarOverlay');
-    sidebar.classList.toggle('open', open);
-    overlay.classList.toggle('open', open);
-  }
-
-  function confirmarSair() {
-    const body = `<p style="font-size:13.5px;">Tem certeza que deseja encerrar sua sessão atual?</p>`;
-    const actions = `
-      <button class="btn btn-outline btn-sm" onclick="closeModal()">Cancelar</button>
-      <button class="btn btn-danger btn-sm" onclick="sair()">Confirmar Sair</button>
-    `;
-    openModal('Encerrar Sessão', body, actions);
-  }
-
-  function sair() {
-    currentUser = null;
-    latestSimulation = null;
-    localStorage.removeItem('nexta_session');
-    closeModal();
-    document.getElementById('app').style.display = 'none';
-    document.getElementById('loginScreen').style.display = 'flex';
-    mostrarTela('login');
-    showToast('Sessão encerrada.');
   }
 </script>
 </body>
