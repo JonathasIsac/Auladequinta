@@ -1,0 +1,1028 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>Nexta Finance — Sistema</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --navy:#0F1B2D;
+    --navy-2:#16243B;
+    --navy-3:#1E304C;
+    --lime:#C6FF3D;
+    --lime-dark:#9FD923;
+    --cream:#F5F3ED;
+    --white:#FFFFFF;
+    --ink:#14181F;
+    --slate:#6B7280;
+    --slate-light:#9AA1AC;
+    --danger:#E4572E;
+    --gold:#D4A54A;
+    --line:#E4E1D8;
+    --radius:14px;
+  }
+  *{
+    box-sizing:border-box;
+    -webkit-tap-highlight-color: transparent;
+  }
+  html,body{
+    margin:0;
+    padding:0;
+    height:100%;
+    height:100dvh;
+  }
+  body{
+    font-family:'Inter',sans-serif;
+    background:var(--cream);
+    color:var(--ink);
+    overflow:hidden;
+  }
+  h1,h2,h3,.display{
+    font-family:'Space Grotesk',sans-serif;
+    letter-spacing:-0.01em;
+  }
+  .mono{font-family:'IBM Plex Mono',monospace;}
+  a{color:inherit;text-decoration:none;}
+  button, a, input, select, .nav-item{
+    font-family:inherit;
+    touch-action: manipulation;
+  }
+  button{cursor:pointer;border:none;}
+
+  /* ---------- APP SHELL ---------- */
+  #app{
+    display:flex; 
+    height:100vh; 
+    height:100dvh; 
+    width:100vw;
+  }
+
+  /* Sidebar */
+  .sidebar{
+    width:236px;
+    min-width:236px;
+    background:var(--navy);
+    color:#DDE3EE;
+    display:flex;
+    flex-direction:column;
+    padding:22px 16px;
+    overflow-y:auto;
+    -webkit-overflow-scrolling:touch;
+  }
+  .brand{
+    display:flex;
+    align-items:center;
+    gap:9px;
+    padding:4px 6px 22px 6px;
+    border-bottom:1px solid rgba(255,255,255,0.08);
+    margin-bottom:18px;
+  }
+  .brand-dot{
+    width:11px;height:11px;border-radius:50%;
+    background:var(--lime);
+    box-shadow:0 0 0 4px rgba(198,255,61,0.15);
+  }
+  .brand-name{font-size:18px;font-weight:700;color:#fff;}
+  .brand-name span{color:var(--lime);}
+
+  .role-toggle{
+    display:flex;
+    background:var(--navy-2);
+    border-radius:10px;
+    padding:4px;
+    margin-bottom:20px;
+  }
+  .role-toggle button{
+    flex:1;
+    background:transparent;
+    color:var(--slate-light);
+    font-size:12.5px;
+    font-weight:600;
+    padding:10px 6px;
+    min-height:38px;
+    border-radius:8px;
+    transition:all .18s ease;
+  }
+  .role-toggle button.active{
+    background:var(--lime);
+    color:var(--navy);
+  }
+
+  .nav-label{
+    font-size:10.5px;
+    text-transform:uppercase;
+    letter-spacing:.09em;
+    color:var(--slate-light);
+    margin:14px 10px 8px;
+    font-weight:600;
+  }
+  .nav-item{
+    display:flex;
+    align-items:center;
+    gap:12px;
+    padding:12px 14px;
+    min-height:44px;
+    border-radius:10px;
+    font-size:14px;
+    font-weight:500;
+    color:#C6CEDB;
+    margin-bottom:4px;
+    cursor:pointer;
+    user-select:none;
+    transition:background .15s ease, color .15s ease;
+  }
+  .nav-item svg{width:18px;height:18px;flex-shrink:0;opacity:.85;}
+  .nav-item:hover, .nav-item:active{background:var(--navy-2); color:#fff;}
+  .nav-item.active{background:var(--navy-3); color:var(--lime);}
+  .nav-item.active svg{opacity:1;}
+
+  .sidebar-foot{
+    margin-top:auto;
+    padding-top:14px;
+    border-top:1px solid rgba(255,255,255,0.08);
+    font-size:11.5px;
+    color:var(--slate-light);
+    line-height:1.5;
+  }
+
+  /* Main */
+  .main{
+    flex:1;
+    display:flex;
+    flex-direction:column;
+    min-width:0;
+  }
+  .topbar{
+    height:64px;
+    min-height:64px;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    padding:0 28px;
+    border-bottom:1px solid var(--line);
+    background:var(--white);
+  }
+  .topbar-title{font-size:15px; font-weight:600; color:var(--ink);}
+  .topbar-title .crumb{color:var(--slate); font-weight:500;}
+  .status-pill{
+    display:flex;
+    align-items:center;
+    gap:7px;
+    background:var(--cream);
+    border:1px solid var(--line);
+    padding:6px 12px;
+    border-radius:999px;
+    font-size:11.5px;
+    font-weight:600;
+    color:var(--slate);
+  }
+  .pulse{
+    width:7px;height:7px;border-radius:50%;
+    background:var(--lime-dark);
+    animation:pulse 1.6s infinite;
+  }
+  @keyframes pulse{
+    0%{box-shadow:0 0 0 0 rgba(159,217,35,.5);}
+    70%{box-shadow:0 0 0 6px rgba(159,217,35,0);}
+    100%{box-shadow:0 0 0 0 rgba(159,217,35,0);}
+  }
+
+  .content{
+    flex:1;
+    overflow-y:auto;
+    -webkit-overflow-scrolling:touch;
+    padding:28px 32px 60px;
+  }
+  .page{display:none; animation:fadeUp .35s ease;}
+  .page.active{display:block;}
+  @keyframes fadeUp{
+    from{opacity:0; transform:translateY(6px);}
+    to{opacity:1; transform:translateY(0);}
+  }
+
+  .page-head{margin-bottom:22px;}
+  .page-head h1{font-size:22px; margin:0 0 4px; color:var(--navy);}
+  .page-head p{margin:0; color:var(--slate); font-size:13.5px;}
+
+  .grid{display:grid; gap:16px;}
+  .grid-3{grid-template-columns:repeat(3,1fr);}
+  .grid-2{grid-template-columns:1.3fr 1fr;}
+
+  .card{
+    background:var(--white);
+    border:1px solid var(--line);
+    border-radius:var(--radius);
+    padding:20px;
+  }
+  .card-label{font-size:11px; text-transform:uppercase; letter-spacing:.07em; color:var(--slate); font-weight:600; margin-bottom:8px;}
+  .card-value{font-size:26px; font-weight:700; font-family:'Space Grotesk',sans-serif; color:var(--navy);}
+  .card-sub{font-size:12px; color:var(--slate); margin-top:6px;}
+  .tag{display:inline-flex; align-items:center; gap:5px; font-size:11px; font-weight:600; padding:3px 9px; border-radius:999px;}
+  .tag.up{background:#EAF9D8; color:#5B8A1D;}
+  .tag.warn{background:#FDEBE3; color:var(--danger);}
+  .tag.gold{background:#FBF1DD; color:#96731F;}
+
+  /* Buttons */
+  .btn{
+    display:inline-flex; align-items:center; gap:8px;
+    background:var(--navy); color:#fff;
+    padding:12px 20px; border-radius:10px;
+    font-size:14px; font-weight:600;
+    min-height:44px;
+    transition:transform .12s ease, background .15s ease;
+  }
+  .btn:hover{background:var(--navy-3);}
+  .btn:active{transform:scale(.98);}
+  .btn-lime{background:var(--lime); color:var(--navy);}
+  .btn-lime:hover{background:var(--lime-dark);}
+  .btn-outline{background:transparent; border:1.4px solid var(--line); color:var(--ink);}
+  .btn-outline:hover{border-color:var(--navy);}
+  .btn-sm{padding:8px 14px; font-size:12.5px; border-radius:8px; min-height:36px;}
+  .btn-block{width:100%; justify-content:center;}
+
+  /* Forms */
+  label{display:block; font-size:12.5px; font-weight:600; color:var(--ink); margin-bottom:6px;}
+  input[type=text], input[type=password], input[type=number], select{
+    width:100%;
+    padding:12px 14px;
+    border:1.4px solid var(--line);
+    border-radius:10px;
+    font-size:14px;
+    font-family:inherit;
+    background:var(--white);
+    margin-bottom:16px;
+    transition:border-color .15s;
+  }
+  input:focus, select:focus{outline:none; border-color:var(--navy);}
+  input[type=range]{width:100%; accent-color:var(--navy); margin:10px 0 8px; height:24px;}
+
+  /* Table styling & responsiveness */
+  .table-responsive{
+    width:100%;
+    overflow-x:auto;
+    -webkit-overflow-scrolling:touch;
+  }
+  table{width:100%; border-collapse:collapse; font-size:13px; min-width:500px;}
+  th{text-align:left; font-size:10.5px; text-transform:uppercase; letter-spacing:.06em; color:var(--slate); padding:0 10px 10px; font-weight:600; border-bottom:1px solid var(--line);}
+  td{padding:12px 10px; border-bottom:1px solid var(--line); vertical-align:middle;}
+  tr:last-child td{border-bottom:none;}
+  .avatar{width:30px;height:30px;border-radius:50%;background:var(--navy-2);color:var(--lime);display:inline-flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;font-family:'Space Grotesk',sans-serif;margin-right:9px;}
+  .row-flex{display:flex; align-items:center;}
+
+  .progress-bar{height:7px; background:var(--line); border-radius:99px; overflow:hidden;}
+  .progress-fill{height:100%; background:var(--lime-dark); border-radius:99px; transition:width 1.2s cubic-bezier(.2,.8,.2,1);}
+
+  .gauge-wrap{display:flex; flex-direction:column; align-items:center; padding:6px 0 0;}
+  .gauge-score{font-family:'Space Grotesk',sans-serif; font-size:30px; font-weight:700; color:var(--navy); margin-top:-46px;}
+  .gauge-caption{font-size:11.5px; color:var(--slate); margin-top:2px; text-align:center;}
+
+  .divider{height:1px; background:var(--line); margin:18px 0;}
+
+  /* Login page */
+  .login-screen{
+    height:100vh; height:100dvh; width:100vw;
+    background:var(--navy);
+    display:flex; align-items:center; justify-content:center;
+    position:relative;
+    overflow-y:auto;
+    padding:20px 0;
+  }
+  .login-screen::before{
+    content:"";
+    position:absolute; inset:0;
+    background:
+      radial-gradient(circle at 15% 20%, rgba(198,255,61,.09), transparent 40%),
+      radial-gradient(circle at 85% 80%, rgba(198,255,61,.06), transparent 45%);
+  }
+  .login-card{
+    position:relative;
+    width:380px;
+    background:var(--white);
+    border-radius:18px;
+    padding:36px 34px 30px;
+    box-shadow:0 30px 60px rgba(0,0,0,.35);
+    margin:auto;
+  }
+  .login-brand{display:flex; align-items:center; gap:9px; margin-bottom:26px;}
+  .login-brand .brand-dot{background:var(--navy); box-shadow:none;}
+  .login-brand .brand-name{color:var(--navy); font-size:19px;}
+  .login-brand .brand-name span{color:#9FD923;}
+  .login-foot{margin-top:18px; font-size:12px; color:var(--slate); text-align:center;}
+
+  /* Timeline */
+  .tl{position:relative; padding-left:26px;}
+  .tl::before{content:""; position:absolute; left:6px; top:4px; bottom:4px; width:2px; background:var(--line);}
+  .tl-item{position:relative; padding-bottom:22px;}
+  .tl-item:last-child{padding-bottom:0;}
+  .tl-dot{position:absolute; left:-26px; top:2px; width:13px; height:13px; border-radius:50%; background:var(--white); border:2.5px solid var(--slate-light);}
+  .tl-item.done .tl-dot{border-color:var(--lime-dark); background:var(--lime-dark);}
+  .tl-item.active .tl-dot{border-color:var(--navy); background:var(--white); box-shadow:0 0 0 4px rgba(15,27,45,.1);}
+  .tl-title{font-size:13.5px; font-weight:600;}
+  .tl-sub{font-size:12px; color:var(--slate); margin-top:2px;}
+
+  ::-webkit-scrollbar{width:8px;}
+  ::-webkit-scrollbar-thumb{background:#D7D3C7; border-radius:99px;}
+
+  .menu-btn{
+    display:none;
+    width:44px; height:44px;
+    align-items:center; justify-content:center;
+    border-radius:10px;
+    background:var(--cream);
+    border:1px solid var(--line);
+    color:var(--navy);
+    cursor:pointer;
+  }
+  .menu-btn svg{width:22px; height:22px;}
+  .sidebar-overlay{
+    display:none;
+    position:fixed; inset:0;
+    background:rgba(15,27,45,.5);
+    backdrop-filter: blur(2px);
+    z-index:99;
+    cursor:pointer;
+  }
+  .sidebar-overlay.open{display:block;}
+
+  /* MOBILE BREAKPOINT (< 880px) */
+  @media(max-width:880px){
+    .menu-btn{display:inline-flex;}
+    .topbar{padding:0 16px; gap:10px; height:60px; min-height:60px;}
+    .topbar-title{font-size:13.5px;}
+    .content{padding:18px 16px 50px;}
+    .grid-3{grid-template-columns:1fr;}
+    .grid-2{grid-template-columns:1fr;}
+    
+    .sidebar{
+      position:fixed; z-index:100; height:100vh; height:100dvh; top:0; left:0;
+      width:260px;
+      transform:translateX(-100%);
+      transition:transform .25s cubic-bezier(0.4, 0, 0.2, 1);
+      box-shadow:20px 0 40px rgba(0,0,0,.35);
+    }
+    .sidebar.open{transform:translateX(0);}
+    
+    .login-card{width:90vw; max-width:400px; padding:28px 22px 24px;}
+    
+    input[type=text], input[type=password], input[type=number], select{
+      font-size:16px !important;
+    }
+  }
+</style>
+</head>
+<body>
+
+<!-- ================= LOGIN ================= -->
+<div class="login-screen" id="loginScreen">
+
+  <!-- ---- TELA: LOGIN ---- -->
+  <div class="login-card" id="viewLogin">
+    <div class="login-brand">
+      <div class="brand-dot"></div>
+      <div class="brand-name">Nexta<span>Finance</span></div>
+    </div>
+    <h2 style="margin:0 0 6px; font-size:19px;">Entrar na sua conta</h2>
+    <p style="margin:0 0 22px; font-size:13px; color:var(--slate);">Acesse o painel para simular, acompanhar ou gerenciar empréstimos.</p>
+    <label>E-mail</label>
+    <input type="text" id="loginEmail" placeholder="voce@email.com" autocomplete="email">
+    <label>Senha</label>
+    <input type="password" id="loginSenha" placeholder="••••••••">
+    <div id="loginError" style="display:none; color:var(--danger); font-size:12.5px; font-weight:600; margin:-8px 0 14px;">E-mail ou senha inválidos.</div>
+    <button class="btn btn-lime btn-block" onclick="tentarLogin()">Entrar</button>
+    <div class="row-flex" style="justify-content:space-between; margin-top:16px;">
+      <a href="#" onclick="mostrarTela('cadastro'); return false;" style="font-size:13px; font-weight:600; color:var(--navy); padding:6px 0;">Criar conta</a>
+      <a href="#" onclick="mostrarTela('esqueci'); return false;" style="font-size:13px; font-weight:600; color:var(--slate); padding:6px 0;">Esqueci a senha</a>
+    </div>
+    <div class="login-foot">
+      <b>Conta de demonstração (interna):</b><br>
+      admin@nexta.com / admin123
+    </div>
+  </div>
+
+  <!-- ---- TELA: CRIAR CONTA ---- -->
+  <div class="login-card" id="viewCadastro" style="display:none;">
+    <div class="login-brand">
+      <div class="brand-dot"></div>
+      <div class="brand-name">Nexta<span>Finance</span></div>
+    </div>
+    <h2 style="margin:0 0 6px; font-size:19px;">Criar conta</h2>
+    <p style="margin:0 0 20px; font-size:13px; color:var(--slate);">Leva menos de um minuto.</p>
+    <label>Nome completo</label>
+    <input type="text" id="cadNome" placeholder="Seu nome">
+    <label>E-mail</label>
+    <input type="text" id="cadEmail" placeholder="voce@email.com">
+    <label>Senha</label>
+    <input type="password" id="cadSenha" placeholder="Crie uma senha">
+    <label>Pergunta de segurança: qual sua cor favorita?</label>
+    <input type="text" id="cadPergunta" placeholder="Ex: azul">
+    <div id="cadError" style="display:none; color:var(--danger); font-size:12.5px; font-weight:600; margin:-8px 0 14px;"></div>
+    <button class="btn btn-lime btn-block" onclick="criarConta()">Criar minha conta</button>
+    <div class="login-foot">
+      <a href="#" onclick="mostrarTela('login'); return false;" style="color:var(--navy); font-weight:600; padding:6px 0; display:inline-block;">← Voltar para o login</a>
+    </div>
+  </div>
+
+  <!-- ---- TELA: ESQUECI MINHA SENHA ---- -->
+  <div class="login-card" id="viewEsqueci" style="display:none;">
+    <div class="login-brand">
+      <div class="brand-dot"></div>
+      <div class="brand-name">Nexta<span>Finance</span></div>
+    </div>
+    <h2 style="margin:0 0 6px; font-size:19px;">Recuperar senha</h2>
+    <p style="margin:0 0 20px; font-size:13px; color:var(--slate);" id="esqueciTexto">Informe seu e-mail cadastrado.</p>
+
+    <div id="esqueciPasso1">
+      <label>E-mail</label>
+      <input type="text" id="recEmail" placeholder="voce@email.com">
+      <div id="recError1" style="display:none; color:var(--danger); font-size:12.5px; font-weight:600; margin:-8px 0 14px;"></div>
+      <button class="btn btn-lime btn-block" onclick="buscarConta()">Continuar</button>
+    </div>
+
+    <div id="esqueciPasso2" style="display:none;">
+      <label id="perguntaLabel">Qual sua cor favorita?</label>
+      <input type="text" id="recResposta" placeholder="Sua resposta">
+      <label>Nova senha</label>
+      <input type="password" id="recNovaSenha" placeholder="Digite a nova senha">
+      <div id="recError2" style="display:none; color:var(--danger); font-size:12.5px; font-weight:600; margin:-8px 0 14px;"></div>
+      <button class="btn btn-lime btn-block" onclick="redefinirSenha()">Redefinir senha</button>
+    </div>
+
+    <div class="login-foot">
+      <a href="#" onclick="mostrarTela('login'); return false;" style="color:var(--navy); font-weight:600; padding:6px 0; display:inline-block;">← Voltar para o login</a>
+    </div>
+  </div>
+
+</div>
+
+<!-- ================= APP ================= -->
+<div id="app" style="display:none;">
+
+  <div class="sidebar" id="sidebar">
+    <div class="brand">
+      <div class="brand-dot"></div>
+      <div class="brand-name">Nexta<span>Finance</span></div>
+    </div>
+
+    <div class="role-toggle" id="roleToggleBox">
+      <button id="roleClienteBtn" class="active" onclick="setRole('cliente')">Cliente</button>
+      <button id="roleAdminBtn" onclick="setRole('admin')">Interno</button>
+    </div>
+
+    <div id="navClienteGroup">
+      <div class="nav-label">Minha conta</div>
+      <div class="nav-item active" data-page="dashboard" onclick="go('dashboard')">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="9" rx="1.5"/><rect x="14" y="3" width="7" height="5" rx="1.5"/><rect x="14" y="12" width="7" height="9" rx="1.5"/><rect x="3" y="16" width="7" height="5" rx="1.5"/></svg>
+        Painel
+      </div>
+      <div class="nav-item" data-page="simulador" onclick="go('simulador')">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2v20M2 12h20"/><circle cx="12" cy="12" r="9"/></svg>
+        Simular empréstimo
+      </div>
+      <div class="nav-item" data-page="acompanhar" onclick="go('acompanhar')">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 12h4l3 8 4-16 3 8h4"/></svg>
+        Acompanhar contrato
+      </div>
+    </div>
+
+    <div id="navAdminGroup" style="display:none;">
+      <div class="nav-label">Operação interna</div>
+      <div class="nav-item" data-page="credito" onclick="go('credito')">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 3"/></svg>
+        Análise de crédito
+      </div>
+      <div class="nav-item" data-page="cobranca" onclick="go('cobranca')">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="6" width="20" height="13" rx="2"/><path d="M2 10h20"/></svg>
+        Central de cobrança
+      </div>
+      <div class="nav-item" data-page="fraude" onclick="go('fraude')">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2 3 6v6c0 5 4 8.5 9 10 5-1.5 9-5 9-10V6l-9-4Z"/></svg>
+        Central antifraude
+      </div>
+    </div>
+
+    <div class="sidebar-foot">
+      <span id="loggedAs">Jonathas</span><br>
+      <a href="#" onclick="sair(); return false;" style="color:#C6CEDB; text-decoration:underline; display:inline-block; padding:4px 0;">Sair</a><br><br>
+      Projeto Prático em Sistemas<br>UNINOVE · Prof. Anderson Barros
+    </div>
+  </div>
+
+  <div class="sidebar-overlay" id="sidebarOverlay" onclick="toggleMenu(false)"></div>
+
+  <div class="main">
+    <div class="topbar">
+      <div class="row-flex" style="gap:10px;">
+        <button class="menu-btn" onclick="toggleMenu(true)" aria-label="Abrir Menu">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 6h18M3 12h18M3 18h18"/></svg>
+        </button>
+        <div class="topbar-title"><span class="crumb" id="crumbRole">Cliente</span> &nbsp;/&nbsp; <span id="crumbPage">Painel</span></div>
+      </div>
+      <div class="status-pill"><span class="pulse"></span> Sistema Nexta ativo</div>
+    </div>
+    <div class="content" id="content">
+
+      <!-- ===== DASHBOARD (CLIENTE) ===== -->
+      <section class="page active" id="page-dashboard">
+        <div class="page-head">
+          <h1 id="welcomeUser">Olá, Jonathas 👋</h1>
+          <p>Aqui está o resumo do seu empréstimo e da sua conta na Nexta.</p>
+        </div>
+        <div class="grid grid-3" style="margin-bottom:16px;">
+          <div class="card">
+            <div class="card-label">Saldo devedor</div>
+            <div class="card-value mono">R$ 4.320,00</div>
+            <div class="card-sub">de R$ 6.000,00 contratados</div>
+          </div>
+          <div class="card">
+            <div class="card-label">Próxima parcela</div>
+            <div class="card-value mono">R$ 480,00</div>
+            <div class="card-sub">vence em 5 de setembro</div>
+          </div>
+          <div class="card">
+            <div class="card-label">Situação</div>
+            <div class="card-value" style="font-size:18px; margin-top:4px;"><span class="tag up">Em dia</span></div>
+            <div class="card-sub">nenhuma pendência no momento</div>
+          </div>
+        </div>
+
+        <div class="grid grid-2">
+          <div class="card">
+            <div class="card-label">Progresso do contrato</div>
+            <div style="margin:14px 0 6px; font-size:13px; color:var(--slate);">8 de 12 parcelas pagas</div>
+            <div class="progress-bar"><div class="progress-fill" style="width:66%"></div></div>
+            <div class="divider"></div>
+            <div class="card-label">Transparência total</div>
+            <p style="font-size:13px; color:var(--slate); line-height:1.6; margin:8px 0 14px;">Toda cobrança de juros e cada etapa do seu empréstimo fica visível aqui — sem letras miúdas.</p>
+            <button class="btn btn-outline btn-sm" onclick="go('acompanhar')">Ver linha do tempo completa</button>
+          </div>
+          <div class="card">
+            <div class="card-label">Precisa de mais crédito?</div>
+            <p style="font-size:13px; color:var(--slate); line-height:1.6; margin:8px 0 16px;">Simule um novo empréstimo e receba uma resposta em segundos, com total clareza sobre taxas.</p>
+            <button class="btn btn-lime btn-block" onclick="go('simulador')">Simular agora</button>
+          </div>
+        </div>
+      </section>
+
+      <!-- ===== SIMULADOR (CLIENTE) ===== -->
+      <section class="page" id="page-simulador">
+        <div class="page-head">
+          <h1>Simular empréstimo</h1>
+          <p>Análise instantânea de crédito — ajuste os valores e veja o resultado em tempo real.</p>
+        </div>
+        <div class="grid grid-2">
+          <div class="card">
+            <label>Valor solicitado</label>
+            <input type="range" id="valorRange" min="500" max="20000" step="100" value="6000" oninput="atualizarSimulacao()">
+            <div class="row-flex" style="justify-content:space-between; margin-bottom:16px;">
+              <span class="mono" style="font-size:13px; color:var(--slate);">R$ 500</span>
+              <span class="mono" id="valorAtual" style="font-weight:700; color:var(--navy);">R$ 6.000</span>
+              <span class="mono" style="font-size:13px; color:var(--slate);">R$ 20.000</span>
+            </div>
+            <label>Número de parcelas</label>
+            <select id="parcelasSelect" onchange="atualizarSimulacao()">
+              <option value="6">6x</option>
+              <option value="12" selected>12x</option>
+              <option value="18">18x</option>
+              <option value="24">24x</option>
+            </select>
+            <button class="btn btn-lime btn-block" onclick="analisarCredito()">Analisar crédito agora</button>
+          </div>
+          <div class="card" style="display:flex; flex-direction:column; align-items:center; justify-content:center;">
+            <div class="gauge-wrap">
+              <svg width="180" height="100" viewBox="0 0 180 100">
+                <path d="M10,95 A80,80 0 0,1 170,95" fill="none" stroke="#E4E1D8" stroke-width="14" stroke-linecap="round"/>
+                <path id="gaugeArc" d="M10,95 A80,80 0 0,1 170,95" fill="none" stroke="#C6FF3D" stroke-width="14" stroke-linecap="round" stroke-dasharray="251" stroke-dashoffset="251"/>
+              </svg>
+              <div class="gauge-score" id="gaugeScore">—</div>
+              <div class="gauge-caption">Score de aprovação estimado<br><span id="gaugeTime" class="mono"></span></div>
+            </div>
+            <div id="resultadoSim" style="margin-top:14px; text-align:center; font-size:13px; color:var(--slate);">Ajuste os valores e clique em "Analisar crédito agora".</div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ===== ACOMPANHAR CONTRATO (CLIENTE) ===== -->
+      <section class="page" id="page-acompanhar">
+        <div class="page-head">
+          <h1>Acompanhar contrato</h1>
+          <p>Linha do tempo completa do seu empréstimo — sem surpresas.</p>
+        </div>
+        <div class="grid grid-2">
+          <div class="card">
+            <div class="tl">
+              <div class="tl-item done">
+                <div class="tl-dot"></div>
+                <div class="tl-title">Solicitação enviada</div>
+                <div class="tl-sub">12/06/2026 — valor solicitado R$ 6.000,00</div>
+              </div>
+              <div class="tl-item done">
+                <div class="tl-dot"></div>
+                <div class="tl-title">Análise de crédito aprovada</div>
+                <div class="tl-sub">12/06/2026 às 14:32 — resposta em 40 segundos</div>
+              </div>
+              <div class="tl-item done">
+                <div class="tl-dot"></div>
+                <div class="tl-title">Contrato assinado digitalmente</div>
+                <div class="tl-sub">13/06/2026 — taxa de 2,3% a.m., 12 parcelas</div>
+              </div>
+              <div class="tl-item active">
+                <div class="tl-dot"></div>
+                <div class="tl-title">8ª parcela paga — em dia</div>
+                <div class="tl-sub">Próxima parcela: R$ 480,00 em 05/09/2026</div>
+              </div>
+              <div class="tl-item">
+                <div class="tl-dot"></div>
+                <div class="tl-title">Quitação prevista</div>
+                <div class="tl-sub">Fevereiro de 2027</div>
+              </div>
+            </div>
+          </div>
+          <div class="card">
+            <div class="card-label">Detalhamento da taxa</div>
+            <div class="table-responsive">
+              <table style="margin-top:10px; min-width:auto;">
+                <tr><td>Valor contratado</td><td class="mono" style="text-align:right;">R$ 6.000,00</td></tr>
+                <tr><td>Taxa de juros</td><td class="mono" style="text-align:right;">2,3% a.m.</td></tr>
+                <tr><td>Total de juros no contrato</td><td class="mono" style="text-align:right;">R$ 780,00</td></tr>
+                <tr><td>Valor total a pagar</td><td class="mono" style="text-align:right; font-weight:700;">R$ 6.780,00</td></tr>
+              </table>
+            </div>
+            <div class="divider"></div>
+            <p style="font-size:12.5px; color:var(--slate); line-height:1.6;">Cada parcela paga é refletida aqui em tempo real — o cliente nunca precisa ligar para saber "quanto falta".</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- ===== ANÁLISE DE CRÉDITO (INTERNO) ===== -->
+      <section class="page" id="page-credito">
+        <div class="page-head">
+          <h1>Análise de crédito</h1>
+          <p>Fila de solicitações com score automático — decisões em segundos, não em dias.</p>
+        </div>
+        <div class="card">
+          <div class="table-responsive">
+            <table>
+              <thead><tr><th>Cliente</th><th>Valor</th><th>Score</th><th>Tempo de análise</th><th>Status</th><th></th></tr></thead>
+              <tbody>
+                <tr>
+                  <td class="row-flex"><span class="avatar">MC</span>Marina Castro</td>
+                  <td class="mono">R$ 3.500</td>
+                  <td><span class="tag up">812</span></td>
+                  <td class="mono">38s</td>
+                  <td><span class="tag up">Aprovado</span></td>
+                  <td><button class="btn btn-outline btn-sm">Ver</button></td>
+                </tr>
+                <tr>
+                  <td class="row-flex"><span class="avatar">RP</span>Rodrigo Paes</td>
+                  <td class="mono">R$ 12.000</td>
+                  <td><span class="tag warn">540</span></td>
+                  <td class="mono">42s</td>
+                  <td><span class="tag warn">Revisão manual</span></td>
+                  <td><button class="btn btn-outline btn-sm">Ver</button></td>
+                </tr>
+                <tr>
+                  <td class="row-flex"><span class="avatar">LA</span>Luiza Andrade</td>
+                  <td class="mono">R$ 8.000</td>
+                  <td><span class="tag up">755</span></td>
+                  <td class="mono">29s</td>
+                  <td><span class="tag up">Aprovado</span></td>
+                  <td><button class="btn btn-outline btn-sm">Ver</button></td>
+                </tr>
+                <tr>
+                  <td class="row-flex"><span class="avatar">DS</span>Diego Souza</td>
+                  <td class="mono">R$ 2.000</td>
+                  <td><span class="tag gold">Pendente</span></td>
+                  <td class="mono">—</td>
+                  <td><span class="tag gold">Em análise</span></td>
+                  <td><button class="btn btn-outline btn-sm">Ver</button></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+        <div class="grid grid-3" style="margin-top:16px;">
+          <div class="card"><div class="card-label">Tempo médio de análise</div><div class="card-value mono">41s</div><div class="card-sub">antes: 2 a 3 dias úteis</div></div>
+          <div class="card"><div class="card-label">Aprovação automática</div><div class="card-value mono">78%</div><div class="card-sub">sem intervenção humana</div></div>
+          <div class="card"><div class="card-label">Em revisão manual</div><div class="card-value mono">14</div><div class="card-sub">casos limítrofes hoje</div></div>
+        </div>
+      </section>
+
+      <!-- ===== COBRANÇA (INTERNO) ===== -->
+      <section class="page" id="page-cobranca">
+        <div class="page-head">
+          <h1>Central de cobrança</h1>
+          <p>Estágios de cobrança organizados — do lembrete amigável à ação judicial.</p>
+        </div>
+        <div class="grid grid-3" style="margin-bottom:16px;">
+          <div class="card"><div class="card-label">Índice de inadimplência</div><div class="card-value mono">4,2%</div><div class="card-sub tag up" style="display:inline-flex; margin-top:8px;">↓ 1,8 p.p. no mês</div></div>
+          <div class="card"><div class="card-label">Em negociação</div><div class="card-value mono">27</div><div class="card-sub">contratos ativos</div></div>
+          <div class="card"><div class="card-label">Recuperado este mês</div><div class="card-value mono">R$ 38.400</div><div class="card-sub">via cobrança automatizada</div></div>
+        </div>
+        <div class="card">
+          <div class="table-responsive">
+            <table>
+              <thead><tr><th>Cliente</th><th>Parcela</th><th>Dias em atraso</th><th>Estágio</th><th></th></tr></thead>
+              <tbody>
+                <tr>
+                  <td class="row-flex"><span class="avatar">JF</span>João Ferreira</td>
+                  <td class="mono">R$ 420,00</td>
+                  <td>3 dias</td>
+                  <td><span class="tag gold">Lembrete enviado</span></td>
+                  <td><button class="btn btn-outline btn-sm">Gerenciar</button></td>
+                </tr>
+                <tr>
+                  <td class="row-flex"><span class="avatar">CP</span>Carla Pires</td>
+                  <td class="mono">R$ 690,00</td>
+                  <td>17 dias</td>
+                  <td><span class="tag warn">Negociação</span></td>
+                  <td><button class="btn btn-outline btn-sm">Gerenciar</button></td>
+                </tr>
+                <tr>
+                  <td class="row-flex"><span class="avatar">TN</span>Tiago Nunes</td>
+                  <td class="mono">R$ 1.150,00</td>
+                  <td>54 dias</td>
+                  <td><span class="tag warn" style="background:#FCE0DA; color:var(--danger);">Cobrança extrajudicial</span></td>
+                  <td><button class="btn btn-outline btn-sm">Gerenciar</button></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <!-- ===== ANTIFRAUDE (INTERNO) ===== -->
+      <section class="page" id="page-fraude">
+        <div class="page-head">
+          <h1>Central antifraude</h1>
+          <p>Monitoramento e alertas de divergências e atipicidades em tempo real.</p>
+        </div>
+        <div class="grid grid-3" style="margin-bottom:16px;">
+          <div class="card"><div class="card-label">Alertas pendentes</div><div class="card-value mono">3</div><div class="card-sub tag warn" style="display:inline-flex; margin-top:8px;">Requer atenção</div></div>
+          <div class="card"><div class="card-label">Tentativas bloqueadas</div><div class="card-value mono">18</div><div class="card-sub">últimos 30 dias</div></div>
+          <div class="card"><div class="card-label">Precisão do modelo</div><div class="card-value mono">99,1%</div><div class="card-sub">Machine Learning</div></div>
+        </div>
+        <div class="card">
+          <div class="table-responsive">
+            <table>
+              <thead><tr><th>Usuário / CPF</th><th>Ocorrência Detectada</th><th>Nível de Risco</th><th>Ação Recomendada</th><th></th></tr></thead>
+              <tbody>
+                <tr>
+                  <td class="row-flex"><span class="avatar">MA</span>Marcio Alves</td>
+                  <td>Múltiplos acessos de IPs geograficamente distantes</td>
+                  <td><span class="tag warn">Alto</span></td>
+                  <td>Bloqueio temporário</td>
+                  <td><button class="btn btn-outline btn-sm">Analisar</button></td>
+                </tr>
+                <tr>
+                  <td class="row-flex"><span class="avatar">CL</span>Carla Lima</td>
+                  <td>Inconsistência entre selfie e documento (OCR)</td>
+                  <td><span class="tag gold">Médio</span></td>
+                  <td>Requerer validação manual</td>
+                  <td><button class="btn btn-outline btn-sm">Analisar</button></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+    </div>
+  </div>
+</div>
+
+<script>
+  let currentUser = null;
+  let currentRole = 'cliente';
+
+  const defaultUsers = [
+    { email: 'admin@nexta.com', senha: 'admin123', nome: 'Administrador', pergunta: 'azul', role: 'admin' },
+    { email: 'jonathas@email.com', senha: '123', nome: 'Jonathas', pergunta: 'verde', role: 'cliente' }
+  ];
+
+  function getUsers() {
+    const stored = localStorage.getItem('nexta_users');
+    return stored ? JSON.parse(stored) : defaultUsers;
+  }
+
+  function saveUsers(users) {
+    localStorage.setItem('nexta_users', JSON.stringify(users));
+  }
+
+  function mostrarTela(tela) {
+    document.getElementById('viewLogin').style.display = 'none';
+    document.getElementById('viewCadastro').style.display = 'none';
+    document.getElementById('viewEsqueci').style.display = 'none';
+
+    if (tela === 'login') document.getElementById('viewLogin').style.display = 'block';
+    if (tela === 'cadastro') document.getElementById('viewCadastro').style.display = 'block';
+    if (tela === 'esqueci') {
+      document.getElementById('viewEsqueci').style.display = 'block';
+      document.getElementById('esqueciPasso1').style.display = 'block';
+      document.getElementById('esqueciPasso2').style.display = 'none';
+    }
+  }
+
+  function tentarLogin() {
+    const email = document.getElementById('loginEmail').value.trim();
+    const senha = document.getElementById('loginSenha').value.trim();
+    const err = document.getElementById('loginError');
+
+    const users = getUsers();
+    const user = users.find(u => u.email.toLowerCase() === email.toLowerCase() && u.senha === senha);
+
+    if (user) {
+      err.style.display = 'none';
+      currentUser = user;
+      iniciarApp();
+    } else {
+      err.style.display = 'block';
+    }
+  }
+
+  function criarConta() {
+    const nome = document.getElementById('cadNome').value.trim();
+    const email = document.getElementById('cadEmail').value.trim();
+    const senha = document.getElementById('cadSenha').value.trim();
+    const pergunta = document.getElementById('cadPergunta').value.trim();
+    const err = document.getElementById('cadError');
+
+    if (!nome || !email || !senha || !pergunta) {
+      err.textContent = 'Preencha todos os campos.';
+      err.style.display = 'block';
+      return;
+    }
+
+    const users = getUsers();
+    if (users.some(u => u.email.toLowerCase() === email.toLowerCase())) {
+      err.textContent = 'E-mail já cadastrado.';
+      err.style.display = 'block';
+      return;
+    }
+
+    const newUser = { email, senha, nome, pergunta, role: 'cliente' };
+    users.push(newUser);
+    saveUsers(users);
+
+    err.style.display = 'none';
+    currentUser = newUser;
+    iniciarApp();
+  }
+
+  let emailRecuperacao = '';
+  function buscarConta() {
+    const email = document.getElementById('recEmail').value.trim();
+    const err = document.getElementById('recError1');
+    const users = getUsers();
+    const user = users.find(u => u.email.toLowerCase() === email.toLowerCase());
+
+    if (!user) {
+      err.textContent = 'E-mail não encontrado.';
+      err.style.display = 'block';
+      return;
+    }
+
+    err.style.display = 'none';
+    emailRecuperacao = email;
+    document.getElementById('perguntaLabel').textContent = `Pergunta: qual sua cor favorita?`;
+    document.getElementById('esqueciPasso1').style.display = 'none';
+    document.getElementById('esqueciPasso2').style.display = 'block';
+  }
+
+  function redefinirSenha() {
+    const resposta = document.getElementById('recResposta').value.trim();
+    const novaSenha = document.getElementById('recNovaSenha').value.trim();
+    const err = document.getElementById('recError2');
+
+    if (!resposta || !novaSenha) {
+      err.textContent = 'Preencha todos os campos.';
+      err.style.display = 'block';
+      return;
+    }
+
+    const users = getUsers();
+    const userIndex = users.findIndex(u => u.email.toLowerCase() === emailRecuperacao.toLowerCase());
+
+    if (userIndex !== -1) {
+      if (users[userIndex].pergunta.toLowerCase() === resposta.toLowerCase()) {
+        users[userIndex].senha = novaSenha;
+        saveUsers(users);
+        alert('Senha redefinida com sucesso!');
+        mostrarTela('login');
+      } else {
+        err.textContent = 'Resposta incorreta.';
+        err.style.display = 'block';
+      }
+    }
+  }
+
+  function iniciarApp() {
+    document.getElementById('loginScreen').style.display = 'none';
+    document.getElementById('app').style.display = 'flex';
+
+    document.getElementById('loggedAs').textContent = currentUser.nome;
+    document.getElementById('welcomeUser').textContent = `Olá, ${currentUser.nome.split(' ')[0]} 👋`;
+    
+    setRole(currentUser.role || 'cliente');
+  }
+
+  function setRole(role) {
+    currentRole = role;
+    const clienteBtn = document.getElementById('roleClienteBtn');
+    const adminBtn = document.getElementById('roleAdminBtn');
+    const navCliente = document.getElementById('navClienteGroup');
+    const navAdmin = document.getElementById('navAdminGroup');
+
+    if (role === 'cliente') {
+      clienteBtn.classList.add('active');
+      adminBtn.classList.remove('active');
+      navCliente.style.display = 'block';
+      navAdmin.style.display = 'none';
+      document.getElementById('crumbRole').textContent = 'Cliente';
+      go('dashboard');
+    } else {
+      adminBtn.classList.add('active');
+      clienteBtn.classList.remove('active');
+      navCliente.style.display = 'none';
+      navAdmin.style.display = 'block';
+      document.getElementById('crumbRole').textContent = 'Interno';
+      go('credito');
+    }
+  }
+
+  function go(pageId) {
+    const pages = document.querySelectorAll('.page');
+    pages.forEach(p => p.classList.remove('active'));
+
+    const target = document.getElementById('page-' + pageId);
+    if (target) target.classList.add('active');
+
+    const navItems = document.querySelectorAll('.nav-item');
+    navItems.forEach(item => {
+      if (item.getAttribute('data-page') === pageId) {
+        item.classList.add('active');
+      } else {
+        item.classList.remove('active');
+      }
+    });
+
+    const pageTitles = {
+      dashboard: 'Painel',
+      simulador: 'Simular empréstimo',
+      acompanhar: 'Acompanhar contrato',
+      credito: 'Análise de crédito',
+      cobranca: 'Central de cobrança',
+      fraude: 'Central antifraude'
+    };
+    document.getElementById('crumbPage').textContent = pageTitles[pageId] || pageId;
+
+    toggleMenu(false);
+  }
+
+  function atualizarSimulacao() {
+    const valor = document.getElementById('valorRange').value;
+    document.getElementById('valorAtual').textContent = 'R$ ' + Number(valor).toLocaleString('pt-BR');
+  }
+
+  function analisarCredito() {
+    const valor = parseInt(document.getElementById('valorRange').value);
+    const parcelas = parseInt(document.getElementById('parcelasSelect').value);
+
+    const score = Math.floor(Math.random() * (880 - 620 + 1)) + 620;
+    const valorParcela = ((valor * 1.25) / parcelas).toFixed(2);
+
+    const arc = document.getElementById('gaugeArc');
+    const scoreText = document.getElementById('gaugeScore');
+    const timeText = document.getElementById('gaugeTime');
+    const resultText = document.getElementById('resultadoSim');
+
+    const offset = 251 - (251 * (score / 1000));
+    arc.style.strokeDashoffset = offset;
+    scoreText.textContent = score;
+    timeText.textContent = 'Processado em ' + (Math.random() * 0.4 + 0.2).toFixed(2) + 's';
+
+    resultText.innerHTML = `<strong style="color:var(--navy);">Aprovação provável:</strong> ${parcelas}x de R$ ${Number(valorParcela).toLocaleString('pt-BR', {minimumFractionDigits: 2})}`;
+  }
+
+  function toggleMenu(open) {
+    const sidebar = document.getElementById('sidebar');
+    const overlay = document.getElementById('sidebarOverlay');
+    if (open) {
+      sidebar.classList.add('open');
+      overlay.classList.add('open');
+    } else {
+      sidebar.classList.remove('open');
+      overlay.classList.remove('open');
+    }
+  }
+
+  function sair() {
+    currentUser = null;
+    document.getElementById('app').style.display = 'none';
+    document.getElementById('loginScreen').style.display = 'flex';
+    mostrarTela('login');
+  }
+</script>
+</body>
+</html>
