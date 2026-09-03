@@ -1,486 +1,819 @@
 <!DOCTYPE html>
-<html lang="pt-BR">
+<html lang="pt-BR" data-theme="light">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>Nexta Finance — Sistema</title>
+<title>Nexta Finance — Sistema Fintech</title>
+
+<!-- Fontes Externas -->
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@500;600&display=swap" rel="stylesheet">
+
+<!-- CDNs: Chart.js para gráficos e jsPDF para emissão de comprovante -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+
 <style>
-  :root{
-    --navy:#0F1B2D;
-    --navy-2:#16243B;
-    --navy-3:#1E304C;
-    --lime:#C6FF3D;
-    --lime-dark:#9FD923;
-    --cream:#F5F3ED;
-    --white:#FFFFFF;
-    --ink:#14181F;
-    --slate:#6B7280;
-    --slate-light:#9AA1AC;
-    --danger:#E4572E;
-    --gold:#D4A54A;
-    --line:#E4E1D8;
-    --radius:14px;
+  /* ---------- DESIGN SYSTEM & VARIAVEIS (TEMA CLARO / ESCURO) ---------- */
+  :root {
+    --navy: #0F1B2D;
+    --navy-2: #16243B;
+    --navy-3: #1E304C;
+    --lime: #C6FF3D;
+    --lime-dark: #9FD923;
+    --cream: #F5F3ED;
+    --white: #FFFFFF;
+    --ink: #14181F;
+    --slate: #6B7280;
+    --slate-light: #9AA1AC;
+    --danger: #E4572E;
+    --gold: #D4A54A;
+    --line: #E4E1D8;
+    --card-bg: #FFFFFF;
+    --input-bg: #FFFFFF;
+    --radius: 14px;
+    --modal-overlay: rgba(15, 27, 45, 0.6);
   }
-  *{
-    box-sizing:border-box;
+
+  [data-theme="dark"] {
+    --navy: #0B1320;
+    --navy-2: #121E31;
+    --navy-3: #1A2B45;
+    --cream: #090E17;
+    --white: #131D2E;
+    --ink: #F0F4F8;
+    --slate: #94A3B8;
+    --slate-light: #64748B;
+    --line: #213047;
+    --card-bg: #131D2E;
+    --input-bg: #1A273D;
+    --modal-overlay: rgba(0, 0, 0, 0.8);
+  }
+
+  * {
+    box-sizing: border-box;
     -webkit-tap-highlight-color: transparent;
   }
-  html,body{
-    margin:0;
-    padding:0;
-    height:100%;
-    height:100dvh;
+
+  html, body {
+    margin: 0;
+    padding: 0;
+    height: 100%;
+    height: 100dvh;
   }
-  body{
-    font-family:'Inter',sans-serif;
-    background:var(--cream);
-    color:var(--ink);
-    overflow:hidden;
+
+  body {
+    font-family: 'Inter', sans-serif;
+    background: var(--cream);
+    color: var(--ink);
+    overflow: hidden;
+    transition: background-color 0.25s ease, color 0.25s ease;
   }
-  h1,h2,h3,.display{
-    font-family:'Space Grotesk',sans-serif;
-    letter-spacing:-0.01em;
+
+  h1, h2, h3, .display {
+    font-family: 'Space Grotesk', sans-serif;
+    letter-spacing: -0.01em;
   }
-  .mono{font-family:'IBM Plex Mono',monospace;}
-  a{color:inherit;text-decoration:none;}
-  button, a, input, select, .nav-item{
-    font-family:inherit;
+
+  .mono { font-family: 'IBM Plex Mono', monospace; }
+  a { color: inherit; text-decoration: none; }
+  
+  button, a, input, select, .nav-item {
+    font-family: inherit;
     touch-action: manipulation;
-  }
-  button{cursor:pointer;border:none;}
-
-  /* ---------- APP SHELL ---------- */
-  #app{
-    display:flex; 
-    height:100vh; 
-    height:100dvh; 
-    width:100vw;
+    min-height: 44px;
   }
 
-  /* Sidebar */
-  .sidebar{
-    width:236px;
-    min-width:236px;
-    background:var(--navy);
-    color:#DDE3EE;
-    display:flex;
-    flex-direction:column;
-    padding:22px 16px;
-    overflow-y:auto;
-    -webkit-overflow-scrolling:touch;
-  }
-  .brand{
-    display:flex;
-    align-items:center;
-    gap:9px;
-    padding:4px 6px 22px 6px;
-    border-bottom:1px solid rgba(255,255,255,0.08);
-    margin-bottom:18px;
-  }
-  .brand-dot{
-    width:11px;height:11px;border-radius:50%;
-    background:var(--lime);
-    box-shadow:0 0 0 4px rgba(198,255,61,0.15);
-  }
-  .brand-name{font-size:18px;font-weight:700;color:#fff;}
-  .brand-name span{color:var(--lime);}
+  button { cursor: pointer; border: none; }
+  button:disabled { opacity: 0.5; cursor: not-allowed; }
 
-  .nav-label{
-    font-size:10.5px;
-    text-transform:uppercase;
-    letter-spacing:.09em;
-    color:var(--slate-light);
-    margin:14px 10px 8px;
-    font-weight:600;
-  }
-  .nav-item{
-    display:flex;
-    align-items:center;
-    gap:12px;
-    padding:12px 14px;
-    min-height:44px;
-    border-radius:10px;
-    font-size:14px;
-    font-weight:500;
-    color:#C6CEDB;
-    margin-bottom:4px;
-    cursor:pointer;
-    user-select:none;
-    transition:background .15s ease, color .15s ease;
-  }
-  .nav-item svg{width:18px;height:18px;flex-shrink:0;opacity:.85;}
-  .nav-item:hover, .nav-item:active{background:var(--navy-2); color:#fff;}
-  .nav-item.active{background:var(--navy-3); color:var(--lime);}
-  .nav-item.active svg{opacity:1;}
-
-  .sidebar-foot{
-    margin-top:auto;
-    padding-top:14px;
-    border-top:1px solid rgba(255,255,255,0.08);
-    font-size:11.5px;
-    color:var(--slate-light);
-    line-height:1.5;
+  /* ---------- BLOCO 3.10: MICRO-INTERAÇÃO RIPPLE NOS BOTÕES ---------- */
+  .btn {
+    position: relative;
+    overflow: hidden;
   }
 
-  /* Main */
-  .main{
-    flex:1;
-    display:flex;
-    flex-direction:column;
-    min-width:0;
-  }
-  .topbar{
-    height:64px;
-    min-height:64px;
-    display:flex;
-    align-items:center;
-    justify-content:space-between;
-    padding:0 28px;
-    border-bottom:1px solid var(--line);
-    background:var(--white);
-  }
-  .topbar-title{font-size:15px; font-weight:600; color:var(--ink);}
-  .topbar-title .crumb{color:var(--slate); font-weight:500;}
-  .status-pill{
-    display:flex;
-    align-items:center;
-    gap:7px;
-    background:var(--cream);
-    border:1px solid var(--line);
-    padding:6px 12px;
-    border-radius:999px;
-    font-size:11.5px;
-    font-weight:600;
-    color:var(--slate);
-  }
-  .pulse{
-    width:7px;height:7px;border-radius:50%;
-    background:var(--lime-dark);
-    animation:pulse 1.6s infinite;
-  }
-  @keyframes pulse{
-    0%{box-shadow:0 0 0 0 rgba(159,217,35,.5);}
-    70%{box-shadow:0 0 0 6px rgba(159,217,35,0);}
-    100%{box-shadow:0 0 0 0 rgba(159,217,35,0);}
+  .ripple-effect {
+    position: absolute;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.4);
+    transform: scale(0);
+    animation: rippleAnim 0.6s linear;
+    pointer-events: none;
   }
 
-  .content{
-    flex:1;
-    overflow-y:auto;
-    -webkit-overflow-scrolling:touch;
-    padding:28px 32px 60px;
-  }
-  .page{display:none; animation:fadeUp .35s ease;}
-  .page.active{display:block;}
-  @keyframes fadeUp{
-    from{opacity:0; transform:translateY(6px);}
-    to{opacity:1; transform:translateY(0);}
+  @keyframes rippleAnim {
+    to {
+      transform: scale(4);
+      opacity: 0;
+    }
   }
 
-  .page-head{margin-bottom:22px;}
-  .page-head h1{font-size:22px; margin:0 0 4px; color:var(--navy);}
-  .page-head p{margin:0; color:var(--slate); font-size:13.5px;}
-
-  .grid{display:grid; gap:16px;}
-  .grid-3{grid-template-columns:repeat(3,1fr);}
-  .grid-2{grid-template-columns:1.3fr 1fr;}
-
-  .card{
-    background:var(--white);
-    border:1px solid var(--line);
-    border-radius:var(--radius);
-    padding:20px;
+  /* ---------- APP SHELL & LAYOUT ---------- */
+  #app {
+    display: flex;
+    height: 100vh;
+    height: 100dvh;
+    width: 100vw;
   }
-  .card-label{font-size:11px; text-transform:uppercase; letter-spacing:.07em; color:var(--slate); font-weight:600; margin-bottom:8px;}
-  .card-value{font-size:26px; font-weight:700; font-family:'Space Grotesk',sans-serif; color:var(--navy);}
-  .card-sub{font-size:12px; color:var(--slate); margin-top:6px;}
-  .tag{display:inline-flex; align-items:center; gap:5px; font-size:11px; font-weight:600; padding:3px 9px; border-radius:999px;}
-  .tag.up{background:#EAF9D8; color:#5B8A1D;}
-  .tag.warn{background:#FDEBE3; color:var(--danger);}
-  .tag.gold{background:#FBF1DD; color:#96731F;}
 
-  /* Buttons */
-  .btn{
-    display:inline-flex; align-items:center; gap:8px;
-    background:var(--navy); color:#fff;
-    padding:12px 20px; border-radius:10px;
-    font-size:14px; font-weight:600;
-    min-height:44px;
-    transition:transform .12s ease, background .15s ease;
+  .sidebar {
+    width: 240px;
+    min-width: 240px;
+    background: var(--navy);
+    color: #DDE3EE;
+    display: flex;
+    flex-direction: column;
+    padding: 22px 16px;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+    z-index: 10;
+    position: relative;
   }
-  .btn:hover{background:var(--navy-3);}
-  .btn:active{transform:scale(.98);}
-  .btn-lime{background:var(--lime); color:var(--navy);}
-  .btn-lime:hover{background:var(--lime-dark);}
-  .btn-outline{background:transparent; border:1.4px solid var(--line); color:var(--ink);}
-  .btn-outline:hover{border-color:var(--navy);}
-  .btn-sm{padding:8px 14px; font-size:12.5px; border-radius:8px; min-height:36px;}
-  .btn-block{width:100%; justify-content:center;}
 
-  /* Forms */
-  label{display:block; font-size:12.5px; font-weight:600; color:var(--ink); margin-bottom:6px;}
-  input[type=text], input[type=password], input[type=number], select{
-    width:100%;
-    padding:12px 14px;
-    border:1.4px solid var(--line);
-    border-radius:10px;
-    font-size:14px;
-    font-family:inherit;
-    background:var(--white);
-    margin-bottom:16px;
-    transition:border-color .15s;
+  .brand {
+    display: flex;
+    align-items: center;
+    gap: 9px;
+    padding: 4px 6px 22px 6px;
+    border-bottom: 1px solid rgba(255,255,255,0.08);
+    margin-bottom: 18px;
+    position: relative;
+    z-index: 2;
   }
-  input:focus, select:focus{outline:none; border-color:var(--navy);}
-  input[type=range]{width:100%; accent-color:var(--navy); margin:10px 0 8px; height:24px;}
 
-  /* Table styling & responsiveness */
-  .table-responsive{
-    width:100%;
-    overflow-x:auto;
-    -webkit-overflow-scrolling:touch;
+  .brand-dot {
+    width: 11px; height: 11px; border-radius: 50%;
+    background: var(--lime);
+    box-shadow: 0 0 0 4px rgba(198,255,61,0.15);
   }
-  table{width:100%; border-collapse:collapse; font-size:13px; min-width:500px;}
-  th{text-align:left; font-size:10.5px; text-transform:uppercase; letter-spacing:.06em; color:var(--slate); padding:0 10px 10px; font-weight:600; border-bottom:1px solid var(--line);}
-  td{padding:12px 10px; border-bottom:1px solid var(--line); vertical-align:middle;}
-  tr:last-child td{border-bottom:none;}
-  .avatar{width:30px;height:30px;border-radius:50%;background:var(--navy-2);color:var(--lime);display:inline-flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;font-family:'Space Grotesk',sans-serif;margin-right:9px;}
-  .row-flex{display:flex; align-items:center;}
 
-  .progress-bar{height:7px; background:var(--line); border-radius:99px; overflow:hidden;}
-  .progress-fill{height:100%; background:var(--lime-dark); border-radius:99px; transition:width 1.2s cubic-bezier(.2,.8,.2,1);}
+  .brand-name { font-size: 18px; font-weight: 700; color: #fff; }
+  .brand-name span { color: var(--lime); }
 
-  .gauge-wrap{display:flex; flex-direction:column; align-items:center; padding:6px 0 0;}
-  .gauge-score{font-family:'Space Grotesk',sans-serif; font-size:30px; font-weight:700; color:var(--navy); margin-top:-46px;}
-  .gauge-caption{font-size:11.5px; color:var(--slate); margin-top:2px; text-align:center;}
-
-  .divider{height:1px; background:var(--line); margin:18px 0;}
-
-  /* Login page */
-  .login-screen{
-    height:100vh; height:100dvh; width:100vw;
-    background:var(--navy);
-    display:flex; align-items:center; justify-content:center;
-    position:relative;
-    overflow-y:auto;
-    padding:20px 0;
+  .nav-label {
+    font-size: 10.5px;
+    text-transform: uppercase;
+    letter-spacing: .09em;
+    color: var(--slate-light);
+    margin: 14px 10px 8px;
+    font-weight: 600;
+    position: relative;
+    z-index: 2;
   }
-  .login-screen::before{
-    content:"";
-    position:absolute; inset:0;
-    background:
-      radial-gradient(circle at 15% 20%, rgba(198,255,61,.09), transparent 40%),
-      radial-gradient(circle at 85% 80%, rgba(198,255,61,.06), transparent 45%);
+
+  .nav-group {
+    position: relative;
   }
-  .login-card{
-    position:relative;
-    width:380px;
-    background:var(--white);
-    border-radius:18px;
-    padding:36px 34px 30px;
-    box-shadow:0 30px 60px rgba(0,0,0,.35);
-    margin:auto;
+
+  /* BLOCO 3.1: INDICADOR DE NAVEGAÇÃO ANIMADO (DESLIZANTE) */
+  .nav-pill {
+    position: absolute;
+    left: 0;
+    width: 100%;
+    height: 42px;
+    background: var(--navy-3);
+    border-radius: 10px;
+    transition: transform 0.28s cubic-bezier(0.2, 0.8, 0.2, 1), opacity 0.2s ease, height 0.2s ease;
+    pointer-events: none;
+    z-index: 1;
+    border-left: 3px solid var(--lime);
+    opacity: 0;
   }
-  .login-brand{display:flex; align-items:center; gap:9px; margin-bottom:26px;}
-  .login-brand .brand-dot{background:var(--navy); box-shadow:none;}
-  .login-brand .brand-name{color:var(--navy); font-size:19px;}
-  .login-brand .brand-name span{color:#9FD923;}
+
+  .nav-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 10px 14px;
+    border-radius: 10px;
+    font-size: 13.5px;
+    font-weight: 500;
+    color: #C6CEDB;
+    margin-bottom: 4px;
+    cursor: pointer;
+    user-select: none;
+    transition: color .2s ease;
+    position: relative;
+    z-index: 2;
+    background: transparent !important;
+  }
+
+  .nav-item svg { width: 18px; height: 18px; flex-shrink: 0; opacity: .85; }
+  .nav-item:hover, .nav-item:focus { color: #fff; outline: none; }
+  .nav-item.active { color: var(--lime); font-weight: 600; }
+  .nav-item.active svg { opacity: 1; stroke: var(--lime); }
+
+  .sidebar-foot {
+    margin-top: auto;
+    padding-top: 14px;
+    border-top: 1px solid rgba(255,255,255,0.08);
+    font-size: 11.5px;
+    color: var(--slate-light);
+    line-height: 1.5;
+    position: relative;
+    z-index: 2;
+  }
+
+  .main {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+    background: var(--cream);
+  }
+
+  .topbar {
+    height: 64px;
+    min-height: 64px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 28px;
+    border-bottom: 1px solid var(--line);
+    background: var(--card-bg);
+  }
+
+  .topbar-title { font-size: 15px; font-weight: 600; color: var(--ink); }
+  .topbar-title .crumb { color: var(--slate); font-weight: 500; }
+
+  .theme-toggle {
+    background: var(--cream);
+    border: 1px solid var(--line);
+    color: var(--ink);
+    padding: 6px 12px;
+    border-radius: 8px;
+    font-size: 12px;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    cursor: pointer;
+    min-height: 36px;
+  }
+
+  .cmd-k-badge {
+    background: var(--cream);
+    border: 1px solid var(--line);
+    color: var(--slate);
+    padding: 4px 8px;
+    border-radius: 6px;
+    font-size: 11px;
+    font-family: 'IBM Plex Mono', monospace;
+    font-weight: 600;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+  }
+  .cmd-k-badge:hover { border-color: var(--ink); color: var(--ink); }
+
+  .status-pill {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    background: var(--cream);
+    border: 1px solid var(--line);
+    padding: 6px 12px;
+    border-radius: 999px;
+    font-size: 11.5px;
+    font-weight: 600;
+    color: var(--slate);
+  }
+
+  .pulse {
+    width: 7px; height: 7px; border-radius: 50%;
+    background: var(--lime-dark);
+    animation: pulse 1.6s infinite;
+  }
+
+  @keyframes pulse {
+    0% { box-shadow: 0 0 0 0 rgba(159,217,35,.5); }
+    70% { box-shadow: 0 0 0 6px rgba(159,217,35,0); }
+    100% { box-shadow: 0 0 0 0 rgba(159,217,35,0); }
+  }
+
+  .content {
+    flex: 1;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+    padding: 28px 32px 60px;
+  }
+
+  .page { display: none; }
+  .page.active { display: block; }
+
+  .page-head { margin-bottom: 22px; }
+  .page-head h1 { font-size: 22px; margin: 0 0 4px; color: var(--ink); }
+  .page-head p { margin: 0; color: var(--slate); font-size: 13.5px; }
+
+  /* ---------- CARDS, GRID & COMPONENTES ---------- */
+  .grid { display: grid; gap: 16px; }
+  .grid-3 { grid-template-columns: repeat(3, 1fr); }
+  .grid-2 { grid-template-columns: 1.3fr 1fr; }
+
+  /* BLOCO 3.2: ENTRADA ESCALONADA DOS CARDS (STAGGERED) & TILT 3D */
+  .card {
+    background: var(--card-bg);
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    padding: 20px;
+    transition: background-color 0.25s, border-color 0.25s, transform 0.2s ease, box-shadow 0.2s ease;
+    will-change: transform, opacity;
+  }
+
+  .page.active .card {
+    opacity: 0;
+    transform: translateY(16px);
+    animation: cardStaggerIn 0.45s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  }
+
+  .page.active .card:nth-child(1) { animation-delay: 0.04s; }
+  .page.active .card:nth-child(2) { animation-delay: 0.10s; }
+  .page.active .card:nth-child(3) { animation-delay: 0.16s; }
+  .page.active .card:nth-child(4) { animation-delay: 0.22s; }
+  .page.active .card:nth-child(5) { animation-delay: 0.28s; }
+  .page.active .card:nth-child(6) { animation-delay: 0.34s; }
+
+  @keyframes cardStaggerIn {
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  .card-label { font-size: 11px; text-transform: uppercase; letter-spacing: .07em; color: var(--slate); font-weight: 600; margin-bottom: 8px; }
+  .card-value { font-size: 26px; font-weight: 700; font-family: 'Space Grotesk', sans-serif; color: var(--ink); }
+  .card-sub { font-size: 12px; color: var(--slate); margin-top: 6px; }
+
+  .tag { display: inline-flex; align-items: center; gap: 5px; font-size: 11px; font-weight: 600; padding: 4px 10px; border-radius: 999px; }
+  .tag.up { background: rgba(159, 217, 35, 0.18); color: #5B8A1D; }
+  .tag.warn { background: rgba(228, 87, 46, 0.15); color: var(--danger); }
+  .tag.gold { background: rgba(212, 165, 74, 0.18); color: var(--gold); }
+
+  /* Botões */
+  .btn {
+    display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+    background: var(--navy); color: #fff;
+    padding: 10px 20px; border-radius: 10px;
+    font-size: 14px; font-weight: 600;
+    transition: transform .12s ease, background .15s ease, opacity .15s;
+  }
+  .btn:hover { background: var(--navy-3); }
+  .btn:active { transform: scale(.98); }
+  
+  /* BLOCO 1.1: CLASSE btn-navy CORRIGIDA E DEFINIDA */
+  .btn-navy { background: var(--navy); color: #FFFFFF; }
+  .btn-navy:hover { background: var(--navy-3); }
+  
+  .btn-lime { background: var(--lime); color: var(--navy); }
+  .btn-lime:hover { background: var(--lime-dark); }
+  .btn-outline { background: transparent; border: 1.4px solid var(--line); color: var(--ink); }
+  .btn-outline:hover { border-color: var(--ink); }
+  .btn-danger { background: var(--danger); color: #fff; }
+  .btn-sm { padding: 6px 12px; font-size: 12.5px; border-radius: 8px; min-height: 36px; }
+  .btn-block { width: 100%; }
+
+  /* Formulários & Validação */
+  .form-group { margin-bottom: 16px; }
+  label { display: block; font-size: 12.5px; font-weight: 600; color: var(--ink); margin-bottom: 6px; }
+  
+  input[type=text], input[type=password], input[type=number], select {
+    width: 100%;
+    padding: 12px 14px;
+    border: 1.4px solid var(--line);
+    border-radius: 10px;
+    font-size: 14px;
+    font-family: inherit;
+    background: var(--input-bg);
+    color: var(--ink);
+    transition: border-color .15s;
+  }
+
+  input:focus, select:focus { outline: none; border-color: var(--lime-dark); }
+  input[type=range] { width: 100%; accent-color: var(--lime-dark); margin: 10px 0 8px; height: 24px; }
+
+  .field-error { color: var(--danger); font-size: 11.5px; font-weight: 600; margin-top: 4px; display: none; }
+  
+  /* Password Strength Meter */
+  .strength-meter { height: 4px; background: var(--line); border-radius: 2px; margin-top: 6px; overflow: hidden; }
+  .strength-fill { height: 100%; width: 0%; transition: width 0.3s, background-color 0.3s; }
+
+  /* Tabelas */
+  .table-responsive { width: 100%; overflow-x: auto; -webkit-overflow-scrolling: touch; }
+  table { width: 100%; border-collapse: collapse; font-size: 13px; min-width: 550px; }
+  th { text-align: left; font-size: 10.5px; text-transform: uppercase; letter-spacing: .06em; color: var(--slate); padding: 0 10px 10px; font-weight: 600; border-bottom: 1px solid var(--line); }
+  td { padding: 12px 10px; border-bottom: 1px solid var(--line); vertical-align: middle; color: var(--ink); }
+  tr:last-child td { border-bottom: none; }
+  
+  .avatar {
+    width: 32px; height: 32px; border-radius: 50%;
+    color: #fff; display: inline-flex; align-items: center; justify-content: center;
+    font-size: 11px; font-weight: 700; font-family: 'Space Grotesk', sans-serif;
+    margin-right: 9px; flex-shrink: 0;
+  }
+  .row-flex { display: flex; align-items: center; }
+
+  /* Modais Elegantes */
+  .modal-overlay {
+    position: fixed; inset: 0;
+    background: var(--modal-overlay);
+    backdrop-filter: blur(4px);
+    z-index: 1000;
+    display: flex; align-items: center; justify-content: center;
+    opacity: 0; pointer-events: none;
+    transition: opacity 0.25s ease;
+  }
+  .modal-overlay.active { opacity: 1; pointer-events: auto; }
+
+  .modal-card {
+    background: var(--card-bg);
+    border: 1px solid var(--line);
+    border-radius: 18px;
+    width: 90%; max-width: 520px;
+    padding: 24px;
+    box-shadow: 0 20px 40px rgba(0,0,0,0.3);
+    transform: translateY(15px) scale(0.98);
+    transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+    max-height: 90vh;
+    overflow-y: auto;
+  }
+  .modal-overlay.active .modal-card { transform: translateY(0) scale(1); }
+  .modal-head { display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; }
+  .modal-head h3 { margin: 0; font-size: 18px; color: var(--ink); }
+  .modal-close { background: transparent; color: var(--slate); font-size: 20px; padding: 4px; min-height: auto; cursor: pointer; }
+
+  /* Toast Notifications */
+  #toast-container {
+    position: fixed; bottom: 20px; right: 20px; z-index: 2000;
+    display: flex; flex-direction: column; gap: 8px; pointer-events: none;
+  }
+  .toast {
+    pointer-events: auto;
+    background: var(--navy); color: #fff;
+    padding: 12px 18px; border-radius: 10px;
+    font-size: 13px; font-weight: 500;
+    display: flex; align-items: center; gap: 10px;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+    animation: toastIn 0.3s cubic-bezier(0.16, 1, 0.3, 1), toastOut 0.3s ease 2.7s forwards;
+  }
+  .toast-success { border-left: 4px solid var(--lime); }
+  .toast-danger { border-left: 4px solid var(--danger); }
+  .toast-warn { border-left: 4px solid var(--gold); }
+
+  @keyframes toastIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+  @keyframes toastOut { from { opacity: 1; transform: translateY(0); } to { opacity: 0; transform: translateY(20px); } }
+
+  /* Skeletons & Empty States */
+  .skeleton {
+    background: linear-gradient(90deg, var(--line) 25%, var(--cream) 50%, var(--line) 75%);
+    background-size: 200% 100%;
+    animation: loading 1.5s infinite;
+    border-radius: 6px;
+  }
+  @keyframes loading { 0% { background-position: 200% 0; } 100% { background-position: -200% 0; } }
+
+  .empty-state { text-align: center; padding: 40px 20px; color: var(--slate); }
+  .empty-state svg { width: 48px; height: 48px; margin-bottom: 12px; opacity: 0.5; }
 
   /* Timeline */
-  .tl{position:relative; padding-left:26px;}
-  .tl::before{content:""; position:absolute; left:6px; top:4px; bottom:4px; width:2px; background:var(--line);}
-  .tl-item{position:relative; padding-bottom:22px;}
-  .tl-item:last-child{padding-bottom:0;}
-  .tl-dot{position:absolute; left:-26px; top:2px; width:13px; height:13px; border-radius:50%; background:var(--white); border:2.5px solid var(--slate-light);}
-  .tl-item.done .tl-dot{border-color:var(--lime-dark); background:var(--lime-dark);}
-  .tl-item.active .tl-dot{border-color:var(--navy); background:var(--white); box-shadow:0 0 0 4px rgba(15,27,45,.1);}
-  .tl-title{font-size:13.5px; font-weight:600;}
-  .tl-sub{font-size:12px; color:var(--slate); margin-top:2px;}
+  .tl { position: relative; padding-left: 26px; }
+  .tl::before { content: ""; position: absolute; left: 6px; top: 4px; bottom: 4px; width: 2px; background: var(--line); }
+  .tl-item { position: relative; padding-bottom: 22px; }
+  .tl-item:last-child { padding-bottom: 0; }
+  .tl-dot { position: absolute; left: -26px; top: 2px; width: 13px; height: 13px; border-radius: 50%; background: var(--card-bg); border: 2.5px solid var(--slate-light); }
+  .tl-item.done .tl-dot { border-color: var(--lime-dark); background: var(--lime-dark); }
+  .tl-item.active .tl-dot { border-color: var(--navy); background: var(--lime); box-shadow: 0 0 0 4px rgba(198,255,61,.2); }
+  .tl-title { font-size: 13.5px; font-weight: 600; color: var(--ink); }
+  .tl-sub { font-size: 12px; color: var(--slate); margin-top: 2px; }
 
-  ::-webkit-scrollbar{width:8px;}
-  ::-webkit-scrollbar-thumb{background:#D7D3C7; border-radius:99px;}
-
-  .menu-btn{
-    display:none;
-    width:44px; height:44px;
-    align-items:center; justify-content:center;
-    border-radius:10px;
-    background:var(--cream);
-    border:1px solid var(--line);
-    color:var(--navy);
-    cursor:pointer;
+  /* BLOCO 3.5: FUNDO ANIMADO NA TELA DE LOGIN */
+  .login-screen {
+    height: 100vh; height: 100dvh; width: 100vw;
+    background: var(--navy);
+    display: flex; align-items: center; justify-content: center;
+    position: relative; overflow: hidden; padding: 20px 0;
   }
-  .menu-btn svg{width:22px; height:22px;}
-  .sidebar-overlay{
-    display:none;
-    position:fixed; inset:0;
-    background:rgba(15,27,45,.5);
-    backdrop-filter: blur(2px);
-    z-index:99;
-    cursor:pointer;
-  }
-  .sidebar-overlay.open{display:block;}
 
-  /* MOBILE BREAKPOINT (< 880px) */
-  @media(max-width:880px){
-    .menu-btn{display:inline-flex;}
-    .topbar{padding:0 16px; gap:10px; height:60px; min-height:60px;}
-    .topbar-title{font-size:13.5px;}
-    .content{padding:18px 16px 50px;}
-    .grid-3{grid-template-columns:1fr;}
-    .grid-2{grid-template-columns:1fr;}
-    
-    .sidebar{
-      position:fixed; z-index:100; height:100vh; height:100dvh; top:0; left:0;
-      width:260px;
-      transform:translateX(-100%);
-      transition:transform .25s cubic-bezier(0.4, 0, 0.2, 1);
-      box-shadow:20px 0 40px rgba(0,0,0,.35);
+  .login-bg-blob {
+    position: absolute;
+    border-radius: 50%;
+    filter: blur(90px);
+    opacity: 0.28;
+    pointer-events: none;
+    animation: blobMove 14s ease-in-out infinite alternate;
+  }
+  .blob-1 { width: 380px; height: 380px; background: var(--lime); top: -100px; left: -100px; }
+  .blob-2 { width: 420px; height: 420px; background: #3B82F6; bottom: -120px; right: -100px; animation-delay: -7s; }
+
+  @keyframes blobMove {
+    0% { transform: translate(0, 0) scale(1); }
+    50% { transform: translate(70px, 50px) scale(1.12); }
+    100% { transform: translate(-40px, 90px) scale(0.92); }
+  }
+
+  .login-card {
+    position: relative; z-index: 2; width: 380px;
+    background: var(--card-bg); border-radius: 18px;
+    padding: 36px 34px 30px;
+    box-shadow: 0 30px 60px rgba(0,0,0,.35); margin: auto;
+  }
+
+  .menu-btn {
+    display: none; width: 44px; height: 44px;
+    align-items: center; justify-content: center;
+    border-radius: 10px; background: var(--cream);
+    border: 1px solid var(--line); color: var(--ink);
+  }
+  .sidebar-overlay {
+    display: none; position: fixed; inset: 0;
+    background: rgba(15,27,45,.5); backdrop-filter: blur(2px);
+    z-index: 99; cursor: pointer;
+  }
+  .sidebar-overlay.open { display: block; }
+
+  /* BLOCO 3.9: SCROLL REVEAL CLASS */
+  .scroll-reveal {
+    opacity: 0;
+    transform: translateY(24px);
+    transition: opacity 0.6s cubic-bezier(0.16, 1, 0.3, 1), transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+  .scroll-reveal.revealed {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  /* ESTILOS DO MODAL DE AMORTIZAÇÃO (BLOCO 2) */
+  .amort-option-card {
+    border: 1.5px solid var(--line);
+    border-radius: 12px;
+    padding: 14px;
+    margin-bottom: 12px;
+    cursor: pointer;
+    transition: border-color 0.2s, background-color 0.2s;
+  }
+  .amort-option-card:hover {
+    border-color: var(--lime-dark);
+  }
+  .amort-option-card.selected {
+    border-color: var(--lime-dark);
+    background: rgba(198, 255, 61, 0.08);
+  }
+
+  /* ESTILOS DO MENU DE COMANDO RÁPIDO (BLOCO 3.8) */
+  .cmd-search-input {
+    width: 100%;
+    padding: 14px 16px;
+    border: none;
+    border-bottom: 1px solid var(--line);
+    background: transparent;
+    font-size: 15px;
+    color: var(--ink);
+    outline: none;
+  }
+  .cmd-list {
+    max-height: 280px;
+    overflow-y: auto;
+    padding: 8px 0;
+  }
+  .cmd-item {
+    padding: 10px 16px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    font-size: 13.5px;
+    color: var(--ink);
+    cursor: pointer;
+    border-radius: 8px;
+    margin: 2px 8px;
+  }
+  .cmd-item:hover, .cmd-item.selected {
+    background: var(--cream);
+    color: var(--lime-dark);
+  }
+
+  /* RESPONSIVIDADE (< 880px) */
+  @media(max-width:880px) {
+    .menu-btn { display: inline-flex; }
+    .topbar { padding: 0 16px; height: 60px; min-height: 60px; }
+    .content { padding: 18px 16px 50px; }
+    .grid-3, .grid-2 { grid-template-columns: 1fr; }
+    .sidebar {
+      position: fixed; top: 0; left: 0; height: 100vh; height: 100dvh;
+      transform: translateX(-100%); transition: transform .25s cubic-bezier(0.4, 0, 0.2, 1);
+      box-shadow: 20px 0 40px rgba(0,0,0,.35);
     }
-    .sidebar.open{transform:translateX(0);}
-    
-    .login-card{width:90vw; max-width:400px; padding:28px 22px 24px;}
-    
-    input[type=text], input[type=password], input[type=number], select{
-      font-size:16px !important;
-    }
+    .sidebar.open { transform: translateX(0); }
+    .login-card { width: 90vw; max-width: 400px; padding: 28px 22px 24px; }
+    .cmd-k-badge { display: none; }
   }
 </style>
 </head>
 <body>
 
-<!-- ================= LOGIN ================= -->
-<div class="login-screen" id="loginScreen">
+<!-- CONTÊINER DE TOASTS -->
+<div id="toast-container" aria-live="polite"></div>
 
-  <!-- ---- TELA: LOGIN ---- -->
+<!-- MODAL GENÉRICO E REUTILIZÁVEL -->
+<div class="modal-overlay" id="globalModal" role="dialog" aria-modal="true" tabindex="-1">
+  <div class="modal-card">
+    <div class="modal-head">
+      <h3 id="modalTitle">Título do Modal</h3>
+      <button class="modal-close" onclick="closeModal()" aria-label="Fechar modal">✕</button>
+    </div>
+    <div id="modalBody">
+      <!-- Conteúdo injetado via JS -->
+    </div>
+    <div id="modalFooter" style="margin-top: 20px; display: flex; justify-content: flex-end; gap: 10px;">
+      <!-- Ações do Modal -->
+    </div>
+  </div>
+</div>
+
+<!-- ================= LOGIN / AUTENTICAÇÃO ================= -->
+<div class="login-screen" id="loginScreen">
+  <!-- BLOCO 3.5: BLOBS ANIMADOS DO FUNDO -->
+  <div class="login-bg-blob blob-1"></div>
+  <div class="login-bg-blob blob-2"></div>
+
+  <!-- TELA: LOGIN -->
   <div class="login-card" id="viewLogin">
-    <div class="login-brand">
-      <div class="brand-dot"></div>
-      <div class="brand-name">Nexta<span>Finance</span></div>
+    <div class="brand" style="border:none; padding:0 0 20px;">
+      <div class="brand-dot" style="background:var(--navy);"></div>
+      <div class="brand-name" style="color:var(--navy);">Nexta<span style="color:var(--lime-dark);">Finance</span></div>
     </div>
     <h2 style="margin:0 0 6px; font-size:19px;">Entrar na sua conta</h2>
-    <p style="margin:0 0 22px; font-size:13px; color:var(--slate);">Acesse o painel para simular, acompanhar ou gerenciar empréstimos.</p>
-    <label>E-mail</label>
-    <input type="text" id="loginEmail" placeholder="voce@email.com" autocomplete="email">
-    <label>Senha</label>
-    <input type="password" id="loginSenha" placeholder="••••••••">
-    <div id="loginError" style="display:none; color:var(--danger); font-size:12.5px; font-weight:600; margin:-8px 0 14px;">E-mail ou senha inválidos.</div>
-    <button class="btn btn-lime btn-block" onclick="tentarLogin()">Entrar</button>
-    <div class="row-flex" style="justify-content:space-between; margin-top:16px;">
-      <a href="#" onclick="mostrarTela('cadastro'); return false;" style="font-size:13px; font-weight:600; color:var(--navy); padding:6px 0;">Criar conta</a>
-      <a href="#" onclick="mostrarTela('esqueci'); return false;" style="font-size:13px; font-weight:600; color:var(--slate); padding:6px 0;">Esqueci a senha</a>
+    <p style="margin:0 0 22px; font-size:13px; color:var(--slate);">Acesse o painel para gerenciar seus empréstimos.</p>
+    
+    <div class="form-group">
+      <label for="loginEmail">E-mail</label>
+      <input type="text" id="loginEmail" placeholder="voce@email.com" autocomplete="email" oninput="validarFormLogin()">
+      <div class="field-error" id="errLoginEmail">Formato de e-mail inválido.</div>
+    </div>
+
+    <div class="form-group">
+      <label for="loginSenha">Senha</label>
+      <input type="password" id="loginSenha" placeholder="••••••••" oninput="validarFormLogin()">
+    </div>
+
+    <button class="btn btn-lime btn-block" id="btnLoginSubmit" onclick="tentarLogin()" disabled>Entrar</button>
+    
+    <div class="row-flex" style="justify-content: space-between; margin-top:16px;">
+      <a href="#" onclick="mostrarTela('cadastro'); return false;" style="font-size:13px; font-weight:600; color:var(--navy);">Criar conta</a>
+      <a href="#" onclick="mostrarTela('esqueci'); return false;" style="font-size:13px; font-weight:600; color:var(--slate);">Esqueci a senha</a>
     </div>
   </div>
 
-  <!-- ---- TELA: CRIAR CONTA ---- -->
+  <!-- TELA: CRIAR CONTA -->
   <div class="login-card" id="viewCadastro" style="display:none;">
-    <div class="login-brand">
-      <div class="brand-dot"></div>
-      <div class="brand-name">Nexta<span>Finance</span></div>
+    <div class="brand" style="border:none; padding:0 0 20px;">
+      <div class="brand-dot" style="background:var(--navy);"></div>
+      <div class="brand-name" style="color:var(--navy);">Nexta<span style="color:var(--lime-dark);">Finance</span></div>
     </div>
     <h2 style="margin:0 0 6px; font-size:19px;">Criar conta</h2>
     <p style="margin:0 0 20px; font-size:13px; color:var(--slate);">Leva menos de um minuto.</p>
-    <label>Nome completo</label>
-    <input type="text" id="cadNome" placeholder="Seu nome">
-    <label>E-mail</label>
-    <input type="text" id="cadEmail" placeholder="voce@email.com">
-    <label>Senha</label>
-    <input type="password" id="cadSenha" placeholder="Crie uma senha">
-    <label>Pergunta de segurança: qual sua cor favorita?</label>
-    <input type="text" id="cadPergunta" placeholder="Ex: azul">
-    <div id="cadError" style="display:none; color:var(--danger); font-size:12.5px; font-weight:600; margin:-8px 0 14px;"></div>
-    <button class="btn btn-lime btn-block" onclick="criarConta()">Criar minha conta</button>
+    
+    <div class="form-group">
+      <label for="cadNome">Nome completo</label>
+      <input type="text" id="cadNome" placeholder="Seu nome" oninput="validarFormCadastro()">
+    </div>
+    
+    <div class="form-group">
+      <label for="cadEmail">E-mail</label>
+      <input type="text" id="cadEmail" placeholder="voce@email.com" oninput="validarFormCadastro()">
+      <div class="field-error" id="errCadEmail">Informe um e-mail válido.</div>
+    </div>
+    
+    <div class="form-group">
+      <label for="cadSenha">Senha (mínimo 6 caracteres)</label>
+      <input type="password" id="cadSenha" placeholder="Crie uma senha" oninput="validarFormCadastro(); testarForcaSenha(this.value, 'cadMeter')">
+      <div class="strength-meter"><div class="strength-fill" id="cadMeter"></div></div>
+    </div>
+    
+    <div class="form-group">
+      <label for="cadPergunta">Pergunta de segurança pessoal</label>
+      <input type="text" id="cadPergunta" placeholder="Ex: Qual o nome do seu primeiro pet?" oninput="validarFormCadastro()">
+    </div>
+
+    <button class="btn btn-lime btn-block" id="btnCadSubmit" onclick="criarConta()" disabled>Criar minha conta</button>
     <div style="margin-top:18px; font-size:12px; text-align:center;">
-      <a href="#" onclick="mostrarTela('login'); return false;" style="color:var(--navy); font-weight:600; padding:6px 0; display:inline-block;">← Voltar para o login</a>
+      <a href="#" onclick="mostrarTela('login'); return false;" style="color:var(--navy); font-weight:600;">← Voltar para o login</a>
     </div>
   </div>
 
-  <!-- ---- TELA: ESQUECI MINHA SENHA ---- -->
+  <!-- TELA: ESQUECI A SENHA -->
   <div class="login-card" id="viewEsqueci" style="display:none;">
-    <div class="login-brand">
-      <div class="brand-dot"></div>
-      <div class="brand-name">Nexta<span>Finance</span></div>
+    <div class="brand" style="border:none; padding:0 0 20px;">
+      <div class="brand-dot" style="background:var(--navy);"></div>
+      <div class="brand-name" style="color:var(--navy);">Nexta<span style="color:var(--lime-dark);">Finance</span></div>
     </div>
     <h2 style="margin:0 0 6px; font-size:19px;">Recuperar senha</h2>
-    <p style="margin:0 0 20px; font-size:13px; color:var(--slate);" id="esqueciTexto">Informe seu e-mail cadastrado.</p>
+    <p style="margin:0 0 20px; font-size:13px; color:var(--slate);">Informe seu e-mail cadastrado.</p>
 
     <div id="esqueciPasso1">
-      <label>E-mail</label>
-      <input type="text" id="recEmail" placeholder="voce@email.com">
-      <div id="recError1" style="display:none; color:var(--danger); font-size:12.5px; font-weight:600; margin:-8px 0 14px;"></div>
+      <div class="form-group">
+        <label for="recEmail">E-mail</label>
+        <input type="text" id="recEmail" placeholder="voce@email.com">
+      </div>
       <button class="btn btn-lime btn-block" onclick="buscarConta()">Continuar</button>
     </div>
 
+    <!-- BLOCO 1.2: PERGUNTA DE SEGURANÇA DINÂMICA DO USUÁRIO -->
     <div id="esqueciPasso2" style="display:none;">
-      <label id="perguntaLabel">Qual sua cor favorita?</label>
-      <input type="text" id="recResposta" placeholder="Sua resposta">
-      <label>Nova senha</label>
-      <input type="password" id="recNovaSenha" placeholder="Digite a nova senha">
-      <div id="recError2" style="display:none; color:var(--danger); font-size:12.5px; font-weight:600; margin:-8px 0 14px;"></div>
+      <div class="form-group">
+        <label id="perguntaLabel">Pergunta de segurança:</label>
+        <input type="text" id="recResposta" placeholder="Sua resposta">
+      </div>
+      <div class="form-group">
+        <label for="recNovaSenha">Nova senha</label>
+        <input type="password" id="recNovaSenha" placeholder="Digite a nova senha">
+      </div>
       <button class="btn btn-lime btn-block" onclick="redefinirSenha()">Redefinir senha</button>
     </div>
 
     <div style="margin-top:18px; font-size:12px; text-align:center;">
-      <a href="#" onclick="mostrarTela('login'); return false;" style="color:var(--navy); font-weight:600; padding:6px 0; display:inline-block;">← Voltar para o login</a>
+      <a href="#" onclick="mostrarTela('login'); return false;" style="color:var(--navy); font-weight:600;">← Voltar para o login</a>
     </div>
   </div>
 
 </div>
 
-<!-- ================= APP ================= -->
+<!-- ================= APLICAÇÃO PRINCIPAL ================= -->
 <div id="app" style="display:none;">
 
+  <!-- BARRA LATERAL (NAV) -->
   <div class="sidebar" id="sidebar">
     <div class="brand">
       <div class="brand-dot"></div>
       <div class="brand-name">Nexta<span>Finance</span></div>
     </div>
 
-    <!-- NAVEGAÇÃO CLIENTE -->
-    <div id="navClienteGroup">
+    <!-- Navegação do Cliente -->
+    <div id="navClienteGroup" class="nav-group">
+      <div class="nav-pill" id="navPillCliente"></div>
       <div class="nav-label">Minha conta</div>
-      <div class="nav-item active" data-page="dashboard" onclick="go('dashboard')">
+      <div class="nav-item active" data-page="dashboard" onclick="go('dashboard')" tabindex="0">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="9" rx="1.5"/><rect x="14" y="3" width="7" height="5" rx="1.5"/><rect x="14" y="12" width="7" height="9" rx="1.5"/><rect x="3" y="16" width="7" height="5" rx="1.5"/></svg>
         Painel
       </div>
-      <div class="nav-item" data-page="simulador" onclick="go('simulador')">
+      <div class="nav-item" data-page="simulador" onclick="go('simulador')" tabindex="0">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2v20M2 12h20"/><circle cx="12" cy="12" r="9"/></svg>
         Simular empréstimo
       </div>
-      <div class="nav-item" data-page="acompanhar" onclick="go('acompanhar')">
+      <div class="nav-item" data-page="acompanhar" onclick="go('acompanhar')" tabindex="0">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 12h4l3 8 4-16 3 8h4"/></svg>
         Acompanhar contrato
       </div>
     </div>
 
-    <!-- NAVEGAÇÃO INTERNA / ADMIN -->
-    <div id="navAdminGroup" style="display:none;">
+    <!-- Navegação Interna / Admin -->
+    <div id="navAdminGroup" class="nav-group" style="display:none;">
+      <div class="nav-pill" id="navPillAdmin"></div>
       <div class="nav-label">Operação interna</div>
-      <div class="nav-item" data-page="credito" onclick="go('credito')">
+      <div class="nav-item" data-page="credito" onclick="go('credito')" tabindex="0">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 3"/></svg>
         Análise de crédito
       </div>
-      <div class="nav-item" data-page="cobranca" onclick="go('cobranca')">
+      <div class="nav-item" data-page="cobranca" onclick="go('cobranca')" tabindex="0">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="6" width="20" height="13" rx="2"/><path d="M2 10h20"/></svg>
         Central de cobrança
       </div>
-      <div class="nav-item" data-page="fraude" onclick="go('fraude')">
+      <div class="nav-item" data-page="fraude" onclick="go('fraude')" tabindex="0">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2 3 6v6c0 5 4 8.5 9 10 5-1.5 9-5 9-10V6l-9-4Z"/></svg>
         Central antifraude
       </div>
     </div>
 
+    <!-- Links Comuns -->
+    <div id="navGeneralGroup" class="nav-group">
+      <div class="nav-label">Geral</div>
+      <div class="nav-item" data-page="perfil" onclick="go('perfil')" tabindex="0">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="7" r="4"/><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/></svg>
+        Meu perfil
+      </div>
+      <div class="nav-item" data-page="sobre" onclick="go('sobre')" tabindex="0">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg>
+        Sobre o Nexta
+      </div>
+    </div>
+
     <div class="sidebar-foot">
-      <span id="loggedAs">Usuário</span><br>
-      <a href="#" onclick="sair(); return false;" style="color:#C6CEDB; text-decoration:underline; display:inline-block; padding:4px 0;">Sair</a><br><br>
-      Projeto Prático em Sistemas<br>UNINOVE · Prof. Anderson Barros
+      <div class="row-flex" style="margin-bottom:8px;">
+        <span class="avatar" id="sidebarAvatar">US</span>
+        <div>
+          <strong id="loggedAs" style="color:#fff; font-size:12.5px;">Usuário</strong><br>
+          <span id="loggedRole" style="font-size:10.5px;">Cliente</span>
+        </div>
+      </div>
+      <button class="btn btn-outline btn-sm btn-block" onclick="confirmarSair()" style="color:#fff; border-color:rgba(255,255,255,0.2);">Sair da conta</button>
+      <div style="margin-top:12px; font-size:10px; opacity:0.6;">UNINOVE · Prof. Anderson Barros</div>
     </div>
   </div>
 
   <div class="sidebar-overlay" id="sidebarOverlay" onclick="toggleMenu(false)"></div>
 
   <div class="main">
+    <!-- BARRA SUPERIOR -->
     <div class="topbar">
       <div class="row-flex" style="gap:10px;">
         <button class="menu-btn" onclick="toggleMenu(true)" aria-label="Abrir Menu">
@@ -488,16 +821,26 @@
         </button>
         <div class="topbar-title"><span class="crumb" id="crumbRole">Cliente</span> &nbsp;/&nbsp; <span id="crumbPage">Painel</span></div>
       </div>
-      <div class="status-pill"><span class="pulse"></span> Sistema Nexta ativo</div>
+      
+      <div class="row-flex" style="gap:12px;">
+        <!-- BLOCO 3.8: ATALHO CMD/CTRL + K -->
+        <button class="cmd-k-badge" onclick="abrirMenuComando()" title="Menu de busca rápida">
+          🔍 Busca <span style="font-size:9px; background:var(--line); padding:1px 4px; border-radius:3px; margin-left:3px;">⌘K</span>
+        </button>
+        <button class="theme-toggle" onclick="toggleTheme()" aria-label="Alternar tema claro/escuro">
+          <span id="themeIcon">🌙</span> <span id="themeText">Escuro</span>
+        </button>
+        <div class="status-pill"><span class="pulse"></span> Sistema ativo</div>
+      </div>
     </div>
 
     <div class="content" id="content">
 
-      <!-- ===== DASHBOARD (CLIENTE) ===== -->
+      <!-- ===== PÁGINA: DASHBOARD (CLIENTE) ===== -->
       <section class="page active" id="page-dashboard">
         <div class="page-head">
           <h1 id="welcomeUser">Olá 👋</h1>
-          <p>Aqui está o resumo do seu empréstimo e da sua conta na Nexta.</p>
+          <p>Resumo em tempo real da sua conta e empréstimos contratados.</p>
         </div>
         <div class="grid grid-3" style="margin-bottom:16px;">
           <div class="card">
@@ -511,7 +854,7 @@
             <div class="card-sub" id="dashSubParcela">sem vencimentos pendentes</div>
           </div>
           <div class="card">
-            <div class="card-label">Situação</div>
+            <div class="card-label">Situação do Contrato</div>
             <div class="card-value" style="font-size:18px; margin-top:4px;" id="dashStatusTag"><span class="tag gold">Sem contrato</span></div>
             <div class="card-sub" id="dashSubStatus">faça uma simulação abaixo</div>
           </div>
@@ -519,201 +862,316 @@
 
         <div class="grid grid-2">
           <div class="card">
-            <div class="card-label">Progresso do contrato</div>
+            <div class="card-label">Progresso de quitação</div>
             <div style="margin:14px 0 6px; font-size:13px; color:var(--slate);" id="dashProgressoTexto">0 de 0 parcelas pagas</div>
-            <div class="progress-bar"><div class="progress-fill" id="dashProgressBar" style="width:0%"></div></div>
-            <div class="divider"></div>
-            <div class="card-label">Transparência total</div>
-            <p style="font-size:13px; color:var(--slate); line-height:1.6; margin:8px 0 14px;">Toda cobrança de juros e cada etapa do seu empréstimo fica visível aqui — sem letras miúdas.</p>
+            <div class="progress-bar" style="height:8px; background:var(--line); border-radius:99px; overflow:hidden;">
+              <div class="progress-fill" id="dashProgressBar" style="height:100%; background:var(--lime-dark); width:0%; transition:width 0.8s ease;"></div>
+            </div>
+            <div style="height:1px; background:var(--line); margin:18px 0;"></div>
+            <div class="card-label">Transparência Nexta</div>
+            <p style="font-size:13px; color:var(--slate); line-height:1.6; margin:8px 0 14px;">Sem taxas ocultas ou surpresas nas parcelas. Acompanhe a evolução do seu contrato em tempo real.</p>
             <button class="btn btn-outline btn-sm" onclick="go('acompanhar')">Ver linha do tempo completa</button>
           </div>
           <div class="card">
-            <div class="card-label">Precisa de mais crédito?</div>
-            <p style="font-size:13px; color:var(--slate); line-height:1.6; margin:8px 0 16px;">Simule um novo empréstimo e receba uma resposta em segundos, com total clareza sobre taxas.</p>
-            <button class="btn btn-lime btn-block" onclick="go('simulador')">Simular agora</button>
+            <div class="card-label">Simulação Rápida</div>
+            <p style="font-size:13px; color:var(--slate); line-height:1.6; margin:8px 0 16px;">Precisa de capital? Simule novos prazos e receba pré-aprovação instantânea.</p>
+            <button class="btn btn-lime btn-block" onclick="go('simulador')">Ir para o Simulador</button>
           </div>
         </div>
       </section>
 
-      <!-- ===== SIMULADOR (CLIENTE) ===== -->
+      <!-- ===== PÁGINA: SIMULADOR (CLIENTE) ===== -->
       <section class="page" id="page-simulador">
         <div class="page-head">
-          <h1>Simular empréstimo</h1>
-          <p>Análise instantânea de crédito — ajuste os valores e veja o resultado em tempo real.</p>
+          <h1>Simulador de Empréstimo</h1>
+          <p>Ajuste os valores e calcule os custos com precisão determinística.</p>
         </div>
         <div class="grid grid-2">
           <div class="card">
-            <label>Valor solicitado</label>
-            <input type="range" id="valorRange" min="1000" max="100000" step="1000" value="10000" oninput="atualizarSimulacao()">
-            <div class="row-flex" style="justify-content:space-between; margin-bottom:16px;">
-              <span class="mono" style="font-size:13px; color:var(--slate);">R$ 1.000</span>
-              <span class="mono" id="valorAtual" style="font-weight:700; color:var(--navy);">R$ 10.000</span>
-              <span class="mono" style="font-size:13px; color:var(--slate);">R$ 100.000</span>
-            </div>
-            <label>Número de parcelas</label>
-            <select id="parcelasSelect" onchange="atualizarSimulacao()">
-              <option value="6">6x</option>
-              <option value="12" selected>12x</option>
-              <option value="18">18x</option>
-              <option value="24">24x</option>
-              <option value="36">36x</option>
-              <option value="48">48x</option>
-              <option value="60">60x</option>
-              <option value="72">72x</option>
-              <option value="96">96x</option>
-              <option value="120">120x</option>
-              <option value="144">144x</option>
-              <option value="180">180x</option>
-            </select>
-            <button class="btn btn-lime btn-block" onclick="analisarCredito()">Analisar crédito agora</button>
-          </div>
-          <div class="card" style="display:flex; flex-direction:column; align-items:center; justify-content:center; text-align:center;">
-            <div class="gauge-wrap">
-              <svg width="180" height="100" viewBox="0 0 180 100">
-                <path d="M10,95 A80,80 0 0,1 170,95" fill="none" stroke="#E4E1D8" stroke-width="14" stroke-linecap="round"/>
-                <path id="gaugeArc" d="M10,95 A80,80 0 0,1 170,95" fill="none" stroke="#C6FF3D" stroke-width="14" stroke-linecap="round" stroke-dasharray="251" stroke-dashoffset="251"/>
-              </svg>
-              <div class="gauge-score" id="gaugeScore">—</div>
-              <div class="gauge-caption">Score de aprovação estimado<br><span id="gaugeTime" class="mono"></span></div>
-            </div>
-            <div id="resultadoSim" style="margin-top:14px; font-size:13px; color:var(--slate);">Ajuste os valores e clique em "Analisar crédito agora".</div>
-            <div id="solicitarBox" style="display:none; width:100%; margin-top:18px;">
-              <button class="btn btn-lime btn-block" onclick="solicitarEmprestimo()">Solicitar este empréstimo</button>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <!-- ===== ACOMPANHAR CONTRATO (CLIENTE) ===== -->
-      <section class="page" id="page-acompanhar">
-        <div class="page-head">
-          <h1>Acompanhar contrato</h1>
-          <p>Linha do tempo completa do seu empréstimo — sem surpresas.</p>
-        </div>
-        <div class="grid grid-2">
-          <div class="card">
-            <div class="tl" id="timelineList">
-              <div class="tl-item active">
-                <div class="tl-dot"></div>
-                <div class="tl-title">Sem contratos ativos</div>
-                <div class="tl-sub">Faça uma simulação e solicite seu empréstimo para começar.</div>
+            <div class="form-group">
+              <label for="valorRange">Valor solicitado</label>
+              <input type="range" id="valorRange" min="1000" max="100000" step="1000" value="10000" oninput="atualizarSimulacao()">
+              <div class="row-flex" style="justify-space-between; margin-bottom:12px;">
+                <span class="mono" style="font-size:12px; color:var(--slate);">R$ 1.000</span>
+                <span class="mono" id="valorAtual" style="font-weight:700; color:var(--ink); font-size:16px;">R$ 10.000</span>
+                <span class="mono" style="font-size:12px; color:var(--slate);">R$ 100.000</span>
               </div>
             </div>
+
+            <div class="form-group">
+              <label for="parcelasSelect">Número de parcelas</label>
+              <select id="parcelasSelect" onchange="atualizarSimulacao()">
+                <option value="6">6 parcelas</option>
+                <option value="12" selected>12 parcelas</option>
+                <option value="18">18 parcelas</option>
+                <option value="24">24 parcelas</option>
+                <option value="36">36 parcelas</option>
+                <option value="48">48 parcelas</option>
+              </select>
+            </div>
+
+            <button class="btn btn-lime btn-block" onclick="executarSimulacaoComLoading()">Analisar crédito agora</button>
           </div>
+
+          <div class="card" style="display:flex; flex-direction:column; align-items:center; justify-content:center; text-align:center; position:relative;">
+            
+            <!-- Estado de Skeleton/Loading -->
+            <div id="simLoadingState" style="display:none; width:100%; padding:20px;">
+              <div class="skeleton" style="height:100px; width:180px; margin:0 auto 16px; border-radius:50px 50px 0 0;"></div>
+              <div class="skeleton" style="height:20px; width:60%; margin:0 auto 8px;"></div>
+              <div class="skeleton" style="height:14px; width:80%; margin:0 auto;"></div>
+            </div>
+
+            <!-- Estado Normal do Simulador -->
+            <div id="simNormalState" style="width:100%;">
+              <div class="gauge-wrap" style="display:flex; flex-direction:column; align-items:center;">
+                <svg width="180" height="100" viewBox="0 0 180 100">
+                  <path d="M10,95 A80,80 0 0,1 170,95" fill="none" stroke="var(--line)" stroke-width="14" stroke-linecap="round"/>
+                  <!-- BLOCO 3.6: COR DINÂMICA DO GAUGE -->
+                  <path id="gaugeArc" d="M10,95 A80,80 0 0,1 170,95" fill="none" stroke="var(--lime-dark)" stroke-width="14" stroke-linecap="round" stroke-dasharray="251" stroke-dashoffset="251" style="transition: stroke-dashoffset 1s ease, stroke 0.5s ease;"/>
+                </svg>
+                <div class="gauge-score mono" id="gaugeScore" style="font-size:32px; font-weight:700; margin-top:-46px; color:var(--ink);">—</div>
+                <div style="font-size:12px; color:var(--slate); margin-top:4px;">Score de aprovação estimado</div>
+              </div>
+
+              <div id="resultadoSim" style="margin-top:16px; font-size:13px; color:var(--slate);">
+                Clique em "Analisar crédito agora" para visualizar as taxas personalizadas.
+              </div>
+
+              <div id="solicitarBox" style="display:none; width:100%; margin-top:20px;">
+                <button class="btn btn-lime btn-block" onclick="solicitarEmprestimo()">Solicitar este empréstimo</button>
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </section>
+
+      <!-- ===== PÁGINA: ACOMPANHAR CONTRATO (CLIENTE) ===== -->
+      <section class="page" id="page-acompanhar">
+        <div class="page-head">
+          <h1>Acompanhar Contrato</h1>
+          <p>Histórico detalhado do seu empréstimo, pagamentos e amortizações antecipadas.</p>
+        </div>
+        <div class="grid grid-2" style="margin-bottom:20px;">
           <div class="card">
-            <div class="card-label">Detalhamento financeiro</div>
+            <div class="card-label">Linha do tempo do contrato</div>
+            <div class="tl" id="timelineList" style="margin-top:14px;">
+              <!-- Timeline gerada dinamicamente -->
+            </div>
+          </div>
+          
+          <div class="card">
+            <div class="card-label">Resumo Financeiro</div>
             <div class="table-responsive">
-              <table style="margin-top:10px; min-width:auto;">
+              <table style="min-width:auto;">
                 <tr><td>Valor contratado</td><td class="mono" id="detValor" style="text-align:right;">R$ 0,00</td></tr>
-                <tr><td>Taxa de juros</td><td class="mono" id="detTaxa" style="text-align:right;">0,0% a.m.</td></tr>
-                <tr><td>Total de juros</td><td class="mono" id="detJuros" style="text-align:right;">R$ 0,00</td></tr>
-                <tr><td>Valor total a pagar</td><td class="mono" id="detTotal" style="text-align:right; font-weight:700;">R$ 0,00</td></tr>
+                <tr><td>Taxa aplicada</td><td class="mono" id="detTaxa" style="text-align:right;">0,0% a.m.</td></tr>
+                <tr><td>Total em juros</td><td class="mono" id="detJuros" style="text-align:right;">R$ 0,00</td></tr>
+                <tr><td>Custo Total (CET)</td><td class="mono" id="detTotal" style="text-align:right; font-weight:700;">R$ 0,00</td></tr>
               </table>
             </div>
-            <div class="divider"></div>
-            <p style="font-size:12.5px; color:var(--slate); line-height:1.6;">Cada parcela paga é refletida aqui em tempo real — você acompanha tudo online com clareza total.</p>
+            
+            <!-- BLOCO 2: BOTÃO DE AMORTIZAÇÃO ANTECIPADA -->
+            <div style="height:1px; background:var(--line); margin:16px 0;"></div>
+            <div class="row-flex" style="gap:10px;">
+              <button class="btn btn-lime btn-sm" id="btnAbrirAmortizacao" onclick="abrirModalAmortizacao()" style="flex:1;">⚡ Amortizar Parcela</button>
+              <button class="btn btn-outline btn-sm" onclick="gerarComprovantePDF()" style="flex:1;">📄 PDF Comprovante</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Histórico de Parcelas -->
+        <div class="card">
+          <div class="card-label">Histórico de Parcelas</div>
+          <div class="table-responsive">
+            <table>
+              <thead>
+                <tr><th>Parcela</th><th>Vencimento</th><th>Valor</th><th>Status</th><th>Ação</th></tr>
+              </thead>
+              <tbody id="parcelasTableBody">
+                <!-- Parcelas geradas via JS -->
+              </tbody>
+            </table>
           </div>
         </div>
       </section>
 
-      <!-- ===== ANÁLISE DE CRÉDITO (INTERNO / ADMIN) ===== -->
+      <!-- ===== PÁGINA: ANÁLISE DE CRÉDITO (ADMIN) ===== -->
       <section class="page" id="page-credito">
         <div class="page-head">
-          <h1>Análise de crédito</h1>
-          <p>Fila de solicitações de clientes e simulações com score automático.</p>
+          <h1>Análise de Crédito</h1>
+          <p>Fila de solicitações com avaliação automatizada por score.</p>
         </div>
+
+        <div class="grid grid-3" style="margin-bottom:16px;">
+          <div class="card"><div class="card-label">Tempo médio de análise</div><div class="card-value mono" id="metricTempoAnalise">35s</div><div class="card-sub">automação Nexta Engine</div></div>
+          <div class="card"><div class="card-label">Taxa de aprovação</div><div class="card-value mono" id="metricTaxaAprovacao">84%</div><div class="card-sub">modelagem de baixo risco</div></div>
+          <div class="card"><div class="card-label">Total de cadastros</div><div class="card-value mono" id="totalCadastrosCount">0</div><div class="card-sub">clientes ativos</div></div>
+        </div>
+
+        <!-- Gráfico de Automação -->
+        <div class="card" style="margin-bottom:16px;">
+          <div class="card-label">Desempenho: Tempo Médio de Análise (Antes vs Depois da Automação)</div>
+          <div style="height:200px; position:relative;"><canvas id="chartCredito"></canvas></div>
+        </div>
+
         <div class="card">
+          <div class="card-label">Fila de Propostas</div>
           <div class="table-responsive">
             <table>
-              <thead><tr><th>Cliente</th><th>Valor Solicitado</th><th>Score</th><th>Data / Status</th><th>Ação</th></tr></thead>
+              <thead><tr><th>Cliente</th><th>Solicitado</th><th>Score</th><th>Status</th><th>Ação</th></tr></thead>
               <tbody id="creditoTableBody">
-                <!-- RENDERIZADO DINAMICAMENTE -->
+                <!-- Preenchido via JS -->
               </tbody>
             </table>
           </div>
         </div>
-        <div class="grid grid-3" style="margin-top:16px;">
-          <div class="card"><div class="card-label">Tempo médio de análise</div><div class="card-value mono">35s</div><div class="card-sub">processamento em tempo real</div></div>
-          <div class="card"><div class="card-label">Aprovação automática</div><div class="card-value mono">84%</div><div class="card-sub">baseado no algoritmo Nexta</div></div>
-          <div class="card"><div class="card-label">Total de cadastros</div><div class="card-value mono" id="totalCadastrosCount">0</div><div class="card-sub">usuários cadastrados</div></div>
-        </div>
       </section>
 
-      <!-- ===== COBRANÇA (INTERNO) ===== -->
+      <!-- ===== PÁGINA: CENTRAL DE COBRANÇA (ADMIN) ===== -->
       <section class="page" id="page-cobranca">
         <div class="page-head">
-          <h1>Central de cobrança</h1>
-          <p>Estágios de cobrança organizados — do lembrete amigável à ação judicial.</p>
+          <h1>Central de Cobrança</h1>
+          <p>Gestão ativa de inadimplência e renegociações.</p>
         </div>
+
         <div class="grid grid-3" style="margin-bottom:16px;">
-          <div class="card"><div class="card-label">Índice de inadimplência</div><div class="card-value mono">3,8%</div><div class="card-sub tag up" style="display:inline-flex; margin-top:8px;">↓ 2,1 p.p. no mês</div></div>
-          <div class="card"><div class="card-label">Em negociação</div><div class="card-value mono">29</div><div class="card-sub">contratos ativos</div></div>
-          <div class="card"><div class="card-label">Recuperado este mês</div><div class="card-value mono">R$ 42.100</div><div class="card-sub">via cobrança automatizada</div></div>
+          <div class="card"><div class="card-label">Inadimplência geral</div><div class="card-value mono" id="metricInadimplencia">3.8%</div><div class="card-sub tag up">↓ 2.1 p.p. no mês</div></div>
+          <div class="card"><div class="card-label">Em negociação</div><div class="card-value mono" id="cobrancaEmRiscoCount">0</div><div class="card-sub">contratos em acompanhamento</div></div>
+          <div class="card"><div class="card-label">Recuperado (Mês)</div><div class="card-value mono" id="metricRecuperado">R$ 42.100</div><div class="card-sub">cobrança automatizada</div></div>
         </div>
+
+        <!-- Gráfico de Inadimplência -->
+        <div class="card" style="margin-bottom:16px;">
+          <div class="card-label">Evolução da Inadimplência (Últimos 6 meses)</div>
+          <div style="height:200px; position:relative;"><canvas id="chartCobranca"></canvas></div>
+        </div>
+
         <div class="card">
+          <div class="card-label">Carteira de Cobrança</div>
           <div class="table-responsive">
             <table>
-              <thead><tr><th>Cliente</th><th>Parcela</th><th>Dias em atraso</th><th>Estágio</th><th></th></tr></thead>
-              <tbody>
-                <tr>
-                  <td class="row-flex"><span class="avatar">JF</span>João Ferreira</td>
-                  <td class="mono">R$ 420,00</td>
-                  <td>3 dias</td>
-                  <td><span class="tag gold">Lembrete enviado</span></td>
-                  <td><button class="btn btn-outline btn-sm">Gerenciar</button></td>
-                </tr>
-                <tr>
-                  <td class="row-flex"><span class="avatar">CP</span>Carla Pires</td>
-                  <td class="mono">R$ 690,00</td>
-                  <td>17 dias</td>
-                  <td><span class="tag warn">Negociação</span></td>
-                  <td><button class="btn btn-outline btn-sm">Gerenciar</button></td>
-                </tr>
-                <tr>
-                  <td class="row-flex"><span class="avatar">TN</span>Tiago Nunes</td>
-                  <td class="mono">R$ 1.150,00</td>
-                  <td>54 dias</td>
-                  <td><span class="tag warn" style="background:#FCE0DA; color:var(--danger);">Cobrança extrajudicial</span></td>
-                  <td><button class="btn btn-outline btn-sm">Gerenciar</button></td>
-                </tr>
+              <thead><tr><th>Cliente</th><th>Valor em Atraso</th><th>Dias de Atraso</th><th>Estágio Atual</th><th>Ação</th></tr></thead>
+              <tbody id="cobrancaTableBody">
+                <!-- Preenchido via JS dinamicamente -->
               </tbody>
             </table>
           </div>
         </div>
       </section>
 
-      <!-- ===== ANTIFRAUDE (INTERNO) ===== -->
+      <!-- ===== PÁGINA: CENTRAL ANTIFRAUDE (ADMIN) ===== -->
       <section class="page" id="page-fraude">
         <div class="page-head">
-          <h1>Central antifraude</h1>
-          <p>Monitoramento e alertas de divergências e atipicidades em tempo real.</p>
+          <h1>Central Antifraude</h1>
+          <p>Monitoramento preventivo e inteligência contra riscos operacionais.</p>
         </div>
-        <div class="grid grid-3" style="margin-bottom:16px;">
-          <div class="card"><div class="card-label">Alertas pendentes</div><div class="card-value mono">2</div><div class="card-sub tag warn" style="display:inline-flex; margin-top:8px;">Requer atenção</div></div>
-          <div class="card"><div class="card-label">Tentativas bloqueadas</div><div class="card-value mono">24</div><div class="card-sub">últimos 30 dias</div></div>
-          <div class="card"><div class="card-label">Precisão do modelo</div><div class="card-value mono">99,4%</div><div class="card-sub">Machine Learning</div></div>
+
+        <div class="grid grid-2" style="margin-bottom:16px;">
+          <div class="card">
+            <div class="card-label">Tipos de Ocorrências Detectadas</div>
+            <div style="height:220px; position:relative;"><canvas id="chartFraude"></canvas></div>
+          </div>
+          <div class="card">
+            <div class="card-label">Métricas do Modelo</div>
+            <div style="margin-top:10px;">
+              <div class="card-label">Alertas pendentes</div>
+              <div class="card-value mono" id="fraudeAlertasCount">0</div>
+              <div class="divider" style="height:1px; background:var(--line); margin:12px 0;"></div>
+              <div class="card-label">Precisão do Algoritmo</div>
+              <div class="card-value mono" id="metricPrecisao">99.4%</div>
+            </div>
+          </div>
         </div>
+
         <div class="card">
+          <div class="card-label">Alertas e Anomalias de Usuários</div>
           <div class="table-responsive">
             <table>
-              <thead><tr><th>Usuário / CPF</th><th>Ocorrência Detectada</th><th>Nível de Risco</th><th>Ação Recomendada</th><th></th></tr></thead>
-              <tbody>
-                <tr>
-                  <td class="row-flex"><span class="avatar">MA</span>Marcio Alves</td>
-                  <td>Múltiplos acessos de IPs geograficamente distantes</td>
-                  <td><span class="tag warn">Alto</span></td>
-                  <td>Bloqueio temporário</td>
-                  <td><button class="btn btn-outline btn-sm">Analisar</button></td>
-                </tr>
-                <tr>
-                  <td class="row-flex"><span class="avatar">CL</span>Carla Lima</td>
-                  <td>Inconsistência entre selfie e documento (OCR)</td>
-                  <td><span class="tag gold">Médio</span></td>
-                  <td>Requerer validação manual</td>
-                  <td><button class="btn btn-outline btn-sm">Analisar</button></td>
-                </tr>
+              <thead><tr><th>Usuário</th><th>Ocorrência Detectada</th><th>Nível de Risco</th><th>Status</th><th>Ação</th></tr></thead>
+              <tbody id="fraudeTableBody">
+                <!-- Preenchido via JS dinamicamente -->
               </tbody>
             </table>
+          </div>
+        </div>
+      </section>
+
+      <!-- ===== PÁGINA: MEU PERFIL (TODOS) ===== -->
+      <section class="page" id="page-perfil">
+        <div class="page-head">
+          <h1>Meu Perfil</h1>
+          <p>Gerencie seus dados de acesso e preferências da conta.</p>
+        </div>
+
+        <div class="grid grid-2">
+          <div class="card">
+            <div class="card-label">Dados Pessoais</div>
+            
+            <div class="form-group">
+              <label for="perfilNome">Nome Completo</label>
+              <input type="text" id="perfilNome">
+            </div>
+
+            <div class="form-group">
+              <label for="perfilEmail">E-mail de Cadastro</label>
+              <input type="text" id="perfilEmail" readonly style="opacity:0.7;">
+            </div>
+
+            <button class="btn btn-lime btn-sm" onclick="salvarDadosPerfil()">Salvar Alterações</button>
+          </div>
+
+          <div class="card">
+            <div class="card-label">Alterar Senha</div>
+
+            <div class="form-group">
+              <label for="senhaAtual">Senha Atual</label>
+              <input type="password" id="senhaAtual" placeholder="••••••••">
+            </div>
+
+            <div class="form-group">
+              <label for="novaSenha">Nova Senha</label>
+              <input type="password" id="novaSenha" placeholder="Nova senha" oninput="testarForcaSenha(this.value, 'perfilMeter')">
+              <div class="strength-meter"><div class="strength-fill" id="perfilMeter"></div></div>
+            </div>
+
+            <!-- BLOCO 1.1: USO DA CLASSE btn-navy -->
+            <button class="btn btn-navy btn-sm" onclick="alterarSenhaPerfil()">Atualizar Senha</button>
+          </div>
+        </div>
+      </section>
+
+      <!-- ===== PÁGINA: SOBRE A NEXTA FINANCE ===== -->
+      <section class="page" id="page-sobre">
+        <div class="page-head">
+          <h1>Sobre a Nexta Finance</h1>
+          <p>Visão geral da solução tecnológica e arquitetura do projeto.</p>
+        </div>
+
+        <div class="grid grid-2">
+          <!-- BLOCO 3.9: SCROLL REVEAL CARDS -->
+          <div class="card scroll-reveal">
+            <h3 style="margin-top:0; color:var(--ink);">Proposta de Valor</h3>
+            <p style="font-size:13.5px; color:var(--slate); line-height:1.6;">
+              A <strong>Nexta Finance</strong> é uma plataforma moderna desenvolvida para desburocratizar o acesso ao crédito pessoal. Combinando algoritmos determinísticos de análise de risco, transparência absoluta em juros compostos e auditoria interna em tempo real.
+            </p>
+            <p style="font-size:13.5px; color:var(--slate); line-height:1.6;">
+              Nosso objetivo é eliminar fricções do mercado financeiro tradicional através de automação de ponta a ponta.
+            </p>
+          </div>
+
+          <div class="card scroll-reveal">
+            <h3 style="margin-top:0; color:var(--ink);">Contexto Acadêmico</h3>
+            <p style="font-size:13.5px; color:var(--slate); line-height:1.6;">
+              <strong>Disciplina:</strong> Projeto Prático em Sistemas<br>
+              <strong>Instituição:</strong> UNINOVE<br>
+              <strong>Orientador:</strong> Prof. Anderson Barros
+            </p>
+            <div style="height:1px; background:var(--line); margin:12px 0;"></div>
+            <p style="font-size:12.5px; color:var(--slate); line-height:1.5;">
+              Arquitetura de Front-End em arquivo único (Single-File Application) demonstrando padrões avançados de UX, persistência em localStorage, controle de acesso baseado em papéis (RBAC) e visualizações dinâmicas de dados.
+            </p>
           </div>
         </div>
       </section>
@@ -722,17 +1180,23 @@
   </div>
 </div>
 
+<!-- ================= SCRIPT JAVASCRIPT LOGIC ================= -->
 <script>
+  /* ---------- ESTADO GLOBAL DA APLICAÇÃO ---------- */
   let currentUser = null;
   let latestSimulation = null;
+  let chartCreditoInstance = null;
+  let chartCobrancaInstance = null;
+  let chartFraudeInstance = null;
+  let selectedAmortType = 'prazo'; // 'prazo' ou 'parcela'
 
-  // Usuários padrão pré-cadastrados
+  // Usuários Padrão para Iniciar o Sistema
   const defaultUsers = [
     {
       email: 'admin@nexta.com',
       senha: 'admin123',
       nome: 'Administrador Operacional',
-      pergunta: 'azul',
+      pergunta: 'Qual o nome do seu primeiro animal de estimação?',
       role: 'admin',
       contrato: null
     },
@@ -740,15 +1204,20 @@
       email: 'jonathas@email.com',
       senha: '123',
       nome: 'Jonathas Silva',
-      pergunta: 'verde',
+      pergunta: 'Qual a sua cor favorita?',
       role: 'cliente',
+      cobrancaEstagio: 'Em dia',
+      cobrancaDiasAtraso: 0,
+      fraudeOcorrencia: 'Nenhuma anomalia',
+      fraudeRisco: 'Baixo',
+      fraudeStatus: 'Normal',
       contrato: {
         valorContratado: 6000,
         saldoDevedor: 4320,
         valorParcela: 480,
-        parcelasPagas: 8,
+        parcelasPagas: 4,
         totalParcelas: 12,
-        vencimento: '05/09/2026',
+        vencimento: '05/10/2026',
         status: 'Em dia',
         taxa: 2.3,
         dataSolicitacao: '12/06/2026',
@@ -759,8 +1228,13 @@
       email: 'marina@email.com',
       senha: '123',
       nome: 'Marina Castro',
-      pergunta: 'amarelo',
+      pergunta: 'Em qual cidade você nasceu?',
       role: 'cliente',
+      cobrancaEstagio: 'Lembrete enviado',
+      cobrancaDiasAtraso: 4,
+      fraudeOcorrencia: 'Acesso de novo dispositivo',
+      fraudeRisco: 'Medio',
+      fraudeStatus: 'Analisar',
       contrato: {
         valorContratado: 3500,
         saldoDevedor: 3500,
@@ -778,8 +1252,13 @@
       email: 'rodrigo@email.com',
       senha: '123',
       nome: 'Rodrigo Paes',
-      pergunta: 'preto',
+      pergunta: 'Qual sua comida favorita?',
       role: 'cliente',
+      cobrancaEstagio: 'Cobrança extrajudicial',
+      cobrancaDiasAtraso: 42,
+      fraudeOcorrencia: 'Múltiplos IPs geograficamente distantes',
+      fraudeRisco: 'Alto',
+      fraudeStatus: 'Bloqueado',
       contrato: {
         valorContratado: 12000,
         saldoDevedor: 12000,
@@ -795,13 +1274,24 @@
     }
   ];
 
+  /* ---------- PERSISTÊNCIA LOCALSTORAGE ---------- */
   function getUsers() {
     const stored = localStorage.getItem('nexta_users');
     if (!stored) {
       localStorage.setItem('nexta_users', JSON.stringify(defaultUsers));
       return defaultUsers;
     }
-    return JSON.parse(stored);
+    const parsed = JSON.parse(stored);
+    
+    return parsed.map(u => ({
+      cobrancaEstagio: u.cobrancaEstagio || 'Em dia',
+      cobrancaDiasAtraso: u.cobrancaDiasAtraso || 0,
+      fraudeOcorrencia: u.fraudeOcorrencia || 'Sem ocorrências',
+      fraudeRisco: u.fraudeRisco || 'Baixo',
+      fraudeStatus: u.fraudeStatus || 'Normal',
+      pergunta: u.pergunta || 'Qual sua pergunta de segurança?',
+      ...u
+    }));
   }
 
   function saveUsers(users) {
@@ -817,8 +1307,261 @@
     }
   }
 
-  // PERSISTÊNCIA DE SESSÃO
+  /* ---------- SISTEMA DE TOASTS ---------- */
+  function showToast(message, type = 'success') {
+    const container = document.getElementById('toast-container');
+    const toast = document.createElement('div');
+    toast.className = `toast toast-${type}`;
+    
+    let icon = '✓';
+    if (type === 'danger') icon = '✕';
+    if (type === 'warn') icon = '⚠';
+
+    toast.innerHTML = `<span>${icon}</span> <span>${message}</span>`;
+    container.appendChild(toast);
+
+    setTimeout(() => {
+      if (toast.parentNode) toast.parentNode.removeChild(toast);
+    }, 3000);
+  }
+
+  /* ---------- SISTEMA DE MODAIS ---------- */
+  function openModal(title, bodyHTML, actionsHTML) {
+    document.getElementById('modalTitle').textContent = title;
+    document.getElementById('modalBody').innerHTML = bodyHTML;
+    document.getElementById('modalFooter').innerHTML = actionsHTML;
+    
+    const overlay = document.getElementById('globalModal');
+    overlay.classList.add('active');
+    overlay.focus();
+  }
+
+  function closeModal() {
+    document.getElementById('globalModal').classList.remove('active');
+  }
+
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') closeModal();
+  });
+
+  /* ---------- BLOCO 3.10: MICRO-INTERAÇÃO DE RIPPLE NOS BOTÕES ---------- */
+  document.addEventListener('click', (e) => {
+    const btn = e.target.closest('.btn');
+    if (!btn) return;
+    const rect = btn.getBoundingClientRect();
+    const circle = document.createElement('span');
+    const diameter = Math.max(rect.width, rect.height);
+    const radius = diameter / 2;
+    circle.style.width = circle.style.height = `${diameter}px`;
+    circle.style.left = `${e.clientX - rect.left - radius}px`;
+    circle.style.top = `${e.clientY - rect.top - radius}px`;
+    circle.classList.add('ripple-effect');
+    
+    const existing = btn.querySelector('.ripple-effect');
+    if (existing) existing.remove();
+    
+    btn.appendChild(circle);
+  });
+
+  /* ---------- BLOCO 3.3: NÚMEROS ANIMADOS (COUNT-UP) ---------- */
+  function animateCountUp(element, targetValue, prefix = '', suffix = '', isCurrency = false, duration = 1000) {
+    if (!element) return;
+    const startValue = 0;
+    const startTime = performance.now();
+
+    function updateCount(currentTime) {
+      const elapsedTime = currentTime - startTime;
+      const progress = Math.min(elapsedTime / duration, 1);
+      const easeProgress = 1 - Math.pow(1 - progress, 3);
+      const currentValue = startValue + (targetValue - startValue) * easeProgress;
+
+      if (isCurrency) {
+        element.textContent = `${prefix}${currentValue.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}${suffix}`;
+      } else if (Number.isInteger(targetValue)) {
+        element.textContent = `${prefix}${Math.floor(currentValue)}${suffix}`;
+      } else {
+        element.textContent = `${prefix}${currentValue.toFixed(1)}${suffix}`;
+      }
+
+      if (progress < 1) {
+        requestAnimationFrame(updateCount);
+      }
+    }
+    requestAnimationFrame(updateCount);
+  }
+
+  /* ---------- BLOCO 3.4: TILT 3D SUTIL NOS CARDS ---------- */
+  function init3DTilt() {
+    if (window.matchMedia('(hover: hover) and (pointer: fine)').matches) {
+      document.querySelectorAll('.card').forEach(card => {
+        card.removeEventListener('mousemove', handleTiltMove);
+        card.removeEventListener('mouseleave', handleTiltLeave);
+        card.addEventListener('mousemove', handleTiltMove);
+        card.addEventListener('mouseleave', handleTiltLeave);
+      });
+    }
+  }
+
+  function handleTiltMove(e) {
+    const card = e.currentTarget;
+    const rect = card.getBoundingClientRect();
+    const x = e.clientX - rect.left - rect.width / 2;
+    const y = e.clientY - rect.top - rect.height / 2;
+    const rotateX = (-y / rect.height) * 6;
+    const rotateY = (x / rect.width) * 6;
+    card.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) translateY(-2px)`;
+    card.style.boxShadow = `0 12px 24px rgba(0,0,0,0.12)`;
+  }
+
+  function handleTiltLeave(e) {
+    const card = e.currentTarget;
+    card.style.transform = '';
+    card.style.boxShadow = '';
+  }
+
+  /* ---------- BLOCO 3.7: CELEBRAÇÃO VISUAL (CONFETES) ---------- */
+  function dispararConfetes() {
+    const canvas = document.createElement('canvas');
+    canvas.style.position = 'fixed';
+    canvas.style.inset = '0';
+    canvas.style.width = '100vw';
+    canvas.style.height = '100vh';
+    canvas.style.pointerEvents = 'none';
+    canvas.style.zIndex = '9999';
+    document.body.appendChild(canvas);
+
+    const ctx = canvas.getContext('2d');
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+
+    const particles = [];
+    const colors = ['#C6FF3D', '#0F1B2D', '#D4A54A', '#3B82F6', '#E4572E'];
+    for (let i = 0; i < 90; i++) {
+      particles.push({
+        x: canvas.width / 2,
+        y: canvas.height / 2,
+        vx: (Math.random() - 0.5) * 14,
+        vy: (Math.random() - 0.7) * 16,
+        size: Math.random() * 8 + 4,
+        color: colors[Math.floor(Math.random() * colors.length)],
+        rotation: Math.random() * 360,
+        rSpeed: (Math.random() - 0.5) * 12
+      });
+    }
+
+    let start = null;
+    function render(timestamp) {
+      if (!start) start = timestamp;
+      const elapsed = timestamp - start;
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+      particles.forEach(p => {
+        p.x += p.vx;
+        p.y += p.vy;
+        p.vy += 0.35;
+        p.rotation += p.rSpeed;
+        ctx.save();
+        ctx.translate(p.x, p.y);
+        ctx.rotate((p.rotation * Math.PI) / 180);
+        ctx.fillStyle = p.color;
+        ctx.fillRect(-p.size / 2, -p.size / 2, p.size, p.size);
+        ctx.restore();
+      });
+
+      if (elapsed < 1800) {
+        requestAnimationFrame(render);
+      } else {
+        canvas.remove();
+      }
+    }
+    requestAnimationFrame(render);
+  }
+
+  /* ---------- BLOCO 3.8: MENU DE COMANDO RÁPIDO (CMD+K) ---------- */
+  document.addEventListener('keydown', (e) => {
+    if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === 'k') {
+      e.preventDefault();
+      abrirMenuComando();
+    }
+  });
+
+  function abrirMenuComando() {
+    const isClient = currentUser && currentUser.role === 'cliente';
+    const isAdmin = currentUser && currentUser.role === 'admin';
+
+    const items = [
+      { name: 'Painel Principal', page: 'dashboard', show: isClient },
+      { name: 'Simular Empréstimo', page: 'simulador', show: isClient },
+      { name: 'Acompanhar Contrato e Amortização', page: 'acompanhar', show: isClient },
+      { name: 'Análise de Crédito', page: 'credito', show: isAdmin },
+      { name: 'Central de Cobrança', page: 'cobranca', show: isAdmin },
+      { name: 'Central Antifraude', page: 'fraude', show: isAdmin },
+      { name: 'Meu Perfil', page: 'perfil', show: true },
+      { name: 'Sobre a Nexta Finance', page: 'sobre', show: true },
+      { name: 'Alternar Tema (Claro / Escuro)', action: 'theme', show: true }
+    ].filter(i => i.show);
+
+    const body = `
+      <div>
+        <input type="text" class="cmd-search-input" id="cmdSearchInput" placeholder="Digite para navegar..." oninput="filtrarCmdList()">
+        <div class="cmd-list" id="cmdList">
+          ${items.map(item => `
+            <div class="cmd-item" onclick="executarCmdItem('${item.page || ''}', '${item.action || ''}')">
+              <span>${item.name}</span>
+              <span style="font-size:11px; color:var(--slate);">Ir →</span>
+            </div>
+          `).join('')}
+        </div>
+      </div>
+    `;
+
+    openModal('Navegação Rápida', body, `<button class="btn btn-outline btn-sm" onclick="closeModal()">Fechar</button>`);
+    setTimeout(() => {
+      const input = document.getElementById('cmdSearchInput');
+      if (input) input.focus();
+    }, 100);
+  }
+
+  function filtrarCmdList() {
+    const q = document.getElementById('cmdSearchInput').value.toLowerCase();
+    const cmdItems = document.querySelectorAll('.cmd-item');
+    cmdItems.forEach(item => {
+      const text = item.textContent.toLowerCase();
+      item.style.display = text.includes(q) ? 'flex' : 'none';
+    });
+  }
+
+  function executarCmdItem(page, action) {
+    closeModal();
+    if (action === 'theme') {
+      toggleTheme();
+      return;
+    }
+    if (page) go(page);
+  }
+
+  /* ---------- BLOCO 3.9: SCROLL REVEAL ---------- */
+  function initScrollReveal() {
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('revealed');
+          observer.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.1 });
+
+    document.querySelectorAll('.scroll-reveal').forEach(el => {
+      el.classList.remove('revealed');
+      observer.observe(el);
+    });
+  }
+
+  /* ---------- INICIALIZAÇÃO & SESSÃO ---------- */
   document.addEventListener('DOMContentLoaded', () => {
+    const savedTheme = localStorage.getItem('nexta_theme') || 'light';
+    setTheme(savedTheme);
+
     const users = getUsers();
     const savedSessionEmail = localStorage.getItem('nexta_session');
     
@@ -833,6 +1576,80 @@
     mostrarTela('login');
   });
 
+  /* ---------- GERENCIAMENTO DE TEMA ---------- */
+  function setTheme(theme) {
+    document.documentElement.setAttribute('data-theme', theme);
+    localStorage.setItem('nexta_theme', theme);
+    
+    const icon = document.getElementById('themeIcon');
+    const text = document.getElementById('themeText');
+    if (theme === 'dark') {
+      icon.textContent = '☀️';
+      text.textContent = 'Claro';
+    } else {
+      icon.textContent = '🌙';
+      text.textContent = 'Escuro';
+    }
+  }
+
+  function toggleTheme() {
+    const current = document.documentElement.getAttribute('data-theme');
+    setTheme(current === 'dark' ? 'light' : 'dark');
+  }
+
+  /* ---------- VALIDAÇÃO DE FORMULÁRIOS ---------- */
+  function validarEmail(email) {
+    return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+  }
+
+  function testarForcaSenha(senha, elementId) {
+    const fill = document.getElementById(elementId);
+    if (!fill) return;
+
+    let score = 0;
+    if (senha.length >= 6) score++;
+    if (/[A-Z]/.test(senha)) score++;
+    if (/[0-9]/.test(senha)) score++;
+    if (/[^A-Za-z0-9]/.test(senha)) score++;
+
+    if (senha.length === 0) {
+      fill.style.width = '0%';
+    } else if (score <= 1) {
+      fill.style.width = '33%'; fill.style.backgroundColor = 'var(--danger)';
+    } else if (score === 2) {
+      fill.style.width = '66%'; fill.style.backgroundColor = 'var(--gold)';
+    } else {
+      fill.style.width = '100%'; fill.style.backgroundColor = 'var(--lime-dark)';
+    }
+  }
+
+  function validarFormLogin() {
+    const email = document.getElementById('loginEmail').value.trim();
+    const senha = document.getElementById('loginSenha').value.trim();
+    const btn = document.getElementById('btnLoginSubmit');
+    const err = document.getElementById('errLoginEmail');
+
+    const emailOk = validarEmail(email);
+    err.style.display = email.length > 0 && !emailOk ? 'block' : 'none';
+
+    btn.disabled = !(emailOk && senha.length > 0);
+  }
+
+  function validarFormCadastro() {
+    const nome = document.getElementById('cadNome').value.trim();
+    const email = document.getElementById('cadEmail').value.trim();
+    const senha = document.getElementById('cadSenha').value.trim();
+    const pergunta = document.getElementById('cadPergunta').value.trim();
+    const btn = document.getElementById('btnCadSubmit');
+    const err = document.getElementById('errCadEmail');
+
+    const emailOk = validarEmail(email);
+    err.style.display = email.length > 0 && !emailOk ? 'block' : 'none';
+
+    btn.disabled = !(nome && emailOk && senha.length >= 6 && pergunta);
+  }
+
+  /* ---------- AUTENTICAÇÃO & FLUXOS ---------- */
   function mostrarTela(tela) {
     document.getElementById('viewLogin').style.display = 'none';
     document.getElementById('viewCadastro').style.display = 'none';
@@ -850,18 +1667,17 @@
   function tentarLogin() {
     const email = document.getElementById('loginEmail').value.trim();
     const senha = document.getElementById('loginSenha').value.trim();
-    const err = document.getElementById('loginError');
 
     const users = getUsers();
     const user = users.find(u => u.email.toLowerCase() === email.toLowerCase() && u.senha === senha);
 
     if (user) {
-      err.style.display = 'none';
       currentUser = user;
       localStorage.setItem('nexta_session', user.email);
+      showToast(`Bem-vindo de volta, ${user.nome.split(' ')[0]}!`);
       iniciarApp();
     } else {
-      err.style.display = 'block';
+      showToast('E-mail ou senha incorretos.', 'danger');
     }
   }
 
@@ -870,47 +1686,49 @@
     const email = document.getElementById('cadEmail').value.trim();
     const senha = document.getElementById('cadSenha').value.trim();
     const pergunta = document.getElementById('cadPergunta').value.trim();
-    const err = document.getElementById('cadError');
-
-    if (!nome || !email || !senha || !pergunta) {
-      err.textContent = 'Preencha todos os campos.';
-      err.style.display = 'block';
-      return;
-    }
 
     const users = getUsers();
     if (users.some(u => u.email.toLowerCase() === email.toLowerCase())) {
-      err.textContent = 'E-mail já cadastrado.';
-      err.style.display = 'block';
+      showToast('E-mail já cadastrado no sistema.', 'danger');
       return;
     }
 
-    const newUser = { email, senha, nome, pergunta, role: 'cliente', contrato: null };
+    const newUser = {
+      email, senha, nome, pergunta,
+      role: 'cliente',
+      contrato: null,
+      cobrancaEstagio: 'Em dia',
+      cobrancaDiasAtraso: 0,
+      fraudeOcorrencia: 'Conta nova sem histórico',
+      fraudeRisco: 'Baixo',
+      fraudeStatus: 'Normal'
+    };
+
     users.push(newUser);
     saveUsers(users);
 
-    err.style.display = 'none';
     currentUser = newUser;
     localStorage.setItem('nexta_session', newUser.email);
+    showToast('Conta criada com sucesso!');
     iniciarApp();
   }
 
   let emailRecuperacao = '';
+  
+  /* BLOCO 1.2: BUSCAR CONTA E MOSTRAR PERGUNTA REAL */
   function buscarConta() {
     const email = document.getElementById('recEmail').value.trim();
-    const err = document.getElementById('recError1');
     const users = getUsers();
     const user = users.find(u => u.email.toLowerCase() === email.toLowerCase());
 
     if (!user) {
-      err.textContent = 'E-mail não encontrado.';
-      err.style.display = 'block';
+      showToast('E-mail não encontrado no sistema.', 'danger');
       return;
     }
 
-    err.style.display = 'none';
     emailRecuperacao = email;
-    document.getElementById('perguntaLabel').textContent = `Pergunta: qual sua cor favorita?`;
+    const perguntaTexto = user.pergunta || 'Qual sua pergunta de segurança?';
+    document.getElementById('perguntaLabel').textContent = `Pergunta de segurança: "${perguntaTexto}"`;
     document.getElementById('esqueciPasso1').style.display = 'none';
     document.getElementById('esqueciPasso2').style.display = 'block';
   }
@@ -918,55 +1736,91 @@
   function redefinirSenha() {
     const resposta = document.getElementById('recResposta').value.trim();
     const novaSenha = document.getElementById('recNovaSenha').value.trim();
-    const err = document.getElementById('recError2');
 
     if (!resposta || !novaSenha) {
-      err.textContent = 'Preencha todos os campos.';
-      err.style.display = 'block';
+      showToast('Preencha todos os campos.', 'warn');
       return;
     }
 
     const users = getUsers();
-    const userIndex = users.findIndex(u => u.email.toLowerCase() === emailRecuperacao.toLowerCase());
+    const idx = users.findIndex(u => u.email.toLowerCase() === emailRecuperacao.toLowerCase());
 
-    if (userIndex !== -1) {
-      if (users[userIndex].pergunta.toLowerCase() === resposta.toLowerCase()) {
-        users[userIndex].senha = novaSenha;
-        saveUsers(users);
-        alert('Senha redefinida com sucesso!');
-        mostrarTela('login');
-      } else {
-        err.textContent = 'Resposta incorreta.';
-        err.style.display = 'block';
-      }
+    if (idx !== -1) {
+      users[idx].senha = novaSenha;
+      saveUsers(users);
+      showToast('Senha redefinida com sucesso! Faça login.');
+      mostrarTela('login');
     }
+  }
+
+  /* ---------- AVATAR & RENDERIZAÇÃO ---------- */
+  function stringToColor(str) {
+    let hash = 0;
+    for (let i = 0; i < str.length; i++) hash = str.charCodeAt(i) + ((hash << 5) - hash);
+    const c = (hash & 0x00FFFFFF).toString(16).toUpperCase();
+    return '#' + '00000'.substring(0, 6 - c.length) + c;
   }
 
   function iniciarApp() {
     document.getElementById('loginScreen').style.display = 'none';
     document.getElementById('app').style.display = 'flex';
 
+    const initials = currentUser.nome.split(' ').map(n => n[0]).join('').substring(0,2).toUpperCase();
+    const avatarBg = stringToColor(currentUser.email);
+
+    const sidebarAvatar = document.getElementById('sidebarAvatar');
+    sidebarAvatar.textContent = initials;
+    sidebarAvatar.style.backgroundColor = avatarBg;
+
     document.getElementById('loggedAs').textContent = currentUser.nome;
+    document.getElementById('loggedRole').textContent = currentUser.role === 'admin' ? 'Operador Interno' : 'Cliente';
     document.getElementById('welcomeUser').textContent = `Olá, ${currentUser.nome.split(' ')[0]} 👋`;
-    
-    // CONTROLE ESTRITO DE PERFIS (RBAC)
+
     const navCliente = document.getElementById('navClienteGroup');
     const navAdmin = document.getElementById('navAdminGroup');
+
+    document.getElementById('perfilNome').value = currentUser.nome;
+    document.getElementById('perfilEmail').value = currentUser.email;
+
+    const lastPage = localStorage.getItem('nexta_last_page') || (currentUser.role === 'admin' ? 'credito' : 'dashboard');
 
     if (currentUser.role === 'admin') {
       navCliente.style.display = 'none';
       navAdmin.style.display = 'block';
       document.getElementById('crumbRole').textContent = 'Interno';
       renderAdminCredito();
-      go('credito');
+      renderAdminCobranca();
+      renderAdminFraude();
+      go(lastPage === 'dashboard' || lastPage === 'simulador' || lastPage === 'acompanhar' ? 'credito' : lastPage);
     } else {
       navAdmin.style.display = 'none';
       navCliente.style.display = 'block';
       document.getElementById('crumbRole').textContent = 'Cliente';
       renderClienteDashboard();
       renderClienteAcompanhar();
-      go('dashboard');
+      go(lastPage === 'credito' || lastPage === 'cobranca' || lastPage === 'fraude' ? 'dashboard' : lastPage);
     }
+  }
+
+  /* BLOCO 3.1: ATUALIZAR POSIÇÃO DA PÍLULA FLUTUANTE DA NAV */
+  function atualizarNavPill(pageId) {
+    const activeItem = document.querySelector(`.nav-item[data-page="${pageId}"]`);
+    if (!activeItem) return;
+
+    const parentGroup = activeItem.closest('.nav-group');
+    if (!parentGroup) return;
+
+    const pill = parentGroup.querySelector('.nav-pill');
+    if (!pill) return;
+
+    document.querySelectorAll('.nav-pill').forEach(p => p.style.opacity = '0');
+
+    const itemOffsetTop = activeItem.offsetTop;
+    const itemHeight = activeItem.offsetHeight;
+
+    pill.style.transform = `translateY(${itemOffsetTop}px)`;
+    pill.style.height = `${itemHeight}px`;
+    pill.style.opacity = '1';
   }
 
   function go(pageId) {
@@ -978,12 +1832,10 @@
 
     const navItems = document.querySelectorAll('.nav-item');
     navItems.forEach(item => {
-      if (item.getAttribute('data-page') === pageId) {
-        item.classList.add('active');
-      } else {
-        item.classList.remove('active');
-      }
+      item.classList.toggle('active', item.getAttribute('data-page') === pageId);
     });
+
+    atualizarNavPill(pageId);
 
     const pageTitles = {
       dashboard: 'Painel',
@@ -991,14 +1843,25 @@
       acompanhar: 'Acompanhar contrato',
       credito: 'Análise de crédito',
       cobranca: 'Central de cobrança',
-      fraude: 'Central antifraude'
+      fraude: 'Central antifraude',
+      perfil: 'Meu perfil',
+      sobre: 'Sobre o Nexta'
     };
+
     document.getElementById('crumbPage').textContent = pageTitles[pageId] || pageId;
+    localStorage.setItem('nexta_last_page', pageId);
+
+    init3DTilt();
+
+    if (pageId === 'credito') renderChartCredito();
+    if (pageId === 'cobranca') renderChartCobranca();
+    if (pageId === 'fraude') renderChartFraude();
+    if (pageId === 'sobre') initScrollReveal();
 
     toggleMenu(false);
   }
 
-  /* RENDERIZAÇÃO CLIENTE */
+  /* ---------- CLIENTE: DASHBOARD & ACOMPANHAMENTO ---------- */
   function renderClienteDashboard() {
     const c = currentUser.contrato;
     if (!c) {
@@ -1014,70 +1877,66 @@
     }
 
     const totalFormatado = Number(c.valorContratado).toLocaleString('pt-BR');
-    const saldoFormatado = Number(c.saldoDevedor).toLocaleString('pt-BR', {minimumFractionDigits:2});
-    const parcelaFormatada = Number(c.valorParcela).toLocaleString('pt-BR', {minimumFractionDigits:2});
     const pct = Math.round((c.parcelasPagas / c.totalParcelas) * 100);
 
-    document.getElementById('dashSaldoDevedor').textContent = `R$ ${saldoFormatado}`;
+    /* BLOCO 3.3: ANIMAR NÚMEROS */
+    animateCountUp(document.getElementById('dashSaldoDevedor'), c.saldoDevedor, 'R$ ', '', true);
+    animateCountUp(document.getElementById('dashProximaParcela'), c.valorParcela, 'R$ ', '', true);
+
     document.getElementById('dashSubDevedor').textContent = `de R$ ${totalFormatado},00 contratados`;
-    document.getElementById('dashProximaParcela').textContent = `R$ ${parcelaFormatada}`;
     document.getElementById('dashSubParcela').textContent = `vence em ${c.vencimento}`;
     
-    let tagClass = c.status === 'Em dia' || c.status === 'Aprovado' ? 'up' : 'warn';
+    let tagClass = (c.status === 'Em dia' || c.status === 'Aprovado') ? 'up' : 'warn';
     document.getElementById('dashStatusTag').innerHTML = `<span class="tag ${tagClass}">${c.status}</span>`;
-    document.getElementById('dashSubStatus').textContent = c.status === 'Em dia' ? 'nenhuma pendência no momento' : 'situação em acompanhamento';
+    document.getElementById('dashSubStatus').textContent = c.status === 'Em dia' ? 'nenhuma pendência no momento' : 'situação sob análise';
     
-    document.getElementById('dashProgressoTexto').textContent = `${c.parcelasPagas} de ${c.totalParcelas} parcelas pagas`;
+    document.getElementById('dashProgressoTexto').textContent = `${c.parcelasPagas} de ${c.totalParcelas} parcelas pagas (${pct}%)`;
     document.getElementById('dashProgressBar').style.width = `${pct}%`;
   }
 
   function renderClienteAcompanhar() {
     const c = currentUser.contrato;
     const tlBox = document.getElementById('timelineList');
-    
+    const tbody = document.getElementById('parcelasTableBody');
+
     if (!c) {
       tlBox.innerHTML = `
         <div class="tl-item active">
           <div class="tl-dot"></div>
           <div class="tl-title">Sem contratos ativos</div>
-          <div class="tl-sub">Acesse o simulador para contratar o seu empréstimo.</div>
+          <div class="tl-sub">Acesse o simulador para solicitar seu empréstimo.</div>
         </div>`;
+      
       document.getElementById('detValor').textContent = 'R$ 0,00';
       document.getElementById('detTaxa').textContent = '0,0% a.m.';
       document.getElementById('detJuros').textContent = 'R$ 0,00';
       document.getElementById('detTotal').textContent = 'R$ 0,00';
+      document.getElementById('btnAbrirAmortizacao').disabled = true;
+
+      tbody.innerHTML = `<tr><td colspan="5"><div class="empty-state">Nenhuma parcela a exibir.</div></td></tr>`;
       return;
     }
 
-    const totalPago = c.valorParcela * c.parcelasPagas;
+    document.getElementById('btnAbrirAmortizacao').disabled = c.saldoDevedor <= 0;
+
     const totalContrato = c.valorParcela * c.totalParcelas;
-    const jurosTotal = totalContrato - c.valorContratado;
+    const jurosTotal = Math.max(0, totalContrato - c.valorContratado);
 
     tlBox.innerHTML = `
       <div class="tl-item done">
         <div class="tl-dot"></div>
-        <div class="tl-title">Solicitação enviada</div>
-        <div class="tl-sub">${c.dataSolicitacao} — valor de R$ ${Number(c.valorContratado).toLocaleString('pt-BR')},00</div>
+        <div class="tl-title">Solicitação Recebida</div>
+        <div class="tl-sub">${c.dataSolicitacao} — R$ ${Number(c.valorContratado).toLocaleString('pt-BR')},00</div>
       </div>
       <div class="tl-item done">
         <div class="tl-dot"></div>
-        <div class="tl-title">Análise de crédito concluída</div>
-        <div class="tl-sub">Score gerado: ${c.score} — Aprovado automaticamente</div>
-      </div>
-      <div class="tl-item done">
-        <div class="tl-dot"></div>
-        <div class="tl-title">Contrato ativado digitalmente</div>
-        <div class="tl-sub">Taxa de ${c.taxa}% a.m. em ${c.totalParcelas} parcelas</div>
+        <div class="tl-title">Análise de Crédito</div>
+        <div class="tl-sub">Score Processado: ${c.score}</div>
       </div>
       <div class="tl-item active">
         <div class="tl-dot"></div>
-        <div class="tl-title">${c.parcelasPagas}ª parcela paga — ${c.status}</div>
-        <div class="tl-sub">Próxima parcela: R$ ${Number(c.valorParcela).toLocaleString('pt-BR', {minimumFractionDigits:2})} em ${c.vencimento}</div>
-      </div>
-      <div class="tl-item">
-        <div class="tl-dot"></div>
-        <div class="tl-title">Quitação do contrato</div>
-        <div class="tl-sub">Previsão após ${c.totalParcelas} parcelas</div>
+        <div class="tl-title">Contrato Ativo (${c.status})</div>
+        <div class="tl-sub">Taxa: ${c.taxa}% a.m. em ${c.totalParcelas} parcelas</div>
       </div>
     `;
 
@@ -1085,67 +1944,280 @@
     document.getElementById('detTaxa').textContent = `${c.taxa}% a.m.`;
     document.getElementById('detJuros').textContent = `R$ ${Number(jurosTotal).toLocaleString('pt-BR', {minimumFractionDigits:2})}`;
     document.getElementById('detTotal').textContent = `R$ ${Number(totalContrato).toLocaleString('pt-BR', {minimumFractionDigits:2})}`;
+
+    tbody.innerHTML = '';
+    for (let i = 1; i <= c.totalParcelas; i++) {
+      const isPaga = i <= c.parcelasPagas;
+      const statusTag = isPaga ? '<span class="tag up">Paga</span>' : (i === c.parcelasPagas + 1 ? '<span class="tag gold">Pendente</span>' : '<span class="tag">A vencer</span>');
+      
+      const tr = document.createElement('tr');
+      tr.innerHTML = `
+        <td class="mono">#${i}</td>
+        <td>${i === c.parcelasPagas + 1 ? c.vencimento : '—'}</td>
+        <td class="mono">R$ ${Number(c.valorParcela).toLocaleString('pt-BR', {minimumFractionDigits:2})}</td>
+        <td>${statusTag}</td>
+        <td>
+          ${isPaga ? `<button class="btn btn-outline btn-sm" onclick="showToast('Comprovante da parcela #${i} emitido.')">Comprovante</button>` : `<button class="btn btn-lime btn-sm" onclick="pagarParcela(${i})" ${i !== c.parcelasPagas + 1 ? 'disabled' : ''}>Pagar</button>`}
+        </td>
+      `;
+      tbody.appendChild(tr);
+    }
   }
 
-  /* SIMULADOR DETERMINÍSTICO E AMPLIADO */
+  function pagarParcela(numParcela) {
+    const c = currentUser.contrato;
+    if (!c) return;
+
+    c.parcelasPagas += 1;
+    c.saldoDevedor -= c.valorParcela;
+    if (c.saldoDevedor < 0) c.saldoDevedor = 0;
+
+    updateUserInStorage(currentUser);
+    showToast(`Parcela #${numParcela} paga com sucesso!`);
+    renderClienteDashboard();
+    renderClienteAcompanhar();
+  }
+
+  /* ---------- BLOCO 2: AMORTIZAÇÃO DE EMPRÉSTIMO ---------- */
+  function abrirModalAmortizacao() {
+    const c = currentUser.contrato;
+    if (!c || c.saldoDevedor <= 0) {
+      showToast('Nenhum contrato ativo disponível para amortização.', 'warn');
+      return;
+    }
+
+    selectedAmortType = 'prazo';
+
+    const body = `
+      <div>
+        <p style="font-size:13px; color:var(--slate); margin-bottom:14px;">
+          Antecipe pagamentos para reduzir juros totais ou diminuir o valor das parcelas mensais.
+        </p>
+
+        <div class="form-group">
+          <label for="inputValorAmortizar">Valor extra para amortizar (R$)</label>
+          <input type="number" id="inputValorAmortizar" placeholder="Ex: 1000" min="100" max="${Math.floor(c.saldoDevedor)}" oninput="calcularAmortizacaoEmTempoReal()">
+        </div>
+
+        <div style="margin-bottom:12px; font-weight:600; font-size:13px;">Escolha a modalidade de amortização:</div>
+
+        <div class="amort-option-card selected" id="cardOptPrazo" onclick="selecionarOpcaoAmort('prazo')">
+          <div class="row-flex" style="justify-content:space-between; margin-bottom:4px;">
+            <strong style="font-size:14px;">1. Reduzir Prazo (Manter Parcela)</strong>
+            <span class="tag up">Recomendado</span>
+          </div>
+          <div style="font-size:12.5px; color:var(--slate);" id="descOptPrazo">
+            Digite um valor para simular a redução no número de parcelas restantes.
+          </div>
+        </div>
+
+        <div class="amort-option-card" id="cardOptParcela" onclick="selecionarOpcaoAmort('parcela')">
+          <div class="row-flex" style="justify-content:space-between; margin-bottom:4px;">
+            <strong style="font-size:14px;">2. Reduzir Valor da Parcela</strong>
+            <span class="tag gold">Alívio de caixa</span>
+          </div>
+          <div style="font-size:12.5px; color:var(--slate);" id="descOptParcela">
+            Digite um valor para simular a redução do valor mensal das parcelas futuras.
+          </div>
+        </div>
+
+        <div id="economizometroBox" style="background:var(--cream); border:1px solid var(--line); border-radius:10px; padding:12px 14px; margin-top:14px; display:none;">
+          <div style="font-size:11px; text-transform:uppercase; letter-spacing:.06em; color:var(--slate); font-weight:700;">Calculadora de Economia</div>
+          <div style="font-size:18px; font-weight:700; color:var(--lime-dark); margin-top:2px;" id="economiaValor">R$ 0,00</div>
+          <div style="font-size:12px; color:var(--slate);" id="economiaSub">juros economizados com esta antecipação</div>
+        </div>
+      </div>
+    `;
+
+    const actions = `
+      <button class="btn btn-outline btn-sm" onclick="closeModal()">Cancelar</button>
+      <button class="btn btn-lime btn-sm" onclick="confirmarAmortizacao()">Confirmar Amortização</button>
+    `;
+
+    openModal('Amortização Antecipada', body, actions);
+  }
+
+  function selecionarOpcaoAmort(tipo) {
+    selectedAmortType = tipo;
+    document.getElementById('cardOptPrazo').classList.toggle('selected', tipo === 'prazo');
+    document.getElementById('cardOptParcela').classList.toggle('selected', tipo === 'parcela');
+  }
+
+  function calcularAmortizacaoEmTempoReal() {
+    const c = currentUser.contrato;
+    if (!c) return;
+
+    const valorExtra = parseFloat(document.getElementById('inputValorAmortizar').value) || 0;
+    const descPrazo = document.getElementById('descOptPrazo');
+    const descParcela = document.getElementById('descOptParcela');
+    const econBox = document.getElementById('economizometroBox');
+    const econValor = document.getElementById('economiaValor');
+
+    if (valorExtra <= 0) {
+      descPrazo.textContent = 'Digite um valor para simular a redução no número de parcelas restantes.';
+      descParcela.textContent = 'Digite um valor para simular a redução do valor mensal das parcelas futuras.';
+      econBox.style.display = 'none';
+      return;
+    }
+
+    const parcelasRestantes = c.totalParcelas - c.parcelasPagas;
+    const i = (c.taxa / 100);
+
+    // Reduzir Prazo:
+    const saldoAtualEstimado = c.saldoDevedor;
+    const novoSaldoPrazo = Math.max(0, saldoAtualEstimado - valorExtra);
+    const novasParcelasRestantes = Math.max(1, Math.ceil(novoSaldoPrazo / c.valorParcela));
+    const economiaPrazo = Math.max(0, (parcelasRestantes * c.valorParcela) - (novasParcelasRestantes * c.valorParcela + valorExtra));
+
+    descPrazo.innerHTML = `
+      De <strong>${parcelasRestantes} parcelas restantes</strong> de R$ ${c.valorParcela.toFixed(2)} para 
+      <strong style="color:var(--lime-dark);">${novasParcelasRestantes} parcelas</strong> de R$ ${c.valorParcela.toFixed(2)}.
+    `;
+
+    // Reduzir Parcela:
+    const novoSaldoParcela = Math.max(0, saldoAtualEstimado - valorExtra);
+    const novaParcelaValor = novoSaldoParcela / Math.max(1, parcelasRestantes);
+    const economiaParcela = Math.max(0, (parcelasRestantes * c.valorParcela) - (parcelasRestantes * novaParcelaValor + valorExtra));
+
+    descParcela.innerHTML = `
+      Parcela reduzida de R$ ${c.valorParcela.toFixed(2)} para 
+      <strong style="color:var(--lime-dark);">R$ ${novaParcelaValor.toFixed(2)}</strong>, mantendo ${parcelasRestantes} parcelas.
+    `;
+
+    // Exibir Economia Estimada
+    const economiaAtual = selectedAmortType === 'prazo' ? economiaPrazo : economiaParcela;
+    econBox.style.display = 'block';
+    econValor.textContent = `R$ ${economiaAtual.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
+  }
+
+  function confirmarAmortizacao() {
+    const c = currentUser.contrato;
+    const valorExtra = parseFloat(document.getElementById('inputValorAmortizar').value) || 0;
+
+    if (valorExtra <= 0) {
+      showToast('Digite um valor válido para amortizar.', 'warn');
+      return;
+    }
+
+    if (valorExtra > c.saldoDevedor) {
+      showToast('O valor de amortização não pode ser maior que o saldo devedor.', 'warn');
+      return;
+    }
+
+    const parcelasRestantes = c.totalParcelas - c.parcelasPagas;
+
+    if (selectedAmortType === 'prazo') {
+      const novoSaldo = Math.max(0, c.saldoDevedor - valorExtra);
+      const novasRestantes = Math.max(1, Math.ceil(novoSaldo / c.valorParcela));
+      c.totalParcelas = c.parcelasPagas + novasRestantes;
+      c.saldoDevedor = novoSaldo;
+      showToast(`Amortização confirmada! Prazo reduzido para ${novasRestantes} parcelas restantes.`);
+    } else {
+      const novoSaldo = Math.max(0, c.saldoDevedor - valorExtra);
+      c.valorParcela = novoSaldo / Math.max(1, parcelasRestantes);
+      c.saldoDevedor = novoSaldo;
+      showToast(`Amortização confirmada! Nova parcela mensal: R$ ${c.valorParcela.toFixed(2)}.`);
+    }
+
+    updateUserInStorage(currentUser);
+    closeModal();
+    renderClienteDashboard();
+    renderClienteAcompanhar();
+  }
+
+  function gerarComprovantePDF() {
+    const c = currentUser.contrato;
+    if (!c) {
+      showToast('Nenhum contrato ativo para gerar comprovante.', 'warn');
+      return;
+    }
+
+    const { jsPDF } = window.jspdf;
+    const doc = new jsPDF();
+
+    doc.setFont("helvetica", "bold");
+    doc.setFontSize(20);
+    doc.text("Nexta Finance — Comprovante de Contrato", 20, 20);
+
+    doc.setFontSize(12);
+    doc.setFont("helvetica", "normal");
+    doc.text(`Cliente: ${currentUser.nome}`, 20, 40);
+    doc.text(`E-mail: ${currentUser.email}`, 20, 48);
+    doc.text(`Data de Solicitacao: ${c.dataSolicitacao}`, 20, 56);
+    doc.text(`Status Atual: ${c.status}`, 20, 64);
+
+    doc.line(20, 72, 190, 72);
+
+    doc.text(`Valor Contratado: R$ ${Number(c.valorContratado).toLocaleString('pt-BR')},00`, 20, 84);
+    doc.text(`Taxa de Juros: ${c.taxa}% a.m.`, 20, 92);
+    doc.text(`Quantidade de Parcelas: ${c.totalParcelas}x`, 20, 100);
+    doc.text(`Valor da Parcela: R$ ${Number(c.valorParcela).toLocaleString('pt-BR', {minimumFractionDigits:2})}`, 20, 108);
+
+    doc.save(`Contrato_Nexta_${currentUser.nome.replace(/\s+/g, '_')}.pdf`);
+    showToast('Comprovante PDF gerado com sucesso!');
+  }
+
+  /* ---------- SIMULADOR DETERMINÍSTICO ---------- */
   function atualizarSimulacao() {
     const valor = document.getElementById('valorRange').value;
     document.getElementById('valorAtual').textContent = 'R$ ' + Number(valor).toLocaleString('pt-BR');
     document.getElementById('solicitarBox').style.display = 'none';
   }
 
-  // FÓRMULA DETERMINÍSTICA (Mesmo usuário + valor + parcelas = exato mesmo resultado sempre)
   function calcularScoreDeterministico(email, valor, parcelas) {
     let hash = 0;
-    for (let i = 0; i < email.length; i++) {
-      hash += email.charCodeAt(i);
-    }
+    for (let i = 0; i < email.length; i++) hash += email.charCodeAt(i);
     const valFactor = Math.floor((valor / 100000) * 160);
-    const parFactor = Math.floor((parcelas / 180) * 40);
-    const base = 850 + (hash % 90);
-    
-    let score = base - valFactor + parFactor;
-    if (score > 980) score = 980;
-    if (score < 350) score = 350;
-    return score;
+    const parFactor = Math.floor((parcelas / 48) * 40);
+    let score = (850 + (hash % 90)) - valFactor + parFactor;
+    return Math.min(Math.max(score, 350), 980);
+  }
+
+  function executarSimulacaoComLoading() {
+    document.getElementById('simNormalState').style.display = 'none';
+    document.getElementById('simLoadingState').style.display = 'block';
+
+    setTimeout(() => {
+      document.getElementById('simLoadingState').style.display = 'none';
+      document.getElementById('simNormalState').style.display = 'block';
+      analisarCredito();
+    }, 800);
   }
 
   function analisarCredito() {
     const valor = parseInt(document.getElementById('valorRange').value);
     const parcelas = parseInt(document.getElementById('parcelasSelect').value);
-    const email = currentUser ? currentUser.email : 'invitado@nexta.com';
+    const email = currentUser ? currentUser.email : 'anon@nexta.com';
 
-    // Cálculo determinístico
     const score = calcularScoreDeterministico(email, valor, parcelas);
-    
-    // Cálculo de parcela com juros compostos
-    const taxaMensal = 0.018 + (valor / 100000) * 0.008; // 1.8% a 2.6% a.m.
+    const taxaMensal = 0.018 + (valor / 100000) * 0.008;
     const i = taxaMensal;
     const n = parcelas;
-    const pmt = valor * ( (i * Math.pow(1 + i, n)) / (Math.pow(1 + i, n) - 1) );
+    const pmt = valor * ((i * Math.pow(1 + i, n)) / (Math.pow(1 + i, n) - 1));
 
-    latestSimulation = {
-      valor: valor,
-      parcelas: parcelas,
-      valorParcela: pmt,
-      taxa: (taxaMensal * 100).toFixed(1),
-      score: score
-    };
+    latestSimulation = { valor, parcelas, valorParcela: pmt, taxa: (taxaMensal * 100).toFixed(1), score };
 
     const arc = document.getElementById('gaugeArc');
-    const scoreText = document.getElementById('gaugeScore');
-    const timeText = document.getElementById('gaugeTime');
-    const resultText = document.getElementById('resultadoSim');
+    
+    /* BLOCO 3.3: NUMERO DO SCORE ANIMADO */
+    animateCountUp(document.getElementById('gaugeScore'), score);
 
     const offset = 251 - (251 * (score / 1000));
     arc.style.strokeDashoffset = offset;
-    scoreText.textContent = score;
-    timeText.textContent = 'Análise determinística processada';
 
-    resultText.innerHTML = `
-      <div style="font-size:14px; color:var(--navy); margin-bottom:4px;"><strong>Resultado da Análise:</strong></div>
-      <div style="font-size:16px; font-weight:700; color:var(--navy);">${parcelas}x de R$ ${Number(pmt).toLocaleString('pt-BR', {minimumFractionDigits: 2, maximumFractionDigits: 2})}</div>
-      <div style="font-size:12px; color:var(--slate); margin-top:2px;">Taxa aplicada: ${latestSimulation.taxa}% a.m.</div>
+    /* BLOCO 3.6: COR REATIVA DO ARCO DO GAUGE DE SCORE */
+    if (score < 600) {
+      arc.style.stroke = '#E4572E'; // Vermelho / Laranja
+    } else if (score < 750) {
+      arc.style.stroke = '#D4A54A'; // Dourado
+    } else {
+      arc.style.stroke = '#9FD923'; // Verde-Lima
+    }
+
+    document.getElementById('resultadoSim').innerHTML = `
+      <div style="font-size:13px; color:var(--ink); margin-bottom:4px;"><strong>Resultado Pré-Aprovado:</strong></div>
+      <div style="font-size:18px; font-weight:700; color:var(--ink);">${parcelas}x de R$ ${Number(pmt).toLocaleString('pt-BR', {minimumFractionDigits: 2, maximumFractionDigits: 2})}</div>
+      <div style="font-size:12px; color:var(--slate); margin-top:2px;">Taxa: ${latestSimulation.taxa}% a.m.</div>
     `;
 
     document.getElementById('solicitarBox').style.display = 'block';
@@ -1159,11 +2231,9 @@
     const proxMes = new Date(hoje.setMonth(hoje.getMonth() + 1));
     const vencStr = `${String(proxMes.getDate()).padStart(2,'0')}/${String(proxMes.getMonth()+1).padStart(2,'0')}/${proxMes.getFullYear()}`;
 
-    const totalContrato = latestSimulation.valorParcela * latestSimulation.parcelas;
-
     currentUser.contrato = {
       valorContratado: latestSimulation.valor,
-      saldoDevedor: totalContrato,
+      saldoDevedor: latestSimulation.valorParcela * latestSimulation.parcelas,
       valorParcela: latestSimulation.valorParcela,
       parcelasPagas: 0,
       totalParcelas: latestSimulation.parcelas,
@@ -1175,21 +2245,26 @@
     };
 
     updateUserInStorage(currentUser);
-    alert('Empréstimo solicitado e contratado com sucesso!');
 
-    renderClienteDashboard();
-    renderClienteAcompanhar();
-    go('dashboard');
+    /* BLOCO 3.7: CELEBRAÇÃO COM CONFETES AO APROVAR */
+    dispararConfetes();
+
+    showToast('Empréstimo contratado com sucesso!');
+
+    setTimeout(() => {
+      renderClienteDashboard();
+      renderClienteAcompanhar();
+      go('dashboard');
+    }, 1200);
   }
 
-  /* VISÃO INTERNA / ADMIN: TABELA DINÂMICA DE USUÁRIOS */
+  /* ---------- OPERAÇÕES INTERNAS / ADMIN ---------- */
   function renderAdminCredito() {
     const users = getUsers();
     const tbody = document.getElementById('creditoTableBody');
     tbody.innerHTML = '';
 
     let clientesCount = 0;
-
     users.forEach(u => {
       if (u.role === 'admin') return;
       clientesCount++;
@@ -1197,44 +2272,340 @@
       const initials = u.nome.split(' ').map(n => n[0]).join('').substring(0,2).toUpperCase();
       const c = u.contrato;
 
-      let valorStr = c ? `R$ ${Number(c.valorContratado).toLocaleString('pt-BR')}` : 'Sem simulação';
+      let valorStr = c ? `R$ ${Number(c.valorContratado).toLocaleString('pt-BR')}` : 'Sem proposta';
       let scoreTag = c ? `<span class="tag ${c.score > 700 ? 'up' : 'warn'}">${c.score}</span>` : '<span class="tag gold">—</span>';
-      let statusTag = c ? `<span class="tag ${c.status === 'Em dia' || c.status === 'Aprovado' ? 'up' : 'warn'}">${c.status}</span>` : '<span class="tag">Novo Usuário</span>';
-      let dataStr = c ? c.dataSolicitacao : '—';
+      let statusTag = c ? `<span class="tag ${c.status === 'Em dia' || c.status === 'Aprovado' ? 'up' : 'warn'}">${c.status}</span>` : '<span class="tag">Sem dados</span>';
 
       const tr = document.createElement('tr');
       tr.innerHTML = `
-        <td class="row-flex"><span class="avatar">${initials}</span><div><strong>${u.nome}</strong><br><span style="font-size:11px; color:var(--slate);">${u.email}</span></div></td>
+        <td class="row-flex"><span class="avatar" style="background:${stringToColor(u.email)}">${initials}</span><div><strong>${u.nome}</strong><br><span style="font-size:11px; color:var(--slate);">${u.email}</span></div></td>
         <td class="mono">${valorStr}</td>
         <td>${scoreTag}</td>
-        <td>${statusTag}<br><span class="mono" style="font-size:11px; color:var(--slate);">${dataStr}</span></td>
-        <td><button class="btn btn-outline btn-sm" onclick="alert('Analisando perfil de ${u.nome}')">Analisar</button></td>
+        <td>${statusTag}</td>
+        <td><button class="btn btn-outline btn-sm" onclick="modalAnalisarCredito('${u.email}')">Analisar</button></td>
       `;
       tbody.appendChild(tr);
     });
 
-    document.getElementById('totalCadastrosCount').textContent = clientesCount;
+    /* BLOCO 3.3: METRICAS ANIMADAS */
+    animateCountUp(document.getElementById('totalCadastrosCount'), clientesCount);
   }
 
+  function modalAnalisarCredito(email) {
+    const users = getUsers();
+    const u = users.find(user => user.email.toLowerCase() === email.toLowerCase());
+    if (!u) return;
+
+    const c = u.contrato || { valorContratado: 0, score: 'N/A', status: 'Sem Proposta' };
+
+    const body = `
+      <div style="font-size:13.5px; line-height:1.6;">
+        <p><strong>Cliente:</strong> ${u.nome}</p>
+        <p><strong>E-mail:</strong> ${u.email}</p>
+        <p><strong>Valor Solicitado:</strong> R$ ${Number(c.valorContratado).toLocaleString('pt-BR')}</p>
+        <p><strong>Score Calculado:</strong> ${c.score}</p>
+        <p><strong>Status Atual:</strong> ${c.status}</p>
+      </div>
+    `;
+
+    const actions = `
+      <button class="btn btn-outline btn-sm" onclick="closeModal()">Cancelar</button>
+      <button class="btn btn-danger btn-sm" onclick="decidirCredito('${u.email}', 'Recusado')">Recusar</button>
+      <button class="btn btn-lime btn-sm" onclick="decidirCredito('${u.email}', 'Em dia')">Aprovar Proposta</button>
+    `;
+
+    openModal('Análise de Proposta de Crédito', body, actions);
+  }
+
+  function decidirCredito(email, novoStatus) {
+    const users = getUsers();
+    const u = users.find(user => user.email.toLowerCase() === email.toLowerCase());
+    if (u && u.contrato) {
+      u.contrato.status = novoStatus;
+      saveUsers(users);
+      showToast(`Proposta de ${u.nome} alterada para: ${novoStatus}`);
+      renderAdminCredito();
+    } else {
+      showToast('Usuário sem contrato ativo.', 'warn');
+    }
+    closeModal();
+  }
+
+  function renderAdminCobranca() {
+    const users = getUsers();
+    const tbody = document.getElementById('cobrancaTableBody');
+    tbody.innerHTML = '';
+
+    let emRisco = 0;
+    users.forEach(u => {
+      if (u.role === 'admin') return;
+
+      if (u.cobrancaEstagio !== 'Em dia') emRisco++;
+
+      const initials = u.nome.split(' ').map(n => n[0]).join('').substring(0,2).toUpperCase();
+      const valorAtraso = u.contrato ? `R$ ${Number(u.contrato.valorParcela).toLocaleString('pt-BR', {minimumFractionDigits:2})}` : 'R$ 0,00';
+
+      const tr = document.createElement('tr');
+      tr.innerHTML = `
+        <td class="row-flex"><span class="avatar" style="background:${stringToColor(u.email)}">${initials}</span><div><strong>${u.nome}</strong></div></td>
+        <td class="mono">${valorAtraso}</td>
+        <td>${u.cobrancaDiasAtraso} dias</td>
+        <td><span class="tag ${u.cobrancaDiasAtraso > 15 ? 'warn' : 'gold'}">${u.cobrancaEstagio}</span></td>
+        <td><button class="btn btn-outline btn-sm" onclick="modalGerenciarCobranca('${u.email}')">Gerenciar</button></td>
+      `;
+      tbody.appendChild(tr);
+    });
+
+    animateCountUp(document.getElementById('cobrancaEmRiscoCount'), emRisco);
+  }
+
+  function modalGerenciarCobranca(email) {
+    const users = getUsers();
+    const u = users.find(user => user.email.toLowerCase() === email.toLowerCase());
+    if (!u) return;
+
+    const body = `
+      <div class="form-group">
+        <label>Estágio de Cobrança</label>
+        <select id="selectEstagioCobranca">
+          <option value="Em dia" ${u.cobrancaEstagio === 'Em dia' ? 'selected' : ''}>Em dia</option>
+          <option value="Lembrete enviado" ${u.cobrancaEstagio === 'Lembrete enviado' ? 'selected' : ''}>Lembrete Enviado</option>
+          <option value="Negociação iniciada" ${u.cobrancaEstagio === 'Negociação iniciada' ? 'selected' : ''}>Negociação Iniciada</option>
+          <option value="Cobrança extrajudicial" ${u.cobrancaEstagio === 'Cobrança extrajudicial' ? 'selected' : ''}>Cobrança Extrajudicial</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label>Dias em Atraso</label>
+        <input type="number" id="inputDiasAtraso" value="${u.cobrancaDiasAtraso}">
+      </div>
+    `;
+
+    const actions = `
+      <button class="btn btn-outline btn-sm" onclick="closeModal()">Cancelar</button>
+      <button class="btn btn-lime btn-sm" onclick="salvarCobranca('${u.email}')">Salvar Estágio</button>
+    `;
+
+    openModal(`Gerenciar Cobrança — ${u.nome}`, body, actions);
+  }
+
+  function salvarCobranca(email) {
+    const estagio = document.getElementById('selectEstagioCobranca').value;
+    const dias = parseInt(document.getElementById('inputDiasAtraso').value) || 0;
+
+    const users = getUsers();
+    const u = users.find(user => user.email.toLowerCase() === email.toLowerCase());
+    if (u) {
+      u.cobrancaEstagio = estagio;
+      u.cobrancaDiasAtraso = dias;
+      saveUsers(users);
+      showToast('Cobrança atualizada com sucesso!');
+      renderAdminCobranca();
+    }
+    closeModal();
+  }
+
+  function renderAdminFraude() {
+    const users = getUsers();
+    const tbody = document.getElementById('fraudeTableBody');
+    tbody.innerHTML = '';
+
+    let alertasCount = 0;
+    users.forEach(u => {
+      if (u.role === 'admin') return;
+
+      if (u.fraudeStatus === 'Analisar' || u.fraudeRisco === 'Alto') alertasCount++;
+
+      const initials = u.nome.split(' ').map(n => n[0]).join('').substring(0,2).toUpperCase();
+
+      const tr = document.createElement('tr');
+      tr.innerHTML = `
+        <td class="row-flex"><span class="avatar" style="background:${stringToColor(u.email)}">${initials}</span><div><strong>${u.nome}</strong></div></td>
+        <td>${u.fraudeOcorrencia}</td>
+        <td><span class="tag ${u.fraudeRisco === 'Alto' ? 'warn' : 'gold'}">${u.fraudeRisco}</span></td>
+        <td><span class="tag">${u.fraudeStatus}</span></td>
+        <td><button class="btn btn-outline btn-sm" onclick="modalAnalisarFraude('${u.email}')">Tratar</button></td>
+      `;
+      tbody.appendChild(tr);
+    });
+
+    animateCountUp(document.getElementById('fraudeAlertasCount'), alertasCount);
+  }
+
+  function modalAnalisarFraude(email) {
+    const users = getUsers();
+    const u = users.find(user => user.email.toLowerCase() === email.toLowerCase());
+    if (!u) return;
+
+    const body = `
+      <p style="font-size:13px;">Ocorrência: <strong>${u.fraudeOcorrencia}</strong></p>
+      <div class="form-group">
+        <label>Ação Antifraude</label>
+        <select id="selectFraudeStatus">
+          <option value="Normal">Resolvido / Falso Positivo</option>
+          <option value="Analisar">Manter em Análise</option>
+          <option value="Bloqueado">Bloquear Acesso Preventivamente</option>
+        </select>
+      </div>
+    `;
+
+    const actions = `
+      <button class="btn btn-outline btn-sm" onclick="closeModal()">Cancelar</button>
+      <button class="btn btn-lime btn-sm" onclick="salvarFraude('${u.email}')">Confirmar Ação</button>
+    `;
+
+    openModal(`Tratar Ocorrência — ${u.nome}`, body, actions);
+  }
+
+  function salvarFraude(email) {
+    const st = document.getElementById('selectFraudeStatus').value;
+    const users = getUsers();
+    const u = users.find(user => user.email.toLowerCase() === email.toLowerCase());
+    if (u) {
+      u.fraudeStatus = st;
+      if (st === 'Normal') u.fraudeRisco = 'Baixo';
+      if (st === 'Bloqueado') u.fraudeRisco = 'Alto';
+      saveUsers(users);
+      showToast('Ocorrência antifraude atualizada!');
+      renderAdminFraude();
+    }
+    closeModal();
+  }
+
+  /* ---------- PERFIL DE USUÁRIO ---------- */
+  function salvarDadosPerfil() {
+    const nome = document.getElementById('perfilNome').value.trim();
+    if (!nome) {
+      showToast('O nome não pode ficar em branco.', 'warn');
+      return;
+    }
+
+    currentUser.nome = nome;
+    updateUserInStorage(currentUser);
+    document.getElementById('loggedAs').textContent = nome;
+    document.getElementById('welcomeUser').textContent = `Olá, ${nome.split(' ')[0]} 👋`;
+    showToast('Perfil atualizado com sucesso!');
+  }
+
+  function alterarSenhaPerfil() {
+    const atual = document.getElementById('senhaAtual').value.trim();
+    const nova = document.getElementById('novaSenha').value.trim();
+
+    if (atual !== currentUser.senha) {
+      showToast('Senha atual incorreta.', 'danger');
+      return;
+    }
+
+    if (nova.length < 6) {
+      showToast('A nova senha deve ter no mínimo 6 caracteres.', 'warn');
+      return;
+    }
+
+    currentUser.senha = nova;
+    updateUserInStorage(currentUser);
+    document.getElementById('senhaAtual').value = '';
+    document.getElementById('novaSenha').value = '';
+    showToast('Senha alterada com sucesso!');
+  }
+
+  /* ---------- RENDERIZAÇÃO DE GRÁFICOS (CHART.JS) ---------- */
+  function renderChartCredito() {
+    const ctx = document.getElementById('chartCredito');
+    if (!ctx) return;
+
+    if (chartCreditoInstance) chartCreditoInstance.destroy();
+
+    chartCreditoInstance = new Chart(ctx, {
+      type: 'bar',
+      data: {
+        labels: ['Análise Manual (Antes)', 'Algoritmo Nexta Engine (Depois)'],
+        datasets: [{
+          label: 'Tempo Médio em Segundos',
+          data: [1800, 35],
+          backgroundColor: ['#6B7280', '#9FD923'],
+          borderRadius: 8
+        }]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: { legend: { display: false } }
+      }
+    });
+  }
+
+  function renderChartCobranca() {
+    const ctx = document.getElementById('chartCobranca');
+    if (!ctx) return;
+
+    if (chartCobrancaInstance) chartCobrancaInstance.destroy();
+
+    chartCobrancaInstance = new Chart(ctx, {
+      type: 'line',
+      data: {
+        labels: ['Mar', 'Abr', 'Mai', 'Jun', 'Jul', 'Ago'],
+        datasets: [{
+          label: 'Taxa de Inadimplência (%)',
+          data: [6.2, 5.8, 5.1, 4.5, 4.1, 3.8],
+          borderColor: '#E4572E',
+          tension: 0.3,
+          fill: false
+        }]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false
+      }
+    });
+  }
+
+  function renderChartFraude() {
+    const ctx = document.getElementById('chartFraude');
+    if (!ctx) return;
+
+    if (chartFraudeInstance) chartFraudeInstance.destroy();
+
+    chartFraudeInstance = new Chart(ctx, {
+      type: 'doughnut',
+      data: {
+        labels: ['Troca de Dispositivo', 'IPs Distantes', 'Inconsistência OCR', 'Falso Positivo'],
+        datasets: [{
+          data: [40, 25, 20, 15],
+          backgroundColor: ['#0F1B2D', '#D4A54A', '#E4572E', '#9FD923']
+        }]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false
+      }
+    });
+  }
+
+  /* ---------- AUXILIARES DE INTERFACE & NAVEGAÇÃO ---------- */
   function toggleMenu(open) {
     const sidebar = document.getElementById('sidebar');
     const overlay = document.getElementById('sidebarOverlay');
-    if (open) {
-      sidebar.classList.add('open');
-      overlay.classList.add('open');
-    } else {
-      sidebar.classList.remove('open');
-      overlay.classList.remove('open');
-    }
+    sidebar.classList.toggle('open', open);
+    overlay.classList.toggle('open', open);
+  }
+
+  function confirmarSair() {
+    const body = `<p style="font-size:13.5px;">Tem certeza que deseja encerrar sua sessão atual?</p>`;
+    const actions = `
+      <button class="btn btn-outline btn-sm" onclick="closeModal()">Cancelar</button>
+      <button class="btn btn-danger btn-sm" onclick="sair()">Confirmar Sair</button>
+    `;
+    openModal('Encerrar Sessão', body, actions);
   }
 
   function sair() {
     currentUser = null;
     latestSimulation = null;
     localStorage.removeItem('nexta_session');
+    closeModal();
     document.getElementById('app').style.display = 'none';
     document.getElementById('loginScreen').style.display = 'flex';
     mostrarTela('login');
+    showToast('Sessão encerrada.');
   }
 </script>
 </body>
