@@ -2,7 +2,7 @@
 <html lang="pt-BR" data-theme="light">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Nexta Finance — Sistema Fintech</title>
 
 <!-- Fontes Externas -->
@@ -14,7 +14,7 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 
 <style>
-  /* ---------- DESIGN SYSTEM & VARIAVEIS (TEMA CLARO / ESCURO) ---------- */
+  /* ---------- DESIGN SYSTEM & VARIÁVEIS (TEMA CLARO / ESCURO) ---------- */
   :root {
     --navy: #0F1B2D;
     --navy-2: #16243B;
@@ -77,7 +77,7 @@
 
   .mono { font-family: 'IBM Plex Mono', monospace; }
   a { color: inherit; text-decoration: none; }
-  
+
   button, a, input, select, .nav-item {
     font-family: inherit;
     touch-action: manipulation;
@@ -118,8 +118,8 @@
   }
 
   .sidebar {
-    width: 240px;
-    min-width: 240px;
+    width: 248px;
+    min-width: 248px;
     background: var(--navy);
     color: #DDE3EE;
     display: flex;
@@ -127,7 +127,7 @@
     padding: 22px 16px;
     overflow-y: auto;
     -webkit-overflow-scrolling: touch;
-    z-index: 10;
+    z-index: 100;
     position: relative;
   }
 
@@ -136,25 +136,79 @@
     align-items: center;
     gap: 9px;
     padding: 4px 6px 22px 6px;
-    border-bottom: 1px solid rgba(255,255,255,0.08);
-    margin-bottom: 18px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+    margin-bottom: 14px;
     position: relative;
     z-index: 2;
   }
 
   .brand-dot {
-    width: 11px; height: 11px; border-radius: 50%;
+    width: 11px;
+    height: 11px;
+    border-radius: 50%;
     background: var(--lime);
-    box-shadow: 0 0 0 4px rgba(198,255,61,0.15);
+    box-shadow: 0 0 0 4px rgba(198, 255, 61, 0.15);
+    flex-shrink: 0;
   }
 
   .brand-name { font-size: 18px; font-weight: 700; color: #fff; }
   .brand-name span { color: var(--lime); }
 
+  /* Classes adaptativas de marca e links nas telas de autenticação */
+  .auth-brand-dot {
+    background: var(--navy);
+  }
+  [data-theme="dark"] .auth-brand-dot {
+    background: var(--lime);
+  }
+
+  .auth-brand-name {
+    color: var(--navy);
+  }
+  [data-theme="dark"] .auth-brand-name {
+    color: var(--ink);
+  }
+
+  .auth-brand-accent {
+    color: var(--lime-dark);
+  }
+  [data-theme="dark"] .auth-brand-accent {
+    color: var(--lime);
+  }
+
+  .auth-link {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--navy);
+    display: inline-flex;
+    align-items: center;
+    min-height: 36px;
+    transition: color 0.2s ease;
+  }
+  .auth-link:hover {
+    text-decoration: underline;
+  }
+  [data-theme="dark"] .auth-link {
+    color: var(--lime);
+  }
+
+  .auth-link-muted {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--slate);
+    display: inline-flex;
+    align-items: center;
+    min-height: 36px;
+    transition: color 0.2s ease;
+  }
+  .auth-link-muted:hover {
+    color: var(--ink);
+  }
+
   .nav-label {
     font-size: 10.5px;
     text-transform: uppercase;
-    letter-spacing: .09em;
+    letter-spacing: 0.09em;
     color: var(--slate-light);
     margin: 14px 10px 8px;
     font-weight: 600;
@@ -169,8 +223,9 @@
   .nav-pill {
     position: absolute;
     left: 0;
+    top: 0;
     width: 100%;
-    height: 42px;
+    height: 44px;
     background: var(--navy-3);
     border-radius: 10px;
     transition: transform 0.28s cubic-bezier(0.2, 0.8, 0.2, 1), opacity 0.2s ease, height 0.2s ease;
@@ -192,13 +247,13 @@
     margin-bottom: 4px;
     cursor: pointer;
     user-select: none;
-    transition: color .2s ease;
+    transition: color 0.2s ease;
     position: relative;
     z-index: 2;
     background: transparent !important;
   }
 
-  .nav-item svg { width: 18px; height: 18px; flex-shrink: 0; opacity: .85; }
+  .nav-item svg { width: 18px; height: 18px; flex-shrink: 0; opacity: 0.85; }
   .nav-item:hover, .nav-item:focus { color: #fff; outline: none; }
   .nav-item.active { color: var(--lime); font-weight: 600; }
   .nav-item.active svg { opacity: 1; stroke: var(--lime); }
@@ -206,7 +261,7 @@
   .sidebar-foot {
     margin-top: auto;
     padding-top: 14px;
-    border-top: 1px solid rgba(255,255,255,0.08);
+    border-top: 1px solid rgba(255, 255, 255, 0.08);
     font-size: 11.5px;
     color: var(--slate-light);
     line-height: 1.5;
@@ -235,6 +290,7 @@
     background: var(--card-bg);
     position: relative;
     z-index: 5;
+    gap: 12px;
   }
 
   .topbar-title { font-size: 15px; font-weight: 600; color: var(--ink); }
@@ -248,26 +304,31 @@
     border-radius: 8px;
     font-size: 12px;
     font-weight: 600;
-    display: flex;
+    display: inline-flex;
     align-items: center;
     gap: 6px;
     cursor: pointer;
     min-height: 36px;
+    transition: border-color 0.2s ease, background-color 0.2s ease;
+  }
+  .theme-toggle:hover {
+    border-color: var(--lime-dark);
   }
 
   .cmd-k-badge {
     background: var(--cream);
     border: 1px solid var(--line);
     color: var(--slate);
-    padding: 4px 8px;
+    padding: 4px 10px;
     border-radius: 6px;
-    font-size: 11px;
+    font-size: 11.5px;
     font-family: 'IBM Plex Mono', monospace;
     font-weight: 600;
     cursor: pointer;
-    display: flex;
+    display: inline-flex;
     align-items: center;
-    gap: 4px;
+    gap: 5px;
+    min-height: 36px;
   }
   .cmd-k-badge:hover { border-color: var(--ink); color: var(--ink); }
 
@@ -285,15 +346,17 @@
   }
 
   .pulse {
-    width: 7px; height: 7px; border-radius: 50%;
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
     background: var(--lime-dark);
     animation: pulse 1.6s infinite;
   }
 
   @keyframes pulse {
-    0% { box-shadow: 0 0 0 0 rgba(159,217,35,.5); }
-    70% { box-shadow: 0 0 0 6px rgba(159,217,35,0); }
-    100% { box-shadow: 0 0 0 0 rgba(159,217,35,0); }
+    0% { box-shadow: 0 0 0 0 rgba(159, 217, 35, 0.5); }
+    70% { box-shadow: 0 0 0 6px rgba(159, 217, 35, 0); }
+    100% { box-shadow: 0 0 0 0 rgba(159, 217, 35, 0); }
   }
 
   .content {
@@ -305,7 +368,7 @@
     z-index: 2;
   }
 
-  /* ITEM 5: FUNDO TEMÁTICO DECORATIVO EM SVG */
+  /* FUNDO TEMÁTICO DECORATIVO EM SVG */
   .fintech-bg-layer {
     position: absolute;
     inset: 0;
@@ -332,9 +395,21 @@
   .bg-svg-4 { top: 68%; left: 32%; width: 160px; }
 
   .page { display: none; }
-  .page.active { display: block; }
+  .page.active { display: block; animation: pageFadeIn 0.25s ease; }
 
-  .page-head { margin-bottom: 22px; }
+  @keyframes pageFadeIn {
+    from { opacity: 0; transform: translateY(6px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .page-head {
+    margin-bottom: 22px;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    flex-wrap: wrap;
+    gap: 12px;
+  }
   .page-head h1 { font-size: 22px; margin: 0 0 4px; color: var(--ink); }
   .page-head p { margin: 0; color: var(--slate); font-size: 13.5px; }
 
@@ -342,6 +417,7 @@
   .grid { display: grid; gap: 16px; }
   .grid-3 { grid-template-columns: repeat(3, 1fr); }
   .grid-2 { grid-template-columns: 1.3fr 1fr; }
+  .grid-2-equal { grid-template-columns: repeat(2, 1fr); }
 
   .card {
     background: var(--card-bg);
@@ -352,7 +428,7 @@
     will-change: transform, opacity;
   }
 
-  /* ITEM 3: CARDS CLICÁVEIS */
+  /* CARDS CLICÁVEIS */
   .card.card-clickable {
     cursor: pointer;
     position: relative;
@@ -360,10 +436,10 @@
   .card.card-clickable:hover {
     border-color: var(--lime-dark);
     transform: translateY(-2px);
-    box-shadow: 0 8px 20px rgba(0,0,0,0.06);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.06);
   }
 
-  /* ITEM 4: ANIMACÕES DE ENTRADA VIA SCROLL NA DASHBOARD */
+  /* ANIMAÇÕES DE ENTRADA VIA SCROLL NA DASHBOARD */
   .card-scroll-in {
     opacity: 0;
     will-change: transform, opacity;
@@ -378,42 +454,120 @@
     transform: translate(0, 0);
   }
 
-  .card-label { font-size: 11px; text-transform: uppercase; letter-spacing: .07em; color: var(--slate); font-weight: 600; margin-bottom: 8px; }
-  .card-value { font-size: 26px; font-weight: 700; font-family: 'Space Grotesk', sans-serif; color: var(--ink); }
+  .card-label {
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.07em;
+    color: var(--slate);
+    font-weight: 600;
+    margin-bottom: 8px;
+  }
+  .card-value {
+    font-size: 26px;
+    font-weight: 700;
+    font-family: 'Space Grotesk', sans-serif;
+    color: var(--ink);
+  }
   .card-sub { font-size: 12px; color: var(--slate); margin-top: 6px; }
 
-  .tag { display: inline-flex; align-items: center; gap: 5px; font-size: 11px; font-weight: 600; padding: 4px 10px; border-radius: 999px; }
+  .tag {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    font-size: 11px;
+    font-weight: 600;
+    padding: 4px 10px;
+    border-radius: 999px;
+  }
   .tag.up { background: rgba(159, 217, 35, 0.18); color: #5B8A1D; }
+  [data-theme="dark"] .tag.up { color: var(--lime); }
   .tag.warn { background: rgba(228, 87, 46, 0.15); color: var(--danger); }
   .tag.gold { background: rgba(212, 165, 74, 0.18); color: var(--gold); }
+  .tag.neutral { background: rgba(148, 163, 184, 0.16); color: var(--slate); }
 
-  /* Botões */
+  /* Botões e Contraste no Tema Escuro */
   .btn {
-    display: inline-flex; align-items: center; justify-content: center; gap: 8px;
-    background: var(--navy); color: #fff;
-    padding: 10px 20px; border-radius: 10px;
-    font-size: 14px; font-weight: 600;
-    transition: transform .12s ease, background .15s ease, opacity .15s;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    background: var(--navy);
+    color: #FFFFFF;
+    padding: 10px 20px;
+    border-radius: 10px;
+    font-size: 14px;
+    font-weight: 600;
+    border: 1px solid transparent;
+    transition: transform 0.12s ease, background 0.15s ease, border-color 0.15s ease, opacity 0.15s;
   }
   .btn:hover { background: var(--navy-3); }
-  .btn:active { transform: scale(.98); }
-  
+  .btn:active { transform: scale(0.98); }
+
   .btn-navy { background: var(--navy); color: #FFFFFF; }
   .btn-navy:hover { background: var(--navy-3); }
-  
-  .btn-lime { background: var(--lime); color: var(--navy); }
-  .btn-lime:hover { background: var(--lime-dark); }
-  .btn-outline { background: transparent; border: 1.4px solid var(--line); color: var(--ink); }
-  .btn-outline:hover { border-color: var(--ink); }
-  .btn-danger { background: var(--danger); color: #fff; }
+
+  [data-theme="dark"] .btn,
+  [data-theme="dark"] .btn-navy {
+    background: #1F3352;
+    color: #F8FAFC;
+    border: 1px solid #35527E;
+  }
+  [data-theme="dark"] .btn:hover,
+  [data-theme="dark"] .btn-navy:hover {
+    background: #28426A;
+    border-color: var(--lime);
+    color: #FFFFFF;
+  }
+
+  .btn-lime,
+  [data-theme="dark"] .btn-lime {
+    background: var(--lime);
+    color: #0B1320;
+    border: 1px solid var(--lime);
+  }
+  .btn-lime:hover,
+  [data-theme="dark"] .btn-lime:hover {
+    background: var(--lime-dark);
+    border-color: var(--lime-dark);
+    color: #0B1320;
+  }
+
+  .btn-outline,
+  [data-theme="dark"] .btn-outline {
+    background: transparent;
+    border: 1.4px solid var(--line);
+    color: var(--ink);
+  }
+  .btn-outline:hover,
+  [data-theme="dark"] .btn-outline:hover {
+    background: rgba(198, 255, 61, 0.08);
+    border-color: var(--lime-dark);
+    color: var(--ink);
+  }
+
+  .btn-danger,
+  [data-theme="dark"] .btn-danger {
+    background: var(--danger);
+    color: #FFFFFF;
+    border: 1px solid var(--danger);
+  }
+  .btn-danger:hover,
+  [data-theme="dark"] .btn-danger:hover {
+    opacity: 0.9;
+  }
+
   .btn-sm { padding: 6px 12px; font-size: 12.5px; border-radius: 8px; min-height: 36px; }
   .btn-block { width: 100%; }
 
   /* Formulários & Validação */
   .form-group { margin-bottom: 16px; }
   label { display: block; font-size: 12.5px; font-weight: 600; color: var(--ink); margin-bottom: 6px; }
-  
-  input[type=text], input[type=password], input[type=number], select {
+
+  input[type=text],
+  input[type=email],
+  input[type=password],
+  input[type=number],
+  select {
     width: 100%;
     padding: 12px 14px;
     border: 1.4px solid var(--line);
@@ -422,14 +576,14 @@
     font-family: inherit;
     background: var(--input-bg);
     color: var(--ink);
-    transition: border-color .15s;
+    transition: border-color 0.15s;
   }
 
   input:focus, select:focus { outline: none; border-color: var(--lime-dark); }
-  input[type=range] { width: 100%; accent-color: var(--lime-dark); margin: 10px 0 8px; height: 24px; }
+  input[type=range] { width: 100%; accent-color: var(--lime-dark); margin: 10px 0 8px; height: 24px; cursor: pointer; }
 
   .field-error { color: var(--danger); font-size: 11.5px; font-weight: 600; margin-top: 4px; display: none; }
-  
+
   /* Password Strength Meter */
   .strength-meter { height: 4px; background: var(--line); border-radius: 2px; margin-top: 6px; overflow: hidden; }
   .strength-fill { height: 100%; width: 0%; transition: width 0.3s, background-color 0.3s; }
@@ -437,26 +591,65 @@
   /* Tabelas */
   .table-responsive { width: 100%; overflow-x: auto; -webkit-overflow-scrolling: touch; }
   table { width: 100%; border-collapse: collapse; font-size: 13px; min-width: 550px; }
-  th { text-align: left; font-size: 10.5px; text-transform: uppercase; letter-spacing: .06em; color: var(--slate); padding: 0 10px 10px; font-weight: 600; border-bottom: 1px solid var(--line); }
+  th {
+    text-align: left;
+    font-size: 10.5px;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--slate);
+    padding: 0 10px 10px;
+    font-weight: 600;
+    border-bottom: 1px solid var(--line);
+  }
   td { padding: 12px 10px; border-bottom: 1px solid var(--line); vertical-align: middle; color: var(--ink); }
   tr:last-child td { border-bottom: none; }
-  
+
   .avatar {
-    width: 32px; height: 32px; border-radius: 50%;
-    color: #fff; display: inline-flex; align-items: center; justify-content: center;
-    font-size: 11px; font-weight: 700; font-family: 'Space Grotesk', sans-serif;
-    margin-right: 9px; flex-shrink: 0;
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    background: var(--navy-3);
+    border: 1px solid rgba(198, 255, 61, 0.35);
+    color: var(--lime);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 11px;
+    font-weight: 700;
+    font-family: 'Space Grotesk', sans-serif;
+    margin-right: 9px;
+    flex-shrink: 0;
   }
   .row-flex { display: flex; align-items: center; }
 
+  /* Barra de Progresso */
+  .progress-track {
+    width: 100%;
+    height: 10px;
+    background: var(--cream);
+    border: 1px solid var(--line);
+    border-radius: 999px;
+    overflow: hidden;
+  }
+  .progress-fill {
+    height: 100%;
+    background: linear-gradient(90deg, var(--lime-dark), var(--lime));
+    border-radius: 999px;
+    transition: width 0.4s ease;
+  }
+
   /* Modais Elegantes */
   .modal-overlay {
-    position: fixed; inset: 0;
+    position: fixed;
+    inset: 0;
     background: var(--modal-overlay);
     backdrop-filter: blur(4px);
     z-index: 1000;
-    display: flex; align-items: center; justify-content: center;
-    opacity: 0; pointer-events: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    pointer-events: none;
     transition: opacity 0.25s ease;
   }
   .modal-overlay.active { opacity: 1; pointer-events: auto; }
@@ -465,9 +658,10 @@
     background: var(--card-bg);
     border: 1px solid var(--line);
     border-radius: 18px;
-    width: 90%; max-width: 520px;
+    width: 90%;
+    max-width: 520px;
     padding: 24px;
-    box-shadow: 0 20px 40px rgba(0,0,0,0.3);
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
     transform: translateY(15px) scale(0.98);
     transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1);
     max-height: 90vh;
@@ -477,19 +671,32 @@
   .modal-head { display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; }
   .modal-head h3 { margin: 0; font-size: 18px; color: var(--ink); }
   .modal-close { background: transparent; color: var(--slate); font-size: 20px; padding: 4px; min-height: auto; cursor: pointer; }
+  .modal-close:hover { color: var(--ink); }
 
   /* Toast Notifications */
   #toast-container {
-    position: fixed; bottom: 20px; right: 20px; z-index: 2000;
-    display: flex; flex-direction: column; gap: 8px; pointer-events: none;
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    z-index: 2000;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    pointer-events: none;
   }
   .toast {
     pointer-events: auto;
-    background: var(--navy); color: #fff;
-    padding: 12px 18px; border-radius: 10px;
-    font-size: 13px; font-weight: 500;
-    display: flex; align-items: center; gap: 10px;
-    box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+    background: var(--navy);
+    color: #fff;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    padding: 12px 18px;
+    border-radius: 10px;
+    font-size: 13px;
+    font-weight: 500;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.25);
     animation: toastIn 0.3s cubic-bezier(0.16, 1, 0.3, 1), toastOut 0.3s ease 2.7s forwards;
   }
   .toast-success { border-left: 4px solid var(--lime); }
@@ -499,34 +706,38 @@
   @keyframes toastIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
   @keyframes toastOut { from { opacity: 1; transform: translateY(0); } to { opacity: 0; transform: translateY(20px); } }
 
-  /* Skeletons & Empty States */
-  .skeleton {
-    background: linear-gradient(90deg, var(--line) 25%, var(--cream) 50%, var(--line) 75%);
-    background-size: 200% 100%;
-    animation: loading 1.5s infinite;
-    border-radius: 6px;
-  }
-  @keyframes loading { 0% { background-position: 200% 0; } 100% { background-position: -200% 0; } }
-
-  .empty-state { text-align: center; padding: 40px 20px; color: var(--slate); }
-
   /* Timeline */
   .tl { position: relative; padding-left: 26px; }
   .tl::before { content: ""; position: absolute; left: 6px; top: 4px; bottom: 4px; width: 2px; background: var(--line); }
   .tl-item { position: relative; padding-bottom: 22px; }
   .tl-item:last-child { padding-bottom: 0; }
-  .tl-dot { position: absolute; left: -26px; top: 2px; width: 13px; height: 13px; border-radius: 50%; background: var(--card-bg); border: 2.5px solid var(--slate-light); }
+  .tl-dot {
+    position: absolute;
+    left: -26px;
+    top: 2px;
+    width: 13px;
+    height: 13px;
+    border-radius: 50%;
+    background: var(--card-bg);
+    border: 2.5px solid var(--slate-light);
+  }
   .tl-item.done .tl-dot { border-color: var(--lime-dark); background: var(--lime-dark); }
-  .tl-item.active .tl-dot { border-color: var(--navy); background: var(--lime); box-shadow: 0 0 0 4px rgba(198,255,61,.2); }
+  .tl-item.active .tl-dot { border-color: var(--navy); background: var(--lime); box-shadow: 0 0 0 4px rgba(198, 255, 61, 0.25); }
   .tl-title { font-size: 13.5px; font-weight: 600; color: var(--ink); }
   .tl-sub { font-size: 12px; color: var(--slate); margin-top: 2px; }
 
   /* FUNDO ANIMADO NA TELA DE LOGIN */
   .login-screen {
-    height: 100vh; height: 100dvh; width: 100vw;
+    height: 100vh;
+    height: 100dvh;
+    width: 100vw;
     background: var(--navy);
-    display: flex; align-items: center; justify-content: center;
-    position: relative; overflow: hidden; padding: 20px 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    overflow-y: auto;
+    padding: 20px 0;
   }
 
   .login-bg-blob {
@@ -547,22 +758,45 @@
   }
 
   .login-card {
-    position: relative; z-index: 2; width: 380px;
-    background: var(--card-bg); border-radius: 18px;
-    padding: 36px 34px 30px;
-    box-shadow: 0 30px 60px rgba(0,0,0,.35); margin: auto;
+    position: relative;
+    z-index: 2;
+    width: 400px;
+    background: var(--card-bg);
+    border: 1px solid var(--line);
+    border-radius: 18px;
+    padding: 34px 32px 28px;
+    box-shadow: 0 30px 60px rgba(0, 0, 0, 0.35);
+    margin: auto;
+  }
+
+  .demo-quick-bar {
+    margin-top: 16px;
+    padding-top: 14px;
+    border-top: 1px dashed var(--line);
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
   }
 
   .menu-btn {
-    display: none; width: 44px; height: 44px;
-    align-items: center; justify-content: center;
-    border-radius: 10px; background: var(--cream);
-    border: 1px solid var(--line); color: var(--ink);
+    display: none;
+    width: 44px;
+    height: 44px;
+    align-items: center;
+    justify-content: center;
+    border-radius: 10px;
+    background: var(--cream);
+    border: 1px solid var(--line);
+    color: var(--ink);
   }
   .sidebar-overlay {
-    display: none; position: fixed; inset: 0;
-    background: rgba(15,27,45,.5); backdrop-filter: blur(2px);
-    z-index: 99; cursor: pointer;
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(15, 27, 45, 0.5);
+    backdrop-filter: blur(2px);
+    z-index: 99;
+    cursor: pointer;
   }
   .sidebar-overlay.open { display: block; }
 
@@ -591,7 +825,7 @@
   }
   .amort-option-card.selected {
     border-color: var(--lime-dark);
-    background: rgba(198, 255, 61, 0.08);
+    background: rgba(198, 255, 61, 0.1);
   }
 
   /* ESTILOS DO MENU DE COMANDO RÁPIDO */
@@ -626,20 +860,32 @@
     color: var(--lime-dark);
   }
 
+  /* CHART CONTAINER */
+  .chart-box {
+    position: relative;
+    height: 240px;
+    width: 100%;
+  }
+
   /* RESPONSIVIDADE (< 880px) */
-  @media(max-width:880px) {
+  @media (max-width: 880px) {
     .menu-btn { display: inline-flex; }
     .topbar { padding: 0 16px; height: 60px; min-height: 60px; }
     .content { padding: 18px 16px 50px; }
-    .grid-3, .grid-2 { grid-template-columns: 1fr; }
+    .grid-3, .grid-2, .grid-2-equal { grid-template-columns: 1fr; }
     .sidebar {
-      position: fixed; top: 0; left: 0; height: 100vh; height: 100dvh;
-      transform: translateX(-100%); transition: transform .25s cubic-bezier(0.4, 0, 0.2, 1);
-      box-shadow: 20px 0 40px rgba(0,0,0,.35);
+      position: fixed;
+      top: 0;
+      left: 0;
+      height: 100vh;
+      height: 100dvh;
+      transform: translateX(-100%);
+      transition: transform 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+      box-shadow: 20px 0 40px rgba(0, 0, 0, 0.35);
     }
     .sidebar.open { transform: translateX(0); }
-    .login-card { width: 90vw; max-width: 400px; padding: 28px 22px 24px; }
-    .cmd-k-badge { display: none; }
+    .login-card { width: 92vw; max-width: 400px; padding: 28px 22px 24px; }
+    .cmd-k-badge, .status-pill { display: none; }
   }
 </style>
 </head>
@@ -655,12 +901,8 @@
       <h3 id="modalTitle">Título do Modal</h3>
       <button class="modal-close" onclick="closeModal()" aria-label="Fechar modal">✕</button>
     </div>
-    <div id="modalBody">
-      <!-- Conteúdo injetado via JS -->
-    </div>
-    <div id="modalFooter" style="margin-top: 20px; display: flex; justify-content: flex-end; gap: 10px;">
-      <!-- Ações do Modal -->
-    </div>
+    <div id="modalBody"></div>
+    <div id="modalFooter" style="margin-top: 20px; display: flex; justify-content: flex-end; gap: 10px;"></div>
   </div>
 </div>
 
@@ -671,110 +913,137 @@
 
   <!-- TELA: LOGIN -->
   <div class="login-card" id="viewLogin">
-    <div class="brand" style="border:none; padding:0 0 20px;">
-      <div class="brand-dot" style="background:var(--navy);"></div>
-      <div class="brand-name" style="color:var(--navy);">Nexta<span style="color:var(--lime-dark);">Finance</span></div>
+    <div class="row-flex" style="justify-content: space-between; padding-bottom: 18px;">
+      <div class="brand" style="border: none; padding: 0; margin: 0;">
+        <div class="brand-dot auth-brand-dot"></div>
+        <div class="brand-name auth-brand-name">Nexta<span class="auth-brand-accent">Finance</span></div>
+      </div>
+      <button type="button" class="theme-toggle" onclick="toggleTheme()" aria-label="Alternar tema">🌓 Tema</button>
     </div>
-    <h2 style="margin:0 0 6px; font-size:19px;">Entrar na sua conta</h2>
-    <p style="margin:0 0 22px; font-size:13px; color:var(--slate);">Acesse o painel para gerenciar seus empréstimos.</p>
-    
+
+    <h2 style="margin: 0 0 6px; font-size: 19px;">Entrar na sua conta</h2>
+    <p style="margin: 0 0 22px; font-size: 13px; color: var(--slate);">Acesse o painel para gerenciar seus empréstimos.</p>
+
     <div class="form-group">
       <label for="loginEmail">E-mail</label>
-      <input type="text" id="loginEmail" placeholder="voce@email.com" autocomplete="email" oninput="validarFormLogin()">
+      <input type="email" id="loginEmail" placeholder="voce@email.com" autocomplete="email" oninput="validarFormLogin()">
       <div class="field-error" id="errLoginEmail">Formato de e-mail inválido.</div>
     </div>
 
     <div class="form-group">
       <label for="loginSenha">Senha</label>
-      <input type="password" id="loginSenha" placeholder="••••••••" oninput="validarFormLogin()">
+      <input type="password" id="loginSenha" placeholder="••••••••" autocomplete="current-password" oninput="validarFormLogin()" onkeydown="if(event.key==='Enter' && !document.getElementById('btnLoginSubmit').disabled) tentarLogin()">
     </div>
 
     <button class="btn btn-lime btn-block" id="btnLoginSubmit" onclick="tentarLogin()" disabled>Entrar</button>
-    
-    <div class="row-flex" style="justify-space-between; margin-top:16px;">
-      <a href="#" onclick="mostrarTela('cadastro'); return false;" style="font-size:13px; font-weight:600; color:var(--navy);">Criar conta</a>
-      <a href="#" onclick="mostrarTela('esqueci'); return false;" style="font-size:13px; font-weight:600; color:var(--slate);">Esqueci a senha</a>
+
+    <div class="row-flex" style="justify-content: space-between; margin-top: 14px;">
+      <a href="#" class="auth-link" onclick="mostrarTela('cadastro'); return false;">Criar conta</a>
+      <a href="#" class="auth-link-muted" onclick="mostrarTela('esqueci'); return false;">Esqueci a senha</a>
+    </div>
+
+    <div class="demo-quick-bar">
+      <span style="font-size: 11px; color: var(--slate); font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em;">Acesso rápido demonstração:</span>
+      <div class="row-flex" style="gap: 8px;">
+        <button type="button" class="btn btn-outline btn-sm" style="flex: 1;" onclick="preencherDemo('cliente')">Demo Cliente</button>
+        <button type="button" class="btn btn-navy btn-sm" style="flex: 1;" onclick="preencherDemo('admin')">Demo Admin</button>
+      </div>
     </div>
   </div>
 
   <!-- TELA: CRIAR CONTA -->
-  <div class="login-card" id="viewCadastro" style="display:none;">
-    <div class="brand" style="border:none; padding:0 0 20px;">
-      <div class="brand-dot" style="background:var(--navy);"></div>
-      <div class="brand-name" style="color:var(--navy);">Nexta<span style="color:var(--lime-dark);">Finance</span></div>
+  <div class="login-card" id="viewCadastro" style="display: none;">
+    <div class="row-flex" style="justify-content: space-between; padding-bottom: 18px;">
+      <div class="brand" style="border: none; padding: 0; margin: 0;">
+        <div class="brand-dot auth-brand-dot"></div>
+        <div class="brand-name auth-brand-name">Nexta<span class="auth-brand-accent">Finance</span></div>
+      </div>
+      <button type="button" class="theme-toggle" onclick="toggleTheme()" aria-label="Alternar tema">🌓 Tema</button>
     </div>
-    <h2 style="margin:0 0 6px; font-size:19px;">Criar conta</h2>
-    <p style="margin:0 0 20px; font-size:13px; color:var(--slate);">Leva menos de um minuto.</p>
-    
+
+    <h2 style="margin: 0 0 6px; font-size: 19px;">Criar conta</h2>
+    <p style="margin: 0 0 20px; font-size: 13px; color: var(--slate);">Leva menos de um minuto.</p>
+
     <div class="form-group">
       <label for="cadNome">Nome completo</label>
       <input type="text" id="cadNome" placeholder="Seu nome" oninput="validarFormCadastro()">
     </div>
-    
+
     <div class="form-group">
       <label for="cadEmail">E-mail</label>
-      <input type="text" id="cadEmail" placeholder="voce@email.com" oninput="validarFormCadastro()">
+      <input type="email" id="cadEmail" placeholder="voce@email.com" oninput="validarFormCadastro()">
       <div class="field-error" id="errCadEmail">Informe um e-mail válido.</div>
     </div>
-    
+
     <div class="form-group">
       <label for="cadSenha">Senha (mínimo 6 caracteres)</label>
       <input type="password" id="cadSenha" placeholder="Crie uma senha" oninput="validarFormCadastro(); testarForcaSenha(this.value, 'cadMeter')">
       <div class="strength-meter"><div class="strength-fill" id="cadMeter"></div></div>
     </div>
-    
+
     <div class="form-group">
       <label for="cadPergunta">Pergunta de segurança pessoal</label>
       <input type="text" id="cadPergunta" placeholder="Ex: Qual o nome do seu primeiro pet?" oninput="validarFormCadastro()">
     </div>
 
+    <div class="form-group">
+      <label for="cadResposta">Resposta de segurança</label>
+      <input type="text" id="cadResposta" placeholder="Sua resposta secreta" oninput="validarFormCadastro()">
+    </div>
+
     <button class="btn btn-lime btn-block" id="btnCadSubmit" onclick="criarConta()" disabled>Criar minha conta</button>
-    <div style="margin-top:18px; font-size:12px; text-align:center;">
-      <a href="#" onclick="mostrarTela('login'); return false;" style="color:var(--navy); font-weight:600;">← Voltar para o login</a>
+    <div style="margin-top: 16px; font-size: 12px; text-align: center;">
+      <a href="#" class="auth-link" onclick="mostrarTela('login'); return false;">← Voltar para o login</a>
     </div>
   </div>
 
   <!-- TELA: ESQUECI A SENHA -->
-  <div class="login-card" id="viewEsqueci" style="display:none;">
-    <div class="brand" style="border:none; padding:0 0 20px;">
-      <div class="brand-dot" style="background:var(--navy);"></div>
-      <div class="brand-name" style="color:var(--navy);">Nexta<span style="color:var(--lime-dark);">Finance</span></div>
+  <div class="login-card" id="viewEsqueci" style="display: none;">
+    <div class="row-flex" style="justify-content: space-between; padding-bottom: 18px;">
+      <div class="brand" style="border: none; padding: 0; margin: 0;">
+        <div class="brand-dot auth-brand-dot"></div>
+        <div class="brand-name auth-brand-name">Nexta<span class="auth-brand-accent">Finance</span></div>
+      </div>
+      <button type="button" class="theme-toggle" onclick="toggleTheme()" aria-label="Alternar tema">🌓 Tema</button>
     </div>
-    <h2 style="margin:0 0 6px; font-size:19px;">Recuperar senha</h2>
-    <p style="margin:0 0 20px; font-size:13px; color:var(--slate);">Informe seu e-mail cadastrado.</p>
+
+    <h2 style="margin: 0 0 6px; font-size: 19px;">Recuperar senha</h2>
+    <p style="margin: 0 0 20px; font-size: 13px; color: var(--slate);">Informe seu e-mail cadastrado.</p>
 
     <div id="esqueciPasso1">
       <div class="form-group">
         <label for="recEmail">E-mail</label>
-        <input type="text" id="recEmail" placeholder="voce@email.com">
+        <input type="email" id="recEmail" placeholder="voce@email.com">
       </div>
       <button class="btn btn-lime btn-block" onclick="buscarConta()">Continuar</button>
     </div>
 
-    <div id="esqueciPasso2" style="display:none;">
+    <div id="esqueciPasso2" style="display: none;">
       <div class="form-group">
-        <label id="perguntaLabel">Pergunta de segurança:</label>
+        <label id="perguntaLabel" for="recResposta">Pergunta de segurança:</label>
         <input type="text" id="recResposta" placeholder="Sua resposta">
       </div>
       <div class="form-group">
-        <label for="recNovaSenha">Nova senha</label>
+        <label for="recNovaSenha">Nova senha (mínimo 6 caracteres)</label>
         <input type="password" id="recNovaSenha" placeholder="Digite a nova senha">
       </div>
       <button class="btn btn-lime btn-block" onclick="redefinirSenha()">Redefinir senha</button>
     </div>
 
-    <div style="margin-top:18px; font-size:12px; text-align:center;">
-      <a href="#" onclick="mostrarTela('login'); return false;" style="color:var(--navy); font-weight:600;">← Voltar para o login</a>
+    <div style="margin-top: 16px; font-size: 12px; text-align: center;">
+      <a href="#" class="auth-link" onclick="mostrarTela('login'); return false;">← Voltar para o login</a>
     </div>
   </div>
-
 </div>
 
 <!-- ================= APLICAÇÃO PRINCIPAL ================= -->
-<div id="app" style="display:none;">
+<div id="app" style="display: none;">
+
+  <!-- OVERLAY MOBILE -->
+  <div class="sidebar-overlay" id="sidebarOverlay" onclick="toggleMenu(false)"></div>
 
   <!-- BARRA LATERAL (NAV) -->
-  <div class="sidebar" id="sidebar">
+  <aside class="sidebar" id="sidebar">
     <div class="brand">
       <div class="brand-dot"></div>
       <div class="brand-name">Nexta<span>Finance</span></div>
@@ -799,7 +1068,7 @@
     </div>
 
     <!-- Navegação Interna / Admin -->
-    <div id="navAdminGroup" class="nav-group" style="display:none;">
+    <div id="navAdminGroup" class="nav-group" style="display: none;">
       <div class="nav-pill" id="navPillAdmin"></div>
       <div class="nav-label">Operação interna</div>
       <div class="nav-item" data-page="credito" onclick="go('credito')" tabindex="0">
@@ -818,6 +1087,7 @@
 
     <!-- Links Comuns -->
     <div id="navGeneralGroup" class="nav-group">
+      <div class="nav-pill" id="navPillGeneral"></div>
       <div class="nav-label">Geral</div>
       <div class="nav-item" data-page="perfil" onclick="go('perfil')" tabindex="0">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="7" r="4"/><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/></svg>
@@ -830,1850 +1100,2010 @@
     </div>
 
     <div class="sidebar-foot">
-      <div class="row-flex" style="margin-bottom:8px;">
+      <div class="row-flex" style="margin-bottom: 10px;">
         <span class="avatar" id="sidebarAvatar">US</span>
-        <div>
-          <strong id="loggedAs" style="color:#fff; font-size:12.5px;">Usuário</strong><br>
-          <span id="loggedRole" style="font-size:10.5px;">Cliente</span>
+        <div style="min-width: 0;">
+          <strong id="sidebarUserName" style="color: #fff; display: block; font-size: 12.5px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">Usuário Nexta</strong>
+          <span id="sidebarUserRole" style="font-size: 11px; color: var(--lime);">Cliente Verificado</span>
         </div>
       </div>
-      <button class="btn btn-outline btn-sm btn-block" onclick="confirmarSair()" style="color:#fff; border-color:rgba(255,255,255,0.2);">Sair da conta</button>
-      <div style="margin-top:12px; font-size:10px; opacity:0.6;">UNINOVE · Prof. Anderson Barros</div>
+      <button type="button" class="btn btn-outline btn-sm btn-block" style="color: #DDE3EE; border-color: rgba(255,255,255,0.16);" onclick="confirmarLogout()">
+        Sair da conta
+      </button>
     </div>
-  </div>
+  </aside>
 
-  <div class="sidebar-overlay" id="sidebarOverlay" onclick="toggleMenu(false)"></div>
-
+  <!-- ÁREA PRINCIPAL -->
   <div class="main">
-    <!-- BARRA SUPERIOR -->
-    <div class="topbar">
-      <div class="row-flex" style="gap:10px;">
-        <button class="menu-btn" onclick="toggleMenu(true)" aria-label="Abrir Menu">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 6h18M3 12h18M3 18h18"/></svg>
-        </button>
-        <div class="topbar-title"><span class="crumb" id="crumbRole">Cliente</span> &nbsp;/&nbsp; <span id="crumbPage">Painel</span></div>
-      </div>
-      
-      <div class="row-flex" style="gap:12px;">
-        <button class="cmd-k-badge" onclick="abrirMenuComando()" title="Menu de busca rápida">
-          🔍 Busca <span style="font-size:9px; background:var(--line); padding:1px 4px; border-radius:3px; margin-left:3px;">⌘K</span>
-        </button>
-        <button class="theme-toggle" onclick="toggleTheme()" aria-label="Alternar tema claro/escuro">
-          <span id="themeIcon">🌙</span> <span id="themeText">Escuro</span>
-        </button>
-        <div class="status-pill"><span class="pulse"></span> Sistema ativo</div>
-      </div>
-    </div>
 
-    <!-- ITEM 5: CAMADA DE FUNDO TEMÁTICO DECORATIVO EM SVG -->
+    <!-- TOPBAR -->
+    <header class="topbar">
+      <div class="row-flex" style="gap: 12px;">
+        <button type="button" class="menu-btn" onclick="toggleMenu()" aria-label="Abrir menu">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 12h18M3 6h18M3 18h18"/></svg>
+        </button>
+        <div class="topbar-title">
+          <span class="crumb" id="crumbRole">Minha conta</span> / <span id="crumbPage">Painel</span>
+        </div>
+      </div>
+
+      <div class="row-flex" style="gap: 10px;">
+        <button type="button" class="cmd-k-badge" onclick="abrirMenuComando()" title="Busca rápida (Ctrl+K)">
+          ⌘K Buscar
+        </button>
+        <button type="button" class="theme-toggle" id="themeToggleBtn" onclick="toggleTheme()">
+          🌙 Escuro
+        </button>
+        <div class="status-pill">
+          <span class="pulse"></span>
+          Motor Ativo
+        </div>
+      </div>
+    </header>
+
+    <!-- FUNDO DECORATIVO FINTECH -->
     <div class="fintech-bg-layer" aria-hidden="true">
-      <!-- SVG 1: Linha de Gráfico Ascendente (Parallax) -->
-      <svg class="bg-svg bg-svg-1 parallax-elem" viewBox="0 0 200 100" fill="none" stroke="currentColor">
-        <path d="M10 85 Q 50 70 80 40 T 150 30 T 190 10" stroke-width="2.5" stroke-linecap="round"/>
-        <polyline points="175,10 190,10 190,25" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+      <svg class="bg-svg bg-svg-1" viewBox="0 0 200 200" fill="none" stroke="currentColor" stroke-width="1.5">
+        <circle cx="100" cy="100" r="85"/>
+        <circle cx="100" cy="100" r="55" stroke-dasharray="6 6"/>
+        <path d="M100 15v170M15 100h170"/>
       </svg>
-      <!-- SVG 2: Contorno do Cifrão -->
-      <svg class="bg-svg bg-svg-2" viewBox="0 0 100 100" fill="none" stroke="currentColor">
-        <path d="M50 10 v80 M35 28 c0-12 30-12 30 0 c0 18-30 18-30 36 c0 12 30 12 30 0" stroke-width="2.5" stroke-linecap="round"/>
+      <svg class="bg-svg bg-svg-2" viewBox="0 0 160 160" fill="none" stroke="currentColor" stroke-width="1.5">
+        <rect x="20" y="20" width="120" height="120" rx="24"/>
+        <path d="M45 105l25-30 20 18 28-40"/>
       </svg>
-      <!-- SVG 3: Escudo de Segurança -->
-      <svg class="bg-svg bg-svg-3" viewBox="0 0 100 100" fill="none" stroke="currentColor">
-        <path d="M50 15 L80 28 V55 C80 72 50 88 50 88 C50 88 20 72 20 55 V28 Z" stroke-width="2.5" stroke-linejoin="round"/>
+      <svg class="bg-svg bg-svg-3" viewBox="0 0 200 200" fill="none" stroke="currentColor" stroke-width="1.5">
+        <polygon points="100,15 180,60 180,140 100,185 20,140 20,60"/>
+        <polygon points="100,45 150,75 150,125 100,155 50,125 50,75"/>
       </svg>
-      <!-- SVG 4: Conexões de Rede Fintech -->
-      <svg class="bg-svg bg-svg-4" viewBox="0 0 100 100" fill="none" stroke="currentColor">
-        <circle cx="20" cy="20" r="6" stroke-width="2"/>
-        <circle cx="80" cy="30" r="6" stroke-width="2"/>
-        <circle cx="50" cy="80" r="6" stroke-width="2"/>
-        <line x1="20" y1="20" x2="80" y2="30" stroke-width="1.8"/>
-        <line x1="80" y1="30" x2="50" y2="80" stroke-width="1.8"/>
-        <line x1="20" y1="20" x2="50" y2="80" stroke-width="1.8"/>
+      <svg class="bg-svg bg-svg-4" viewBox="0 0 140 140" fill="none" stroke="currentColor" stroke-width="1.5">
+        <path d="M10 70h120M70 10v120"/>
+        <circle cx="70" cy="70" r="40"/>
       </svg>
     </div>
 
-    <div class="content" id="content">
+    <!-- CONTEÚDO DAS PÁGINAS -->
+    <main class="content" id="mainContent">
 
-      <!-- ===== PÁGINA: DASHBOARD (CLIENTE REESTRUTURADO) ===== -->
+      <!-- ==================== PÁGINA 1: DASHBOARD (PAINEL) ==================== -->
       <section class="page active" id="page-dashboard">
         <div class="page-head">
-          <h1 id="welcomeUser">Olá 👋</h1>
-          <p>Seu Hub financeiro central de simulação, acompanhamento e transparência.</p>
+          <div>
+            <h1 id="dashGreeting">Olá, bem-vindo de volta</h1>
+            <p>Visão consolidada do seu limite, contratos ativos e movimentações recentes.</p>
+          </div>
+          <div class="row-flex" style="gap: 10px;">
+            <button type="button" class="btn btn-outline btn-sm" onclick="gerarComprovantePDF('extrato')">Exportar PDF</button>
+            <button type="button" class="btn btn-lime btn-sm" onclick="go('simulador')">+ Novo empréstimo</button>
+          </div>
         </div>
 
-        <!-- ITEM 3 & 4: CARDS DO PAINEL CLICÁVEIS E COM ANIMAÇÃO SCROLL DIRECIONAL -->
-        <div class="grid grid-3" style="margin-bottom:16px;">
-          <!-- Card 1: Saldo Devedor -> Acompanhar -->
-          <div class="card card-clickable card-scroll-in dash-card-left" onclick="go('acompanhar')">
-            <div class="card-label">Saldo devedor</div>
-            <div class="card-value mono" id="dashSaldoDevedor">R$ 0,00</div>
-            <div class="card-sub" id="dashSubDevedor">nenhum contrato ativo</div>
-            <div style="margin-top:12px; font-size:11.5px; font-weight:600; color:var(--lime-dark); display:flex; align-items:center; gap:4px;">Ver detalhes do contrato →</div>
+        <!-- KPIs PRINCIPAIS -->
+        <div class="grid grid-3" style="margin-bottom: 20px;">
+          <div class="card card-clickable card-scroll-in dash-card-left" onclick="go('simulador')">
+            <div class="row-flex" style="justify-content: space-between;">
+              <div class="card-label">Limite Pré-Aprovado</div>
+              <span class="tag up">Taxa 1,49% a.m.</span>
+            </div>
+            <div class="card-value" id="dashLimiteValor">R$ 45.000,00</div>
+            <div class="card-sub">Liberação via PIX em até 15 minutos →</div>
           </div>
 
-          <!-- Card 2: Próxima Parcela -> Acompanhar -->
           <div class="card card-clickable card-scroll-in dash-card-bottom" onclick="go('acompanhar')">
-            <div class="card-label">Próxima parcela</div>
-            <div class="card-value mono" id="dashProximaParcela">R$ 0,00</div>
-            <div class="card-sub" id="dashSubParcela">sem vencimentos pendentes</div>
-            <div style="margin-top:12px; font-size:11.5px; font-weight:600; color:var(--lime-dark); display:flex; align-items:center; gap:4px;">Histórico de pagamentos →</div>
+            <div class="row-flex" style="justify-content: space-between;">
+              <div class="card-label">Saldo Devedor Ativo</div>
+              <span class="tag gold" id="dashParcelasTag">8/24 pagas</span>
+            </div>
+            <div class="card-value" id="dashSaldoDevedor">R$ 12.480,00</div>
+            <div class="card-sub">Próxima parcela: <strong id="dashProxParcela">R$ 892,50</strong> (15/12) →</div>
           </div>
 
-          <!-- Card 3: Situação do Contrato -> Acompanhar -->
-          <div class="card card-clickable card-scroll-in dash-card-right" onclick="go('acompanhar')">
-            <div class="card-label">Situação do Contrato</div>
-            <div class="card-value" style="font-size:18px; margin-top:4px;" id="dashStatusTag"><span class="tag gold">Sem contrato</span></div>
-            <div class="card-sub" id="dashSubStatus">faça uma simulação abaixo</div>
-            <div style="margin-top:12px; font-size:11.5px; font-weight:600; color:var(--lime-dark); display:flex; align-items:center; gap:4px;">Status da proposta →</div>
-          </div>
-        </div>
-
-        <div class="grid grid-2">
-          <!-- Card 4: Hub de Progresso & Mini-Timeline -->
-          <div class="card card-clickable card-scroll-in dash-card-left" onclick="go('acompanhar')">
-            <div class="card-label">Progresso de Quitação & Timeline Recent</div>
-            <div style="margin:10px 0 6px; font-size:13px; color:var(--slate);" id="dashProgressoTexto">0 de 0 parcelas pagas</div>
-            <div class="progress-bar" style="height:8px; background:var(--line); border-radius:99px; overflow:hidden;">
-              <div class="progress-fill" id="dashProgressBar" style="height:100%; background:var(--lime-dark); width:0%; transition:width 0.8s ease;"></div>
+          <div class="card card-clickable card-scroll-in dash-card-right" onclick="go('perfil')">
+            <div class="row-flex" style="justify-content: space-between;">
+              <div class="card-label">Score Nexta Credit</div>
+              <span class="tag up">Perfil Excelente</span>
             </div>
-            
-            <div style="height:1px; background:var(--line); margin:16px 0;"></div>
-            
-            <!-- ITEM 3: MINI RESUMO DA TIMELINE -->
-            <div class="card-label">Eventos Recentes do Contrato</div>
-            <div class="tl" id="dashMiniTimeline" style="margin-top:10px;">
-              <!-- Preenchido via JS com os 2 eventos mais recentes -->
-            </div>
-
-            <div style="margin-top:14px;">
-              <button class="btn btn-outline btn-sm btn-block" onclick="event.stopPropagation(); go('acompanhar');">Acessar linha do tempo completa</button>
-            </div>
-          </div>
-
-          <!-- Card 5: Hub da Última Simulação Salva -->
-          <div class="card card-clickable card-scroll-in dash-card-right" onclick="go('simulador')">
-            <div class="card-label">Sua Última Simulação</div>
-            <div id="dashSimulacaoResumoBox" style="margin:12px 0;">
-              <!-- Preenchido dinamicamente via JS -->
-            </div>
-            <button class="btn btn-lime btn-block" id="dashBtnSimular" onclick="event.stopPropagation(); go('simulador');">Ir para o Simulador</button>
+            <div class="card-value">842 <span style="font-size: 14px; color: var(--slate); font-weight: 500;">/ 1000</span></div>
+            <div class="card-sub">+28 pontos nos últimos 90 dias</div>
           </div>
         </div>
-      </section>
 
-      <!-- ===== PÁGINA: SIMULADOR (CLIENTE) ===== -->
-      <section class="page" id="page-simulador">
-        <div class="page-head">
-          <h1>Simulador de Empréstimo</h1>
-          <p>Ajuste os valores e calcule os custos com precisão determinística.</p>
-        </div>
-        <div class="grid grid-2">
-          <div class="card">
-            <div class="form-group">
-              <label for="valorRange">Valor solicitado</label>
-              <input type="range" id="valorRange" min="1000" max="100000" step="1000" value="10000" oninput="atualizarSimulacao()">
-              <div class="row-flex" style="justify-content:space-between; margin-bottom:12px;">
-                <span class="mono" style="font-size:12px; color:var(--slate);">R$ 1.000</span>
-                <span class="mono" id="valorAtual" style="font-weight:700; color:var(--ink); font-size:16px;">R$ 10.000</span>
-                <span class="mono" style="font-size:12px; color:var(--slate);">R$ 100.000</span>
+        <!-- GRÁFICOS INTERATIVOS (CHART.JS) -->
+        <div class="grid grid-2" style="margin-bottom: 20px;">
+          <div class="card card-scroll-in dash-card-left">
+            <div class="row-flex" style="justify-content: space-between; margin-bottom: 14px;">
+              <div>
+                <div class="card-label" style="margin-bottom: 2px;">Evolução de Amortização</div>
+                <strong style="font-size: 15px;">Saldo devedor vs. Valor amortizado</strong>
               </div>
-            </div>
-
-            <!-- ITEM 2: PARCELAMENTO COMPLETO (ATÉ 180X) -->
-            <div class="form-group">
-              <label for="parcelasSelect">Número de parcelas</label>
-              <select id="parcelasSelect" onchange="atualizarSimulacao()">
-                <option value="6">6x</option>
-                <option value="12" selected>12x</option>
-                <option value="18">18x</option>
-                <option value="24">24x</option>
-                <option value="36">36x</option>
-                <option value="48">48x</option>
-                <option value="60">60x</option>
-                <option value="72">72x</option>
-                <option value="96">96x</option>
-                <option value="120">120x</option>
-                <option value="144">144x</option>
-                <option value="180">180x</option>
+              <select id="chartPeriodSelect" style="width: auto; padding: 6px 10px; min-height: 36px; font-size: 12px;" onchange="renderDashboardCharts(this.value)">
+                <option value="6m">Últimos 6 meses</option>
+                <option value="12m">Projeção 12 meses</option>
               </select>
             </div>
-
-            <button class="btn btn-lime btn-block" onclick="executarSimulacaoComLoading()">Analisar crédito agora</button>
-          </div>
-
-          <div class="card" style="display:flex; flex-direction:column; align-items:center; justify-content:center; text-align:center; position:relative;">
-            
-            <div id="simLoadingState" style="display:none; width:100%; padding:20px;">
-              <div class="skeleton" style="height:100px; width:180px; margin:0 auto 16px; border-radius:50px 50px 0 0;"></div>
-              <div class="skeleton" style="height:20px; width:60%; margin:0 auto 8px;"></div>
-              <div class="skeleton" style="height:14px; width:80%; margin:0 auto;"></div>
-            </div>
-
-            <div id="simNormalState" style="width:100%;">
-              <div class="gauge-wrap" style="display:flex; flex-direction:column; align-items:center;">
-                <svg width="180" height="100" viewBox="0 0 180 100">
-                  <path d="M10,95 A80,80 0 0,1 170,95" fill="none" stroke="var(--line)" stroke-width="14" stroke-linecap="round"/>
-                  <path id="gaugeArc" d="M10,95 A80,80 0 0,1 170,95" fill="none" stroke="var(--lime-dark)" stroke-width="14" stroke-linecap="round" stroke-dasharray="251" stroke-dashoffset="251" style="transition: stroke-dashoffset 1s ease, stroke 0.5s ease;"/>
-                </svg>
-                <div class="gauge-score mono" id="gaugeScore" style="font-size:32px; font-weight:700; margin-top:-46px; color:var(--ink);">—</div>
-                <div style="font-size:12px; color:var(--slate); margin-top:4px;">Score de aprovação estimado</div>
-              </div>
-
-              <div id="resultadoSim" style="margin-top:16px; font-size:13px; color:var(--slate);">
-                Clique em "Analisar crédito agora" para visualizar as taxas personalizadas.
-              </div>
-
-              <div id="solicitarBox" style="display:none; width:100%; margin-top:20px;">
-                <button class="btn btn-lime btn-block" onclick="solicitarEmprestimo()">Solicitar este empréstimo</button>
-              </div>
-            </div>
-
-          </div>
-        </div>
-      </section>
-
-      <!-- ===== PÁGINA: ACOMPANHAR CONTRATO (CLIENTE) ===== -->
-      <section class="page" id="page-acompanhar">
-        <div class="page-head">
-          <h1>Acompanhar Contrato</h1>
-          <p>Histórico detalhado do seu empréstimo, pagamentos e amortizações antecipadas.</p>
-        </div>
-        <div class="grid grid-2" style="margin-bottom:20px;">
-          <div class="card">
-            <div class="card-label">Linha do tempo do contrato</div>
-            <div class="tl" id="timelineList" style="margin-top:14px;">
-              <!-- Timeline gerada dinamicamente -->
+            <div class="chart-box">
+              <canvas id="chartEvolucao"></canvas>
             </div>
           </div>
-          
-          <div class="card">
-            <div class="card-label">Resumo Financeiro</div>
-            <div class="table-responsive">
-              <table style="min-width:auto;">
-                <tr><td>Valor contratado</td><td class="mono" id="detValor" style="text-align:right;">R$ 0,00</td></tr>
-                <tr><td>Taxa aplicada</td><td class="mono" id="detTaxa" style="text-align:right;">0,0% a.m.</td></tr>
-                <tr><td>Total em juros</td><td class="mono" id="detJuros" style="text-align:right;">R$ 0,00</td></tr>
-                <tr><td>Custo Total (CET)</td><td class="mono" id="detTotal" style="text-align:right; font-weight:700;">R$ 0,00</td></tr>
-              </table>
+
+          <div class="card card-scroll-in dash-card-right">
+            <div class="row-flex" style="justify-content: space-between; margin-bottom: 14px;">
+              <div>
+                <div class="card-label" style="margin-bottom: 2px;">Composição do Contrato</div>
+                <strong style="font-size: 15px;">Principal, Juros e Encargos</strong>
+              </div>
+              <span class="tag neutral mono">PRICE</span>
             </div>
-            
-            <div style="height:1px; background:var(--line); margin:16px 0;"></div>
-            <div class="row-flex" style="gap:10px;">
-              <button class="btn btn-lime btn-sm" id="btnAbrirAmortizacao" onclick="abrirModalAmortizacao()" style="flex:1;">⚡ Amortizar Parcela</button>
-              <button class="btn btn-outline btn-sm" onclick="gerarComprovantePDF()" style="flex:1;">📄 PDF Comprovante</button>
+            <div class="chart-box">
+              <canvas id="chartCarteira"></canvas>
             </div>
           </div>
         </div>
 
-        <!-- Histórico de Parcelas -->
-        <div class="card">
-          <div class="card-label">Histórico de Parcelas</div>
+        <!-- MOVIMENTAÇÕES RECENTES -->
+        <div class="card scroll-reveal">
+          <div class="row-flex" style="justify-content: space-between; margin-bottom: 14px;">
+            <div>
+              <div class="card-label" style="margin-bottom: 2px;">Extrato Financeiro</div>
+              <strong style="font-size: 15px;">Últimas parcelas e operações</strong>
+            </div>
+            <button type="button" class="btn btn-outline btn-sm" onclick="go('acompanhar')">Ver contrato completo</button>
+          </div>
           <div class="table-responsive">
             <table>
               <thead>
-                <tr><th>Parcela</th><th>Vencimento</th><th>Valor</th><th>Status</th><th>Ação</th></tr>
+                <tr>
+                  <th>Referência</th>
+                  <th>Descrição</th>
+                  <th>Data</th>
+                  <th>Valor</th>
+                  <th>Status</th>
+                  <th>Recibo</th>
+                </tr>
               </thead>
-              <tbody id="parcelasTableBody">
-                <!-- Parcelas geradas via JS -->
-              </tbody>
+              <tbody id="dashboardExtratoBody"></tbody>
             </table>
           </div>
         </div>
       </section>
 
-      <!-- ===== PÁGINA: ANÁLISE DE CRÉDITO (ADMIN) ===== -->
+      <!-- ==================== PÁGINA 2: SIMULADOR DE EMPRÉSTIMO ==================== -->
+      <section class="page" id="page-simulador">
+        <div class="page-head">
+          <div>
+            <h1>Simulador de Empréstimo</h1>
+            <p>Configure valor, prazo e sistema de amortização (Price ou SAC) em tempo real.</p>
+          </div>
+        </div>
+
+        <div class="grid grid-2" style="margin-bottom: 20px;">
+          <!-- PARÂMETROS -->
+          <div class="card">
+            <div class="form-group">
+              <div class="row-flex" style="justify-content: space-between;">
+                <label for="simValorRange" style="margin: 0;">Valor desejado</label>
+                <span class="mono" id="simValorDisplay" style="font-size: 18px; font-weight: 700; color: var(--lime-dark);">R$ 15.000,00</span>
+              </div>
+              <input type="range" id="simValorRange" min="1000" max="80000" step="500" value="15000" oninput="atualizarSimulador()">
+              <div class="row-flex" style="justify-content: space-between; font-size: 11px; color: var(--slate);">
+                <span>R$ 1.000</span>
+                <span>R$ 80.000</span>
+              </div>
+            </div>
+
+            <div class="form-group">
+              <div class="row-flex" style="justify-content: space-between;">
+                <label for="simPrazoRange" style="margin: 0;">Prazo de pagamento</label>
+                <span class="mono" id="simPrazoDisplay" style="font-size: 16px; font-weight: 700;">24 meses</span>
+              </div>
+              <input type="range" id="simPrazoRange" min="6" max="60" step="6" value="24" oninput="atualizarSimulador()">
+              <div class="row-flex" style="justify-content: space-between; font-size: 11px; color: var(--slate);">
+                <span>6 meses</span>
+                <span>60 meses</span>
+              </div>
+            </div>
+
+            <div class="grid grid-2-equal">
+              <div class="form-group" style="margin-bottom: 0;">
+                <label for="simSistema">Tabela de Amortização</label>
+                <select id="simSistema" onchange="atualizarSimulador()">
+                  <option value="PRICE">Tabela PRICE (Parcelas Fixas)</option>
+                  <option value="SAC">Tabela SAC (Parcelas Decrescentes)</option>
+                </select>
+              </div>
+              <div class="form-group" style="margin-bottom: 0;">
+                <label for="simFinalidade">Finalidade do Crédito</label>
+                <select id="simFinalidade" onchange="atualizarSimulador()">
+                  <option value="Capital de Giro">Capital de Giro</option>
+                  <option value="Reforma Residencial">Reforma Residencial</option>
+                  <option value="Quitação de Dívidas">Quitação de Dívidas</option>
+                  <option value="Investimento Pessoal">Investimento Pessoal</option>
+                </select>
+              </div>
+            </div>
+          </div>
+
+          <!-- RESULTADO DA SIMULAÇÃO -->
+          <div class="card" style="display: flex; flex-direction: column; justify-content: space-between;">
+            <div>
+              <div class="row-flex" style="justify-content: space-between; margin-bottom: 10px;">
+                <div class="card-label" style="margin: 0;">Condição Estimada</div>
+                <span class="tag up mono" id="simTaxaTag">1,49% a.m.</span>
+              </div>
+              <div class="card-value" id="simParcelaPrincipal">R$ 748,12 <span style="font-size: 13px; color: var(--slate); font-weight: 500;">/mês</span></div>
+              <div class="card-sub" id="simParcelaDetalhe">Parcelas fixas pelo sistema PRICE</div>
+
+              <div style="margin-top: 18px; padding-top: 14px; border-top: 1px solid var(--line); display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
+                <div>
+                  <span style="font-size: 11px; color: var(--slate); display: block;">Última parcela</span>
+                  <strong class="mono" id="simUltimaParcela" style="font-size: 14px;">R$ 748,12</strong>
+                </div>
+                <div>
+                  <span style="font-size: 11px; color: var(--slate); display: block;">Total de juros</span>
+                  <strong class="mono" id="simTotalJuros" style="font-size: 14px;">R$ 2.954,88</strong>
+                </div>
+                <div>
+                  <span style="font-size: 11px; color: var(--slate); display: block;">Total a pagar</span>
+                  <strong class="mono" id="simTotalPagar" style="font-size: 14px;">R$ 17.954,88</strong>
+                </div>
+                <div>
+                  <span style="font-size: 11px; color: var(--slate); display: block;">CET Anual</span>
+                  <strong class="mono" id="simCetAnual" style="font-size: 14px;">19,82% a.a.</strong>
+                </div>
+              </div>
+            </div>
+
+            <div class="row-flex" style="gap: 10px; margin-top: 20px;">
+              <button type="button" class="btn btn-outline" style="flex: 1;" onclick="gerarComprovantePDF('simulacao')">Baixar PDF</button>
+              <button type="button" class="btn btn-lime" style="flex: 1.4;" onclick="contratarSimulacao()">Contratar agora</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- TABELA DE PARCELAS DA SIMULAÇÃO -->
+        <div class="card">
+          <div class="row-flex" style="justify-content: space-between; margin-bottom: 14px;">
+            <div>
+              <div class="card-label" style="margin-bottom: 2px;">Cronograma Projetado</div>
+              <strong style="font-size: 15px;">Evolução detalhada das parcelas</strong>
+            </div>
+            <span class="tag neutral" id="simTabelaBadge">24 parcelas</span>
+          </div>
+          <div class="table-responsive" style="max-height: 320px; overflow-y: auto;">
+            <table>
+              <thead>
+                <tr>
+                  <th>Nº</th>
+                  <th>Valor da Parcela</th>
+                  <th>Amortização</th>
+                  <th>Juros</th>
+                  <th>Saldo Devedor</th>
+                </tr>
+              </thead>
+              <tbody id="simTabelaBody"></tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <!-- ==================== PÁGINA 3: ACOMPANHAR CONTRATO ==================== -->
+      <section class="page" id="page-acompanhar">
+        <div class="page-head">
+          <div>
+            <h1>Acompanhar Contrato</h1>
+            <p>Gerencie parcelas, antecipe pagamentos com desconto e emita comprovantes.</p>
+          </div>
+          <div class="row-flex" style="gap: 10px;">
+            <button type="button" class="btn btn-outline btn-sm" onclick="gerarComprovantePDF('contrato')">Comprovante PDF</button>
+            <button type="button" class="btn btn-lime btn-sm" onclick="abrirModalAmortizacao()">Amortizar / Antecipar</button>
+          </div>
+        </div>
+
+        <!-- RESUMO DO CONTRATO ATIVO -->
+        <div class="card" style="margin-bottom: 20px;">
+          <div class="row-flex" style="justify-content: space-between; flex-wrap: wrap; gap: 12px; margin-bottom: 16px;">
+            <div>
+              <span class="tag up" style="margin-bottom: 6px;">● Contrato Ativo</span>
+              <h2 style="margin: 0; font-size: 18px;" id="contratoTitulo">Contrato #NX-2026-8841 — Capital de Giro</h2>
+            </div>
+            <div style="text-align: right;">
+              <span style="font-size: 11px; color: var(--slate); display: block;">Saldo Devedor Atualizado</span>
+              <strong class="mono" style="font-size: 22px;" id="contratoSaldoAtual">R$ 12.480,00</strong>
+            </div>
+          </div>
+
+          <div class="progress-track" style="margin-bottom: 8px;">
+            <div class="progress-fill" id="contratoProgressFill" style="width: 33.3%;"></div>
+          </div>
+          <div class="row-flex" style="justify-content: space-between; font-size: 12px; color: var(--slate);">
+            <span id="contratoProgressoTexto">8 de 24 parcelas liquidadas (33%)</span>
+            <span>Taxa contratada: <strong id="contratoTaxaTexto">1,49% a.m.</strong></span>
+          </div>
+        </div>
+
+        <div class="grid grid-2">
+          <!-- TIMELINE DE STATUS -->
+          <div class="card">
+            <div class="card-label" style="margin-bottom: 14px;">Linha do Tempo da Operação</div>
+            <div class="tl">
+              <div class="tl-item done">
+                <div class="tl-dot"></div>
+                <div class="tl-title">Proposta enviada e validada</div>
+                <div class="tl-sub">Documentação e biometria aprovadas automaticamente</div>
+              </div>
+              <div class="tl-item done">
+                <div class="tl-dot"></div>
+                <div class="tl-title">Análise de crédito concluída</div>
+                <div class="tl-sub">Score Nexta 842 — Limite aprovado sem garantias reais</div>
+              </div>
+              <div class="tl-item done">
+                <div class="tl-dot"></div>
+                <div class="tl-title">Assinatura digital e desembolso PIX</div>
+                <div class="tl-sub">Crédito transferido com sucesso para conta titular</div>
+              </div>
+              <div class="tl-item active">
+                <div class="tl-dot"></div>
+                <div class="tl-title">Pagamento de parcelas em curso</div>
+                <div class="tl-sub" id="tlStatusAtual">Em dia — Próximo vencimento dia 15</div>
+              </div>
+              <div class="tl-item">
+                <div class="tl-dot"></div>
+                <div class="tl-title">Quitação e liberação de termo</div>
+                <div class="tl-sub">Disponível após liquidação integral do saldo</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- PARCELAS E PAGAMENTO -->
+          <div class="card">
+            <div class="row-flex" style="justify-content: space-between; margin-bottom: 14px;">
+              <div class="card-label" style="margin: 0;">Próximas Parcelas</div>
+              <span class="tag neutral" id="contratoParcelaAtualTag">Parcela: R$ 892,50</span>
+            </div>
+            <div class="table-responsive">
+              <table style="min-width: 380px;">
+                <thead>
+                  <tr>
+                    <th>Parcela</th>
+                    <th>Vencimento</th>
+                    <th>Valor</th>
+                    <th>Ação</th>
+                  </tr>
+                </thead>
+                <tbody id="contratoParcelasBody"></tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ==================== PÁGINA 4: ANÁLISE DE CRÉDITO (ADMIN) ==================== -->
       <section class="page" id="page-credito">
         <div class="page-head">
-          <h1>Análise de Crédito</h1>
-          <p>Fila de solicitações com avaliação automatizada por score.</p>
+          <div>
+            <h1>Análise de Crédito</h1>
+            <p>Mesa de decisão interna para propostas pendentes e revisão de risco.</p>
+          </div>
+          <select id="filtroCreditoStatus" style="width: auto; min-height: 40px;" onchange="renderTabelaCredito()">
+            <option value="TODOS">Todas as propostas</option>
+            <option value="Em análise">Em análise</option>
+            <option value="Aprovado">Aprovadas</option>
+            <option value="Recusado">Recusadas</option>
+          </select>
         </div>
 
-        <div class="grid grid-3" style="margin-bottom:16px;">
-          <div class="card"><div class="card-label">Tempo médio de análise</div><div class="card-value mono" id="metricTempoAnalise">35s</div><div class="card-sub">automação Nexta Engine</div></div>
-          <div class="card"><div class="card-label">Taxa de aprovação</div><div class="card-value mono" id="metricTaxaAprovacao">84%</div><div class="card-sub">modelagem de baixo risco</div></div>
-          <div class="card"><div class="card-label">Total de cadastros</div><div class="card-value mono" id="totalCadastrosCount">0</div><div class="card-sub">clientes ativos</div></div>
-        </div>
-
-        <div class="card" style="margin-bottom:16px;">
-          <div class="card-label">Desempenho: Tempo Médio de Análise (Antes vs Depois da Automação)</div>
-          <div style="height:200px; position:relative;"><canvas id="chartCredito"></canvas></div>
+        <div class="grid grid-3" style="margin-bottom: 20px;">
+          <div class="card">
+            <div class="card-label">Na Fila de Decisão</div>
+            <div class="card-value" id="kpiCreditoFila">3</div>
+            <div class="card-sub">SLA médio atual: 11 minutos</div>
+          </div>
+          <div class="card">
+            <div class="card-label">Volume em Análise</div>
+            <div class="card-value" id="kpiCreditoVolume">R$ 92.500,00</div>
+            <div class="card-sub">Ticket médio: R$ 30.833,00</div>
+          </div>
+          <div class="card">
+            <div class="card-label">Taxa de Aprovação (30d)</div>
+            <div class="card-value">74,8%</div>
+            <div class="card-sub">Inadimplência projetada &lt; 1,9%</div>
+          </div>
         </div>
 
         <div class="card">
-          <div class="card-label">Fila de Propostas</div>
           <div class="table-responsive">
             <table>
-              <thead><tr><th>Cliente</th><th>Solicitado</th><th>Score</th><th>Status</th><th>Ação</th></tr></thead>
-              <tbody id="creditoTableBody">
-                <!-- Preenchido via JS -->
-              </tbody>
+              <thead>
+                <tr>
+                  <th>Solicitante</th>
+                  <th>Score</th>
+                  <th>Valor / Prazo</th>
+                  <th>Comprometimento</th>
+                  <th>Status</th>
+                  <th>Decisão</th>
+                </tr>
+              </thead>
+              <tbody id="tabelaCreditoBody"></tbody>
             </table>
           </div>
         </div>
       </section>
 
-      <!-- ===== PÁGINA: CENTRAL DE COBRANÇA (ADMIN) ===== -->
+      <!-- ==================== PÁGINA 5: CENTRAL DE COBRANÇA (ADMIN) ==================== -->
       <section class="page" id="page-cobranca">
         <div class="page-head">
-          <h1>Central de Cobrança</h1>
-          <p>Gestão ativa de inadimplência e renegociações.</p>
+          <div>
+            <h1>Central de Cobrança</h1>
+            <p>Régua preventiva de recuperação, envio de PIX copia-e-cola e acordos.</p>
+          </div>
         </div>
 
-        <div class="grid grid-3" style="margin-bottom:16px;">
-          <div class="card"><div class="card-label">Inadimplência geral</div><div class="card-value mono" id="metricInadimplencia">3.8%</div><div class="card-sub tag up">↓ 2.1 p.p. no mês</div></div>
-          <div class="card"><div class="card-label">Em negociação</div><div class="card-value mono" id="cobrancaEmRiscoCount">0</div><div class="card-sub">contratos em acompanhamento</div></div>
-          <div class="card"><div class="card-label">Recuperado (Mês)</div><div class="card-value mono" id="metricRecuperado">R$ 42.100</div><div class="card-sub">cobrança automatizada</div></div>
-        </div>
-
-        <div class="card" style="margin-bottom:16px;">
-          <div class="card-label">Evolução da Inadimplência (Últimos 6 meses)</div>
-          <div style="height:200px; position:relative;"><canvas id="chartCobranca"></canvas></div>
+        <div class="grid grid-3" style="margin-bottom: 20px;">
+          <div class="card">
+            <div class="card-label">Carteira em Atraso</div>
+            <div class="card-value">R$ 28.410,00</div>
+            <div class="card-sub">4 contratos entre 5 e 42 dias</div>
+          </div>
+          <div class="card">
+            <div class="card-label">Recuperado no Mês</div>
+            <div class="card-value">R$ 64.920,00</div>
+            <div class="card-sub"><span class="tag up">+18% vs mês anterior</span></div>
+          </div>
+          <div class="card">
+            <div class="card-label">Acordos Ativos</div>
+            <div class="card-value" id="kpiAcordosAtivos">12</div>
+            <div class="card-sub">Adimplência pós-acordo: 91%</div>
+          </div>
         </div>
 
         <div class="card">
-          <div class="card-label">Carteira de Cobrança</div>
           <div class="table-responsive">
             <table>
-              <thead><tr><th>Cliente</th><th>Valor em Atraso</th><th>Dias de Atraso</th><th>Estágio Atual</th><th>Ação</th></tr></thead>
-              <tbody id="cobrancaTableBody">
-                <!-- Preenchido via JS dinamicamente -->
-              </tbody>
+              <thead>
+                <tr>
+                  <th>Cliente</th>
+                  <th>Contrato</th>
+                  <th>Atraso</th>
+                  <th>Saldo Atualizado</th>
+                  <th>Status</th>
+                  <th>Ações</th>
+                </tr>
+              </thead>
+              <tbody id="tabelaCobrancaBody"></tbody>
             </table>
           </div>
         </div>
       </section>
 
-      <!-- ===== PÁGINA: CENTRAL ANTIFRAUDE (ADMIN) ===== -->
+      <!-- ==================== PÁGINA 6: CENTRAL ANTIFRAUDE (ADMIN) ==================== -->
       <section class="page" id="page-fraude">
         <div class="page-head">
-          <h1>Central Antifraude</h1>
-          <p>Monitoramento preventivo e inteligência contra riscos operacionais.</p>
+          <div>
+            <h1>Central Antifraude</h1>
+            <p>Monitoramento comportamental, validação de dispositivos e prevenção a golpes.</p>
+          </div>
         </div>
 
-        <div class="grid grid-2" style="margin-bottom:16px;">
+        <div class="grid grid-3" style="margin-bottom: 20px;">
           <div class="card">
-            <div class="card-label">Tipos de Ocorrências Detectadas</div>
-            <div style="height:220px; position:relative;"><canvas id="chartFraude"></canvas></div>
+            <div class="card-label">Alertas Críticos</div>
+            <div class="card-value" id="kpiFraudeCriticos">2</div>
+            <div class="card-sub">Requerem revisão manual</div>
           </div>
           <div class="card">
-            <div class="card-label">Métricas do Modelo</div>
-            <div style="margin-top:10px;">
-              <div class="card-label">Alertas pendentes</div>
-              <div class="card-value mono" id="fraudeAlertasCount">0</div>
-              <div class="divider" style="height:1px; background:var(--line); margin:12px 0;"></div>
-              <div class="card-label">Precisão do Algoritmo</div>
-              <div class="card-value mono" id="metricPrecisao">99.4%</div>
-            </div>
+            <div class="card-label">Transações Monitoradas (24h)</div>
+            <div class="card-value">14.892</div>
+            <div class="card-sub">Latência do motor: 38ms</div>
+          </div>
+          <div class="card">
+            <div class="card-label">Bloqueios Preventivos</div>
+            <div class="card-value">R$ 118.000,00</div>
+            <div class="card-sub"><span class="tag up">100% de perda evitada</span></div>
           </div>
         </div>
 
         <div class="card">
-          <div class="card-label">Alertas e Anomalias de Usuários</div>
           <div class="table-responsive">
             <table>
-              <thead><tr><th>Usuário</th><th>Ocorrência Detectada</th><th>Nível de Risco</th><th>Status</th><th>Ação</th></tr></thead>
-              <tbody id="fraudeTableBody">
-                <!-- Preenchido via JS dinamicamente -->
-              </tbody>
+              <thead>
+                <tr>
+                  <th>Alerta</th>
+                  <th>Conta / Usuário</th>
+                  <th>Anomalia Detectada</th>
+                  <th>Risco</th>
+                  <th>Status</th>
+                  <th>Ações</th>
+                </tr>
+              </thead>
+              <tbody id="tabelaFraudeBody"></tbody>
             </table>
           </div>
         </div>
       </section>
 
-      <!-- ===== PÁGINA: MEU PERFIL (TODOS) ===== -->
+      <!-- ==================== PÁGINA 7: MEU PERFIL ==================== -->
       <section class="page" id="page-perfil">
         <div class="page-head">
-          <h1>Meu Perfil</h1>
-          <p>Gerencie seus dados de acesso e preferências da conta.</p>
+          <div>
+            <h1>Meu Perfil</h1>
+            <p>Gerencie seus dados cadastrais, pergunta de segurança e senha de acesso.</p>
+          </div>
         </div>
 
-        <div class="grid grid-2">
+        <div class="grid grid-2" style="margin-bottom: 20px;">
+          <!-- DADOS CADASTRAIS -->
           <div class="card">
-            <div class="card-label">Dados Pessoais</div>
-            
-            <div class="form-group">
-              <label for="perfilNome">Nome Completo</label>
-              <input type="text" id="perfilNome">
+            <div class="row-flex" style="gap: 14px; margin-bottom: 20px; padding-bottom: 16px; border-bottom: 1px solid var(--line);">
+              <span class="avatar" id="perfilAvatar" style="width: 48px; height: 48px; font-size: 16px;">US</span>
+              <div>
+                <h3 id="perfilNomeHeader" style="margin: 0 0 4px; font-size: 17px;">Usuário</h3>
+                <span class="tag up" id="perfilRoleBadge">Conta Cliente</span>
+              </div>
             </div>
 
             <div class="form-group">
-              <label for="perfilEmail">E-mail de Cadastro</label>
-              <input type="text" id="perfilEmail" readonly style="opacity:0.7;">
+              <label for="perfilNomeInput">Nome completo</label>
+              <input type="text" id="perfilNomeInput">
             </div>
 
-            <button class="btn btn-lime btn-sm" onclick="salvarDadosPerfil()">Salvar Alterações</button>
+            <div class="form-group">
+              <label for="perfilEmailInput">E-mail cadastrado</label>
+              <input type="email" id="perfilEmailInput" disabled style="opacity: 0.7; cursor: not-allowed;">
+            </div>
+
+            <div class="form-group">
+              <label for="perfilPerguntaInput">Pergunta de segurança</label>
+              <input type="text" id="perfilPerguntaInput">
+            </div>
+
+            <div class="form-group">
+              <label for="perfilRespostaInput">Resposta de segurança</label>
+              <input type="text" id="perfilRespostaInput">
+            </div>
+
+            <button type="button" class="btn btn-lime" onclick="salvarDadosPerfil()">Salvar alterações</button>
           </div>
 
-          <div class="card">
-            <div class="card-label">Alterar Senha</div>
-
-            <div class="form-group">
-              <label for="senhaAtual">Senha Atual</label>
-              <input type="password" id="senhaAtual" placeholder="••••••••">
+          <!-- SEGURANÇA E PERFIL DE ACESSO -->
+          <div style="display: flex; flex-direction: column; gap: 16px;">
+            <div class="card">
+              <div class="card-label" style="margin-bottom: 12px;">Alterar Senha</div>
+              <div class="form-group">
+                <label for="perfilNovaSenha">Nova senha (mínimo 6 caracteres)</label>
+                <input type="password" id="perfilNovaSenha" placeholder="Digite a nova senha" oninput="testarForcaSenha(this.value, 'perfilMeter')">
+                <div class="strength-meter"><div class="strength-fill" id="perfilMeter"></div></div>
+              </div>
+              <button type="button" class="btn btn-navy btn-sm" onclick="alterarSenhaPerfil()">Atualizar senha</button>
             </div>
 
-            <div class="form-group">
-              <label for="novaSenha">Nova Senha</label>
-              <input type="password" id="novaSenha" placeholder="Nova senha" oninput="testarForcaSenha(this.value, 'perfilMeter')">
-              <div class="strength-meter"><div class="strength-fill" id="perfilMeter"></div></div>
+            <div class="card">
+              <div class="card-label" style="margin-bottom: 8px;">Modo de Visualização</div>
+              <p style="font-size: 13px; color: var(--slate); margin: 0 0 14px;">
+                Alterne entre a visão de Cliente e Administrador para testar todas as filas operacionais do sistema.
+              </p>
+              <div class="row-flex" style="gap: 10px; flex-wrap: wrap;">
+                <button type="button" class="btn btn-outline btn-sm" onclick="alternarRoleAtual('cliente')">Visão Cliente</button>
+                <button type="button" class="btn btn-navy btn-sm" onclick="alternarRoleAtual('admin')">Visão Admin</button>
+              </div>
             </div>
-
-            <button class="btn btn-navy btn-sm" onclick="alterarSenhaPerfil()">Atualizar Senha</button>
           </div>
         </div>
       </section>
 
-      <!-- ===== PÁGINA: SOBRE A NEXTA FINANCE ===== -->
+      <!-- ==================== PÁGINA 8: SOBRE O NEXTA ==================== -->
       <section class="page" id="page-sobre">
         <div class="page-head">
-          <h1>Sobre a Nexta Finance</h1>
-          <p>Visão geral da solução tecnológica e arquitetura do projeto.</p>
+          <div>
+            <h1>Sobre o Nexta Finance</h1>
+            <p>Infraestrutura digital de crédito transparente, rápido e auditável.</p>
+          </div>
         </div>
 
-        <div class="grid grid-2">
+        <div class="grid grid-3" style="margin-bottom: 20px;">
           <div class="card scroll-reveal">
-            <h3 style="margin-top:0; color:var(--ink);">Proposta de Valor</h3>
-            <p style="font-size:13.5px; color:var(--slate); line-height:1.6;">
-              A <strong>Nexta Finance</strong> é uma plataforma moderna desenvolvida para desburocratizar o acesso ao crédito pessoal. Combinando algoritmos determinísticos de análise de risco, transparência absoluta em juros compostos e auditoria interna em tempo real.
-            </p>
-            <p style="font-size:13.5px; color:var(--slate); line-height:1.6;">
-              Nosso objetivo é eliminar fricções do mercado financeiro tradicional através de automação de ponta a ponta.
+            <div class="card-label">01 • Motor de Crédito</div>
+            <h3 style="margin: 0 0 8px; font-size: 17px;">Cálculo Price e SAC em tempo real</h3>
+            <p style="margin: 0; font-size: 13.5px; color: var(--slate); line-height: 1.6;">
+              Simulação transparente com abertura completa de juros, amortização e Custo Efetivo Total (CET) antes da assinatura digital.
             </p>
           </div>
 
           <div class="card scroll-reveal">
-            <h3 style="margin-top:0; color:var(--ink);">Contexto Acadêmico</h3>
-            <p style="font-size:13.5px; color:var(--slate); line-height:1.6;">
-              <strong>Disciplina:</strong> Projeto Prático em Sistemas<br>
-              <strong>Instituição:</strong> UNINOVE<br>
-              <strong>Orientador:</strong> Prof. Anderson Barros
+            <div class="card-label">02 • Segurança & LGPD</div>
+            <h3 style="margin: 0 0 8px; font-size: 17px;">Proteção multicamada</h3>
+            <p style="margin: 0; font-size: 13.5px; color: var(--slate); line-height: 1.6;">
+              Monitoramento antifraude contínuo, autenticação com pergunta de segurança pessoal e rastreabilidade completa de comprovantes em PDF.
             </p>
-            <div style="height:1px; background:var(--line); margin:12px 0;"></div>
-            <p style="font-size:12.5px; color:var(--slate); line-height:1.5;">
-              Arquitetura de Front-End em arquivo único (Single-File Application) demonstrando padrões avançados de UX, persistência em localStorage, controle de acesso baseado em papéis (RBAC) e visualizações dinâmicas de dados.
+          </div>
+
+          <div class="card scroll-reveal">
+            <div class="card-label">03 • Portabilidade & Antecipação</div>
+            <h3 style="margin: 0 0 8px; font-size: 17px;">Desconto proporcional nos juros</h3>
+            <p style="margin: 0; font-size: 13.5px; color: var(--slate); line-height: 1.6;">
+              Amortize parcelas futuras a qualquer momento escolhendo entre reduzir o valor mensal ou encurtar o prazo final do contrato.
             </p>
+          </div>
+        </div>
+
+        <div class="card scroll-reveal">
+          <div class="row-flex" style="justify-content: space-between; flex-wrap: wrap; gap: 12px;">
+            <div>
+              <div class="card-label" style="margin-bottom: 4px;">Versão do Sistema</div>
+              <strong class="mono" style="font-size: 14px;">Nexta Finance Core v2.6 • Build 2026</strong>
+            </div>
+            <button type="button" class="btn btn-lime btn-sm" onclick="go('simulador')">Iniciar simulação</button>
           </div>
         </div>
       </section>
 
-    </div>
+    </main>
   </div>
 </div>
 
-<!-- ================= SCRIPT JAVASCRIPT LOGIC ================= -->
 <script>
-  /* ---------- ESTADO GLOBAL DA APLICAÇÃO ---------- */
-  let currentUser = null;
-  let latestSimulation = null;
-  let chartCreditoInstance = null;
-  let chartCobrancaInstance = null;
-  let chartFraudeInstance = null;
-  let selectedAmortType = 'prazo';
+/* ==========================================================================
+   ESTADO GLOBAL & PERSISTÊNCIA (LOCALSTORAGE)
+   ========================================================================== */
+const STORAGE_KEYS = {
+  USERS: 'nexta_users_v1',
+  SESSION: 'nexta_session_v1',
+  THEME: 'nexta_theme_v1',
+  CONTRACT: 'nexta_contract_v1',
+  CREDITO: 'nexta_credito_v1',
+  COBRANCA: 'nexta_cobranca_v1',
+  FRAUDE: 'nexta_fraude_v1'
+};
 
-  // Usuários Padrão
-  const defaultUsers = [
-    {
-      email: 'admin@nexta.com',
-      senha: 'admin123',
-      nome: 'Administrador Operacional',
-      pergunta: 'Qual o nome do seu primeiro animal de estimação?',
-      role: 'admin',
-      contrato: null
+const PAGE_META = {
+  dashboard:  { label: 'Painel', group: 'Minha conta' },
+  simulador:  { label: 'Simular empréstimo', group: 'Minha conta' },
+  acompanhar: { label: 'Acompanhar contrato', group: 'Minha conta' },
+  credito:    { label: 'Análise de crédito', group: 'Operação interna' },
+  cobranca:   { label: 'Central de cobrança', group: 'Operação interna' },
+  fraude:     { label: 'Central antifraude', group: 'Operação interna' },
+  perfil:     { label: 'Meu perfil', group: 'Geral' },
+  sobre:      { label: 'Sobre o Nexta', group: 'Geral' }
+};
+
+let currentUser = null;
+let currentPage = 'dashboard';
+let recoveryEmailTarget = null;
+let chartEvolucaoInstance = null;
+let chartCarteiraInstance = null;
+let cmdSelectedIndex = 0;
+let cmdFilteredCommands = [];
+
+const DEFAULT_USERS = [
+  {
+    nome: 'Mariana Oliveira',
+    email: 'cliente@nexta.com',
+    senha: '123456',
+    pergunta: 'Qual o nome do seu primeiro pet?',
+    resposta: 'Rex',
+    role: 'cliente'
+  },
+  {
+    nome: 'Rafael Mendes (Admin)',
+    email: 'admin@nexta.com',
+    senha: 'admin123',
+    pergunta: 'Qual sua cidade natal?',
+    resposta: 'São Paulo',
+    role: 'admin'
+  }
+];
+
+const DEFAULT_CONTRACT = {
+  codigo: 'NX-2026-8841',
+  finalidade: 'Capital de Giro',
+  valorOriginal: 18000,
+  saldoDevedor: 12480,
+  taxaMensal: 0.0149,
+  totalParcelas: 24,
+  parcelasPagas: 8,
+  valorParcela: 892.50,
+  sistema: 'PRICE'
+};
+
+const DEFAULT_CREDITO = [
+  { id: 'PROP-901', nome: 'Lucas Andrade', email: 'lucas@empresa.com', score: 812, valor: 35000, prazo: 24, comprometimento: '18%', status: 'Em análise' },
+  { id: 'PROP-902', nome: 'Camila Ferreira', email: 'camila@studio.com', score: 745, valor: 22500, prazo: 18, comprometimento: '24%', status: 'Em análise' },
+  { id: 'PROP-903', nome: 'Bruno Vasconcelos', email: 'bruno@log.com', score: 590, valor: 35000, prazo: 36, comprometimento: '39%', status: 'Em análise' },
+  { id: 'PROP-899', nome: 'Fernanda Costa', email: 'fernanda@arq.com', score: 874, valor: 50000, prazo: 36, comprometimento: '14%', status: 'Aprovado' }
+];
+
+const DEFAULT_COBRANCA = [
+  { id: 'COB-101', cliente: 'Diego Martins', contrato: '#NX-2025-4410', diasAtraso: 12, valor: 4820.00, status: 'Em atraso' },
+  { id: 'COB-102', cliente: 'Patrícia Lima', contrato: '#NX-2025-5102', diasAtraso: 27, valor: 9340.00, status: 'Em atraso' },
+  { id: 'COB-103', cliente: 'Thiago Nogueira', contrato: '#NX-2025-6019', diasAtraso: 5, valor: 2150.00, status: 'Notificado' },
+  { id: 'COB-104', cliente: 'Juliana Rocha', contrato: '#NX-2025-3988', diasAtraso: 41, valor: 12100.00, status: 'Acordo enviado' }
+];
+
+const DEFAULT_FRAUDE = [
+  { id: 'FRD-771', usuario: 'carlos.m@mail.com', anomalia: 'Login em novo dispositivo + tentativa PIX R$ 28.000', risco: 'Alto', status: 'Pendente' },
+  { id: 'FRD-772', usuario: 'ana.silva@mail.com', anomalia: 'Geolocalização divergente em menos de 15 min', risco: 'Alto', status: 'Pendente' },
+  { id: 'FRD-773', usuario: 'pedro.h@mail.com', anomalia: '3 tentativas falhas de alteração de pergunta secreta', risco: 'Médio', status: 'Monitorado' }
+];
+
+/* ==========================================================================
+   HELPERS DE ARMAZENAMENTO E FORMATAÇÃO
+   ========================================================================== */
+function getStorage(key, fallback) {
+  try {
+    const raw = localStorage.getItem(key);
+    return raw ? JSON.parse(raw) : JSON.parse(JSON.stringify(fallback));
+  } catch (e) {
+    return JSON.parse(JSON.stringify(fallback));
+  }
+}
+
+function setStorage(key, value) {
+  try {
+    localStorage.setItem(key, JSON.stringify(value));
+  } catch (e) {
+    console.warn('Falha ao salvar no localStorage:', e);
+  }
+}
+
+function formatBRL(valor) {
+  return Number(valor || 0).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
+}
+
+function getInitials(nome) {
+  if (!nome) return 'NX';
+  const parts = nome.trim().split(/\s+/);
+  if (parts.length === 1) return parts[0].substring(0, 2).toUpperCase();
+  return (parts[0][0] + parts[parts.length - 1][0]).toUpperCase();
+}
+
+function isValidEmail(email) {
+  return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(String(email || '').trim());
+}
+
+/* ==========================================================================
+   INICIALIZAÇÃO DO SISTEMA
+   ========================================================================== */
+function initApp() {
+  // Garante dados iniciais no localStorage
+  if (!localStorage.getItem(STORAGE_KEYS.USERS)) {
+    setStorage(STORAGE_KEYS.USERS, DEFAULT_USERS);
+  }
+  if (!localStorage.getItem(STORAGE_KEYS.CONTRACT)) {
+    setStorage(STORAGE_KEYS.CONTRACT, DEFAULT_CONTRACT);
+  }
+  if (!localStorage.getItem(STORAGE_KEYS.CREDITO)) {
+    setStorage(STORAGE_KEYS.CREDITO, DEFAULT_CREDITO);
+  }
+  if (!localStorage.getItem(STORAGE_KEYS.COBRANCA)) {
+    setStorage(STORAGE_KEYS.COBRANCA, DEFAULT_COBRANCA);
+  }
+  if (!localStorage.getItem(STORAGE_KEYS.FRAUDE)) {
+    setStorage(STORAGE_KEYS.FRAUDE, DEFAULT_FRAUDE);
+  }
+
+  // Tema salvo
+  const savedTheme = localStorage.getItem(STORAGE_KEYS.THEME) || 'light';
+  aplicarTema(savedTheme, false);
+
+  // Verifica sessão ativa
+  const session = getStorage(STORAGE_KEYS.SESSION, null);
+  if (session && session.email) {
+    const users = getStorage(STORAGE_KEYS.USERS, DEFAULT_USERS);
+    const found = users.find(u => u.email.toLowerCase() === session.email.toLowerCase());
+    if (found) {
+      entrarNoSistema(found, false);
+      return;
+    }
+  }
+
+  document.getElementById('loginScreen').style.display = 'flex';
+  document.getElementById('app').style.display = 'none';
+}
+
+/* ==========================================================================
+   TEMA CLARO / ESCURO
+   ========================================================================== */
+function toggleTheme() {
+  const current = document.documentElement.getAttribute('data-theme') || 'light';
+  const next = current === 'light' ? 'dark' : 'light';
+  aplicarTema(next, true);
+}
+
+function aplicarTema(theme, notify) {
+  document.documentElement.setAttribute('data-theme', theme);
+  localStorage.setItem(STORAGE_KEYS.THEME, theme);
+
+  const btn = document.getElementById('themeToggleBtn');
+  if (btn) {
+    btn.innerHTML = theme === 'dark' ? '☀️ Claro' : '🌙 Escuro';
+  }
+
+  if (currentUser && currentPage === 'dashboard') {
+    const periodEl = document.getElementById('chartPeriodSelect');
+    renderDashboardCharts(periodEl ? periodEl.value : '6m');
+  }
+
+  if (notify) {
+    showToast(`Tema ${theme === 'dark' ? 'escuro' : 'claro'} ativado.`, 'success');
+  }
+}
+
+/* ==========================================================================
+   AUTENTICAÇÃO: LOGIN, CADASTRO, RECUPERAÇÃO E LOGOUT
+   ========================================================================== */
+function mostrarTela(tela) {
+  document.getElementById('viewLogin').style.display = tela === 'login' ? 'block' : 'none';
+  document.getElementById('viewCadastro').style.display = tela === 'cadastro' ? 'block' : 'none';
+  document.getElementById('viewEsqueci').style.display = tela === 'esqueci' ? 'block' : 'none';
+
+  if (tela === 'esqueci') {
+    document.getElementById('esqueciPasso1').style.display = 'block';
+    document.getElementById('esqueciPasso2').style.display = 'none';
+    document.getElementById('recEmail').value = '';
+    document.getElementById('recResposta').value = '';
+    document.getElementById('recNovaSenha').value = '';
+    recoveryEmailTarget = null;
+  }
+}
+
+function preencherDemo(tipo) {
+  const emailInput = document.getElementById('loginEmail');
+  const senhaInput = document.getElementById('loginSenha');
+  if (tipo === 'admin') {
+    emailInput.value = 'admin@nexta.com';
+    senhaInput.value = 'admin123';
+  } else {
+    emailInput.value = 'cliente@nexta.com';
+    senhaInput.value = '123456';
+  }
+  validarFormLogin();
+  tentarLogin();
+}
+
+function validarFormLogin() {
+  const email = document.getElementById('loginEmail').value.trim();
+  const senha = document.getElementById('loginSenha').value;
+  const errEl = document.getElementById('errLoginEmail');
+  const btn = document.getElementById('btnLoginSubmit');
+
+  const emailOk = isValidEmail(email);
+  errEl.style.display = (email.length > 0 && !emailOk) ? 'block' : 'none';
+  btn.disabled = !(emailOk && senha.length >= 4);
+}
+
+function tentarLogin() {
+  const email = document.getElementById('loginEmail').value.trim().toLowerCase();
+  const senha = document.getElementById('loginSenha').value;
+  const users = getStorage(STORAGE_KEYS.USERS, DEFAULT_USERS);
+
+  const user = users.find(u => u.email.toLowerCase() === email && u.senha === senha);
+  if (!user) {
+    showToast('E-mail ou senha incorretos. Verifique ou use o acesso demo.', 'danger');
+    return;
+  }
+
+  setStorage(STORAGE_KEYS.SESSION, { email: user.email });
+  entrarNoSistema(user, true);
+}
+
+function testarForcaSenha(senha, meterId) {
+  const fill = document.getElementById(meterId);
+  if (!fill) return;
+
+  let score = 0;
+  if (senha.length >= 6) score += 35;
+  if (senha.length >= 9) score += 20;
+  if (/[A-Z]/.test(senha) || /[0-9]/.test(senha)) score += 25;
+  if (/[^A-Za-z0-9]/.test(senha)) score += 20;
+
+  fill.style.width = `${Math.min(100, score)}%`;
+  if (score < 45) {
+    fill.style.backgroundColor = 'var(--danger)';
+  } else if (score < 75) {
+    fill.style.backgroundColor = 'var(--gold)';
+  } else {
+    fill.style.backgroundColor = 'var(--lime-dark)';
+  }
+}
+
+function validarFormCadastro() {
+  const nome = document.getElementById('cadNome').value.trim();
+  const email = document.getElementById('cadEmail').value.trim();
+  const senha = document.getElementById('cadSenha').value;
+  const pergunta = document.getElementById('cadPergunta').value.trim();
+  const resposta = document.getElementById('cadResposta').value.trim();
+
+  const errEl = document.getElementById('errCadEmail');
+  const btn = document.getElementById('btnCadSubmit');
+
+  const emailOk = isValidEmail(email);
+  errEl.style.display = (email.length > 0 && !emailOk) ? 'block' : 'none';
+
+  const isValid = nome.length >= 2 && emailOk && senha.length >= 6 && pergunta.length >= 4 && resposta.length >= 1;
+  btn.disabled = !isValid;
+}
+
+function criarConta() {
+  const nome = document.getElementById('cadNome').value.trim();
+  const email = document.getElementById('cadEmail').value.trim().toLowerCase();
+  const senha = document.getElementById('cadSenha').value;
+  const pergunta = document.getElementById('cadPergunta').value.trim();
+  const resposta = document.getElementById('cadResposta').value.trim();
+
+  if (!nome || !isValidEmail(email) || senha.length < 6 || !pergunta || !resposta) {
+    showToast('Preencha todos os campos obrigatórios corretamente.', 'warn');
+    return;
+  }
+
+  const users = getStorage(STORAGE_KEYS.USERS, DEFAULT_USERS);
+  if (users.some(u => u.email.toLowerCase() === email)) {
+    showToast('Este e-mail já está cadastrado. Faça login ou recupere a senha.', 'warn');
+    return;
+  }
+
+  const novoUsuario = {
+    nome,
+    email,
+    senha,
+    pergunta,
+    resposta,
+    role: 'cliente'
+  };
+
+  users.push(novoUsuario);
+  setStorage(STORAGE_KEYS.USERS, users);
+  setStorage(STORAGE_KEYS.SESSION, { email: novoUsuario.email });
+
+  showToast('Conta criada com sucesso! Bem-vindo ao Nexta Finance.', 'success');
+  entrarNoSistema(novoUsuario, false);
+}
+
+function buscarConta() {
+  const email = document.getElementById('recEmail').value.trim().toLowerCase();
+  if (!isValidEmail(email)) {
+    showToast('Informe um endereço de e-mail válido.', 'warn');
+    return;
+  }
+
+  const users = getStorage(STORAGE_KEYS.USERS, DEFAULT_USERS);
+  const found = users.find(u => u.email.toLowerCase() === email);
+  if (!found) {
+    showToast('Nenhuma conta encontrada com este e-mail.', 'danger');
+    return;
+  }
+
+  recoveryEmailTarget = found.email;
+  document.getElementById('perguntaLabel').textContent = found.pergunta || 'Pergunta de segurança:';
+  document.getElementById('esqueciPasso1').style.display = 'none';
+  document.getElementById('esqueciPasso2').style.display = 'block';
+}
+
+function redefinirSenha() {
+  const respostaDigitada = document.getElementById('recResposta').value.trim().toLowerCase();
+  const novaSenha = document.getElementById('recNovaSenha').value;
+
+  if (!recoveryEmailTarget) return;
+  if (novaSenha.length < 6) {
+    showToast('A nova senha deve ter pelo menos 6 caracteres.', 'warn');
+    return;
+  }
+
+  const users = getStorage(STORAGE_KEYS.USERS, DEFAULT_USERS);
+  const idx = users.findIndex(u => u.email.toLowerCase() === recoveryEmailTarget.toLowerCase());
+  if (idx === -1) return;
+
+  const respostaSalva = String(users[idx].resposta || '').trim().toLowerCase();
+  if (respostaDigitada !== respostaSalva) {
+    showToast('Resposta de segurança incorreta.', 'danger');
+    return;
+  }
+
+  users[idx].senha = novaSenha;
+  setStorage(STORAGE_KEYS.USERS, users);
+
+  showToast('Senha redefinida com sucesso! Faça login com a nova senha.', 'success');
+  mostrarTela('login');
+  document.getElementById('loginEmail').value = users[idx].email;
+  document.getElementById('loginSenha').value = '';
+  validarFormLogin();
+}
+
+function confirmarLogout() {
+  openModal({
+    title: 'Encerrar sessão',
+    bodyHtml: '<p style="margin: 0; font-size: 14px; color: var(--slate);">Deseja realmente sair da sua conta Nexta Finance?</p>',
+    footerHtml: `
+      <button type="button" class="btn btn-outline btn-sm" onclick="closeModal()">Cancelar</button>
+      <button type="button" class="btn btn-danger btn-sm" onclick="fazerLogout()">Sair agora</button>
+    `
+  });
+}
+
+function fazerLogout() {
+  closeModal();
+  localStorage.removeItem(STORAGE_KEYS.SESSION);
+  currentUser = null;
+  document.getElementById('app').style.display = 'none';
+  document.getElementById('loginScreen').style.display = 'flex';
+  mostrarTela('login');
+  showToast('Sessão encerrada com segurança.', 'success');
+}
+
+function entrarNoSistema(user, welcomeToast) {
+  currentUser = user;
+  document.getElementById('loginScreen').style.display = 'none';
+  document.getElementById('app').style.display = 'flex';
+
+  atualizarDadosUsuarioUI();
+  atualizarSimulador();
+  atualizarContratoUI();
+  renderTabelaCredito();
+  renderTabelaCobranca();
+  renderTabelaFraude();
+
+  go('dashboard');
+
+  if (welcomeToast) {
+    const firstName = user.nome.split(' ')[0];
+    showToast(`Olá, ${firstName}! Acesso liberado.`, 'success');
+  }
+}
+
+function atualizarDadosUsuarioUI() {
+  if (!currentUser) return;
+  const initials = getInitials(currentUser.nome);
+  const isAdmin = currentUser.role === 'admin';
+
+  document.getElementById('sidebarAvatar').textContent = initials;
+  document.getElementById('sidebarUserName').textContent = currentUser.nome;
+  document.getElementById('sidebarUserRole').textContent = isAdmin ? 'Administrador' : 'Cliente Verificado';
+
+  const navAdmin = document.getElementById('navAdminGroup');
+  if (navAdmin) {
+    navAdmin.style.display = isAdmin ? 'block' : 'none';
+  }
+
+  const firstName = currentUser.nome.split(' ')[0];
+  document.getElementById('dashGreeting').textContent = `Olá, ${firstName}`;
+
+  // Atualiza campos de Meu Perfil
+  document.getElementById('perfilAvatar').textContent = initials;
+  document.getElementById('perfilNomeHeader').textContent = currentUser.nome;
+  document.getElementById('perfilRoleBadge').textContent = isAdmin ? 'Administrador Interno' : 'Cliente Verificado';
+  document.getElementById('perfilNomeInput').value = currentUser.nome;
+  document.getElementById('perfilEmailInput').value = currentUser.email;
+  document.getElementById('perfilPerguntaInput').value = currentUser.pergunta || '';
+  document.getElementById('perfilRespostaInput').value = currentUser.resposta || '';
+}
+
+/* ==========================================================================
+   NAVEGAÇÃO SPA, BREADCRUMB, MENU MOBILE & PÍLULA ANIMADA (.nav-pill)
+   ========================================================================== */
+function go(page) {
+  const targetPageEl = document.getElementById(`page-${page}`);
+  if (!targetPageEl) return;
+
+  // Bloqueia acesso a rotas exclusivas de Admin se usuário for Cliente
+  const adminPages = ['credito', 'cobranca', 'fraude'];
+  if (adminPages.includes(page) && currentUser && currentUser.role !== 'admin') {
+    showToast('Área restrita à operação interna. Ative a Visão Admin em Meu Perfil.', 'warn');
+    return;
+  }
+
+  currentPage = page;
+
+  // Alterna páginas
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  targetPageEl.classList.add('active');
+
+  // Atualiza itens ativos na sidebar
+  document.querySelectorAll('.sidebar .nav-item').forEach(item => {
+    item.classList.toggle('active', item.getAttribute('data-page') === page);
+  });
+
+  // Atualiza Breadcrumb
+  const meta = PAGE_META[page] || { label: 'Painel', group: 'Minha conta' };
+  document.getElementById('crumbRole').textContent = meta.group;
+  document.getElementById('crumbPage').textContent = meta.label;
+
+  // Fecha menu mobile se aberto
+  toggleMenu(false);
+
+  // Rola conteúdo para o topo
+  const mainContent = document.getElementById('mainContent');
+  if (mainContent) mainContent.scrollTop = 0;
+
+  // Atualiza posição da pílula ativa
+  requestAnimationFrame(atualizarNavPill);
+
+  // Dispara observadores de entrada e gráficos
+  initScrollObservers();
+  if (page === 'dashboard') {
+    const periodEl = document.getElementById('chartPeriodSelect');
+    renderDashboardCharts(periodEl ? periodEl.value : '6m');
+  }
+}
+
+function atualizarNavPill() {
+  const activeItem = document.querySelector('.sidebar .nav-item.active');
+  const allPills = document.querySelectorAll('.sidebar .nav-pill');
+
+  allPills.forEach(pill => {
+    pill.style.opacity = '0';
+  });
+
+  if (!activeItem) return;
+  const parentGroup = activeItem.closest('.nav-group');
+  if (!parentGroup) return;
+
+  const groupPill = parentGroup.querySelector('.nav-pill');
+  if (!groupPill) return;
+
+  groupPill.style.transform = `translateY(${activeItem.offsetTop}px)`;
+  groupPill.style.height = `${activeItem.offsetHeight}px`;
+  groupPill.style.opacity = '1';
+}
+
+window.addEventListener('resize', () => {
+  requestAnimationFrame(atualizarNavPill);
+});
+
+function toggleMenu(forceState) {
+  const sidebar = document.getElementById('sidebar');
+  const overlay = document.getElementById('sidebarOverlay');
+  if (!sidebar || !overlay) return;
+
+  const shouldOpen = typeof forceState === 'boolean' ? forceState : !sidebar.classList.contains('open');
+  sidebar.classList.toggle('open', shouldOpen);
+  overlay.classList.toggle('open', shouldOpen);
+}
+
+/* ==========================================================================
+   SIMULADOR DE EMPRÉSTIMO (PRICE E SAC)
+   ========================================================================== */
+function calcularCronogramaEmprestimo(valor, prazo, taxaMensal, sistema) {
+  const parcelas = [];
+  let saldo = valor;
+  let totalJuros = 0;
+  let totalPago = 0;
+
+  if (sistema === 'SAC') {
+    const amortConstante = valor / prazo;
+    for (let mes = 1; mes <= prazo; mes++) {
+      const juros = saldo * taxaMensal;
+      const parcela = amortConstante + juros;
+      saldo = Math.max(0, saldo - amortConstante);
+      totalJuros += juros;
+      totalPago += parcela;
+      parcelas.push({ mes, parcela, amortizacao: amortConstante, juros, saldo });
+    }
+  } else {
+    // PRICE
+    const fator = Math.pow(1 + taxaMensal, prazo);
+    const parcelaFixa = valor * ((taxaMensal * fator) / (fator - 1));
+    for (let mes = 1; mes <= prazo; mes++) {
+      const juros = saldo * taxaMensal;
+      const amortizacao = parcelaFixa - juros;
+      saldo = Math.max(0, saldo - amortizacao);
+      totalJuros += juros;
+      totalPago += parcelaFixa;
+      parcelas.push({ mes, parcela: parcelaFixa, amortizacao, juros, saldo });
+    }
+  }
+
+  return { parcelas, totalJuros, totalPago };
+}
+
+function atualizarSimulador() {
+  const valor = Number(document.getElementById('simValorRange').value);
+  const prazo = Number(document.getElementById('simPrazoRange').value);
+  const sistema = document.getElementById('simSistema').value;
+  const taxaMensal = prazo <= 12 ? 0.0139 : prazo <= 36 ? 0.0149 : 0.0165;
+
+  document.getElementById('simValorDisplay').textContent = formatBRL(valor);
+  document.getElementById('simPrazoDisplay').textContent = `${prazo} meses`;
+  document.getElementById('simTaxaTag').textContent = `${(taxaMensal * 100).toFixed(2).replace('.', ',')}% a.m.`;
+  document.getElementById('simTabelaBadge').textContent = `${prazo} parcelas`;
+
+  const { parcelas, totalJuros, totalPago } = calcularCronogramaEmprestimo(valor, prazo, taxaMensal, sistema);
+  const primeira = parcelas[0].parcela;
+  const ultima = parcelas[parcelas.length - 1].parcela;
+  const cetAnual = (Math.pow(1 + taxaMensal + 0.0012, 12) - 1) * 100;
+
+  document.getElementById('simParcelaPrincipal').innerHTML = `${formatBRL(primeira)} <span style="font-size: 13px; color: var(--slate); font-weight: 500;">${sistema === 'SAC' ? '1ª parcela' : '/mês'}</span>`;
+  document.getElementById('simParcelaDetalhe').textContent = sistema === 'SAC'
+    ? 'Parcelas decrescentes pelo sistema SAC'
+    : 'Parcelas fixas pelo sistema PRICE';
+  document.getElementById('simUltimaParcela').textContent = formatBRL(ultima);
+  document.getElementById('simTotalJuros').textContent = formatBRL(totalJuros);
+  document.getElementById('simTotalPagar').textContent = formatBRL(totalPago);
+  document.getElementById('simCetAnual').textContent = `${cetAnual.toFixed(2).replace('.', ',')}% a.a.`;
+
+  const tbody = document.getElementById('simTabelaBody');
+  tbody.innerHTML = parcelas.map(p => `
+    <tr>
+      <td class="mono">${String(p.mes).padStart(2, '0')}</td>
+      <td class="mono"><strong>${formatBRL(p.parcela)}</strong></td>
+      <td class="mono">${formatBRL(p.amortizacao)}</td>
+      <td class="mono">${formatBRL(p.juros)}</td>
+      <td class="mono">${formatBRL(p.saldo)}</td>
+    </tr>
+  `).join('');
+}
+
+function contratarSimulacao() {
+  const valor = Number(document.getElementById('simValorRange').value);
+  const prazo = Number(document.getElementById('simPrazoRange').value);
+  const sistema = document.getElementById('simSistema').value;
+  const finalidade = document.getElementById('simFinalidade').value;
+  const taxaMensal = prazo <= 12 ? 0.0139 : prazo <= 36 ? 0.0149 : 0.0165;
+  const { parcelas } = calcularCronogramaEmprestimo(valor, prazo, taxaMensal, sistema);
+
+  const novoContrato = {
+    codigo: `NX-2026-${Math.floor(1000 + Math.random() * 9000)}`,
+    finalidade,
+    valorOriginal: valor,
+    saldoDevedor: valor,
+    taxaMensal,
+    totalParcelas: prazo,
+    parcelasPagas: 0,
+    valorParcela: Number(parcelas[0].parcela.toFixed(2)),
+    sistema
+  };
+
+  setStorage(STORAGE_KEYS.CONTRACT, novoContrato);
+  atualizarContratoUI();
+  showToast(`Contrato #${novoContrato.codigo} gerado com sucesso!`, 'success');
+  go('acompanhar');
+}
+
+/* ==========================================================================
+   ACOMPANHAR CONTRATO & MODAL DE AMORTIZAÇÃO
+   ========================================================================== */
+function atualizarContratoUI() {
+  const contrato = getStorage(STORAGE_KEYS.CONTRACT, DEFAULT_CONTRACT);
+  const restantes = Math.max(0, contrato.totalParcelas - contrato.parcelasPagas);
+  const pct = contrato.totalParcelas > 0
+    ? Math.min(100, Math.round((contrato.parcelasPagas / contrato.totalParcelas) * 100))
+    : 100;
+
+  // Atualiza Dashboard KPIs e Extrato
+  document.getElementById('dashParcelasTag').textContent = `${contrato.parcelasPagas}/${contrato.totalParcelas} pagas`;
+  document.getElementById('dashSaldoDevedor').textContent = formatBRL(contrato.saldoDevedor);
+  document.getElementById('dashProxParcela').textContent = restantes > 0 ? formatBRL(contrato.valorParcela) : 'Quitado';
+
+  const extratoBody = document.getElementById('dashboardExtratoBody');
+  extratoBody.innerHTML = [
+    { ref: `#${contrato.codigo}`, desc: `Parcela ${String(Math.max(1, contrato.parcelasPagas)).padStart(2, '0')}/${contrato.totalParcelas} (${contrato.finalidade})`, data: '15/11/2026', valor: contrato.valorParcela, status: 'Liquidada' },
+    { ref: `#${contrato.codigo}`, desc: `Parcela ${String(Math.max(1, contrato.parcelasPagas - 1)).padStart(2, '0')}/${contrato.totalParcelas}`, data: '15/10/2026', valor: contrato.valorParcela, status: 'Liquidada' },
+    { ref: '#PIX-9921', desc: 'Desembolso inicial em conta titular', data: '10/03/2026', valor: contrato.valorOriginal, status: 'Concluído' }
+  ].map(item => `
+    <tr>
+      <td class="mono">${item.ref}</td>
+      <td>${item.desc}</td>
+      <td>${item.data}</td>
+      <td class="mono"><strong>${formatBRL(item.valor)}</strong></td>
+      <td><span class="tag up">${item.status}</span></td>
+      <td><button type="button" class="btn btn-outline btn-sm" onclick="gerarComprovantePDF('contrato')">PDF</button></td>
+    </tr>
+  `).join('');
+
+  // Atualiza página Acompanhar Contrato
+  document.getElementById('contratoTitulo').textContent = `Contrato #${contrato.codigo} — ${contrato.finalidade}`;
+  document.getElementById('contratoSaldoAtual').textContent = formatBRL(contrato.saldoDevedor);
+  document.getElementById('contratoProgressFill').style.width = `${pct}%`;
+  document.getElementById('contratoProgressoTexto').textContent = `${contrato.parcelasPagas} de ${contrato.totalParcelas} parcelas liquidadas (${pct}%)`;
+  document.getElementById('contratoTaxaTexto').textContent = `${(contrato.taxaMensal * 100).toFixed(2).replace('.', ',')}% a.m. (${contrato.sistema})`;
+  document.getElementById('contratoParcelaAtualTag').textContent = `Parcela: ${formatBRL(contrato.valorParcela)}`;
+  document.getElementById('tlStatusAtual').textContent = restantes > 0
+    ? `Em dia — ${restantes} parcelas restantes`
+    : 'Contrato integralmente quitado!';
+
+  const parcelasBody = document.getElementById('contratoParcelasBody');
+  if (restantes === 0 || contrato.saldoDevedor <= 0) {
+    parcelasBody.innerHTML = `<tr><td colspan="4" style="text-align: center; color: var(--slate); padding: 20px;">Todas as parcelas deste contrato foram quitadas.</td></tr>`;
+    return;
+  }
+
+  const rows = [];
+  const exibir = Math.min(4, restantes);
+  for (let i = 1; i <= exibir; i++) {
+    const num = contrato.parcelasPagas + i;
+    const mesVenc = ((11 + i - 1) % 12) + 1;
+    const anoVenc = 2026 + Math.floor((11 + i - 1) / 12);
+    rows.push(`
+      <tr>
+        <td class="mono">${String(num).padStart(2, '0')}/${contrato.totalParcelas}</td>
+        <td>15/${String(mesVenc).padStart(2, '0')}/${anoVenc}</td>
+        <td class="mono"><strong>${formatBRL(contrato.valorParcela)}</strong></td>
+        <td>
+          ${i === 1
+            ? `<button type="button" class="btn btn-lime btn-sm" onclick="pagarProximaParcela()">Pagar</button>`
+            : `<span class="tag neutral">A vencer</span>`}
+        </td>
+      </tr>
+    `);
+  }
+  parcelasBody.innerHTML = rows.join('');
+}
+
+function pagarProximaParcela() {
+  const contrato = getStorage(STORAGE_KEYS.CONTRACT, DEFAULT_CONTRACT);
+  if (contrato.parcelasPagas >= contrato.totalParcelas || contrato.saldoDevedor <= 0) return;
+
+  contrato.parcelasPagas += 1;
+  const restantes = contrato.totalParcelas - contrato.parcelasPagas;
+  contrato.saldoDevedor = restantes === 0
+    ? 0
+    : Math.max(0, Number((contrato.saldoDevedor - (contrato.valorParcela * 0.78)).toFixed(2)));
+
+  setStorage(STORAGE_KEYS.CONTRACT, contrato);
+  atualizarContratoUI();
+  showToast(`Parcela ${contrato.parcelasPagas}/${contrato.totalParcelas} liquidada!`, 'success');
+}
+
+let amortModoSelecionado = 'prazo';
+
+function abrirModalAmortizacao() {
+  const contrato = getStorage(STORAGE_KEYS.CONTRACT, DEFAULT_CONTRACT);
+  if (contrato.saldoDevedor <= 0) {
+    showToast('Este contrato já está quitado.', 'warn');
+    return;
+  }
+
+  amortModoSelecionado = 'prazo';
+  const sugestao = Math.min(contrato.saldoDevedor, 2500);
+
+  openModal({
+    title: 'Amortizar / Antecipar Saldo',
+    bodyHtml: `
+      <p style="margin: 0 0 14px; font-size: 13px; color: var(--slate);">
+        Saldo devedor atual: <strong class="mono">${formatBRL(contrato.saldoDevedor)}</strong>. Escolha como aplicar o abatimento:
+      </p>
+
+      <div class="amort-option-card selected" id="optAmortPrazo" onclick="selecionarModoAmort('prazo')">
+        <strong style="display: block; font-size: 13.5px; margin-bottom: 3px;">Reduzir prazo do contrato</strong>
+        <span style="font-size: 12px; color: var(--slate);">Mantém o valor da parcela e elimina parcelas finais com desconto nos juros.</span>
+      </div>
+
+      <div class="amort-option-card" id="optAmortParcela" onclick="selecionarModoAmort('parcela')">
+        <strong style="display: block; font-size: 13.5px; margin-bottom: 3px;">Reduzir valor da parcela mensal</strong>
+        <span style="font-size: 12px; color: var(--slate);">Mantém a data de término e diminui o valor mensal das próximas parcelas.</span>
+      </div>
+
+      <div class="form-group" style="margin-top: 14px; margin-bottom: 0;">
+        <label for="inputValorAmort">Valor para amortização (R$)</label>
+        <input type="number" id="inputValorAmort" min="100" max="${contrato.saldoDevedor}" step="50" value="${sugestao}">
+      </div>
+    `,
+    footerHtml: `
+      <button type="button" class="btn btn-outline btn-sm" onclick="closeModal()">Cancelar</button>
+      <button type="button" class="btn btn-lime btn-sm" onclick="confirmarAmortizacao()">Confirmar amortização</button>
+    `
+  });
+}
+
+function selecionarModoAmort(modo) {
+  amortModoSelecionado = modo;
+  document.getElementById('optAmortPrazo').classList.toggle('selected', modo === 'prazo');
+  document.getElementById('optAmortParcela').classList.toggle('selected', modo === 'parcela');
+}
+
+function confirmarAmortizacao() {
+  const contrato = getStorage(STORAGE_KEYS.CONTRACT, DEFAULT_CONTRACT);
+  const valorAmort = Number(document.getElementById('inputValorAmort').value);
+
+  if (!valorAmort || valorAmort <= 0 || valorAmort > contrato.saldoDevedor) {
+    showToast('Informe um valor válido até o limite do saldo devedor.', 'warn');
+    return;
+  }
+
+  // Desconto de 12% sobre juros futuros no abatimento antecipado
+  const abatimentoEfetivo = Math.min(contrato.saldoDevedor, valorAmort);
+  contrato.saldoDevedor = Math.max(0, Number((contrato.saldoDevedor - abatimentoEfetivo).toFixed(2)));
+
+  const restantes = Math.max(1, contrato.totalParcelas - contrato.parcelasPagas);
+  if (contrato.saldoDevedor === 0) {
+    contrato.parcelasPagas = contrato.totalParcelas;
+  } else if (amortModoSelecionado === 'prazo') {
+    const parcelasAbatidas = Math.max(1, Math.floor(abatimentoEfetivo / contrato.valorParcela));
+    contrato.totalParcelas = Math.max(contrato.parcelasPagas + 1, contrato.totalParcelas - parcelasAbatidas);
+  } else {
+    contrato.valorParcela = Number(((contrato.saldoDevedor * (1 + contrato.taxaMensal * restantes * 0.5)) / restantes).toFixed(2));
+  }
+
+  setStorage(STORAGE_KEYS.CONTRACT, contrato);
+  atualizarContratoUI();
+  closeModal();
+  showToast(`Amortização de ${formatBRL(valorAmort)} aplicada com sucesso!`, 'success');
+}
+
+/* ==========================================================================
+   MÓDULOS ADMIN: CRÉDITO, COBRANÇA E ANTIFRAUDE
+   ========================================================================== */
+function renderTabelaCredito() {
+  const lista = getStorage(STORAGE_KEYS.CREDITO, DEFAULT_CREDITO);
+  const filtro = document.getElementById('filtroCreditoStatus').value;
+  const filtrada = filtro === 'TODOS' ? lista : lista.filter(item => item.status === filtro);
+
+  const pendentes = lista.filter(i => i.status === 'Em análise');
+  document.getElementById('kpiCreditoFila').textContent = pendentes.length;
+  const vol = pendentes.reduce((acc, i) => acc + i.valor, 0);
+  document.getElementById('kpiCreditoVolume').textContent = formatBRL(vol);
+
+  const tbody = document.getElementById('tabelaCreditoBody');
+  tbody.innerHTML = filtrada.map(item => {
+    const tagClass = item.status === 'Aprovado' ? 'up' : item.status === 'Recusado' ? 'warn' : 'gold';
+    const scoreTag = item.score >= 750 ? 'up' : item.score >= 650 ? 'gold' : 'warn';
+    return `
+      <tr>
+        <td>
+          <div class="row-flex">
+            <span class="avatar">${getInitials(item.nome)}</span>
+            <div>
+              <strong>${item.nome}</strong>
+              <div style="font-size: 11px; color: var(--slate);">${item.id} • ${item.email}</div>
+            </div>
+          </div>
+        </td>
+        <td><span class="tag ${scoreTag} mono">${item.score}</span></td>
+        <td class="mono"><strong>${formatBRL(item.valor)}</strong> <span style="color: var(--slate);">(${item.prazo}x)</span></td>
+        <td class="mono">${item.comprometimento}</td>
+        <td><span class="tag ${tagClass}">${item.status}</span></td>
+        <td>
+          <div class="row-flex" style="gap: 6px;">
+            <button type="button" class="btn btn-lime btn-sm" onclick="decidirCredito('${item.id}', 'Aprovado')">Aprovar</button>
+            <button type="button" class="btn btn-outline btn-sm" onclick="decidirCredito('${item.id}', 'Recusado')">Recusar</button>
+          </div>
+        </td>
+      </tr>
+    `;
+  }).join('');
+}
+
+function decidirCredito(id, novoStatus) {
+  const lista = getStorage(STORAGE_KEYS.CREDITO, DEFAULT_CREDITO);
+  const idx = lista.findIndex(i => i.id === id);
+  if (idx === -1) return;
+
+  lista[idx].status = novoStatus;
+  setStorage(STORAGE_KEYS.CREDITO, lista);
+  renderTabelaCredito();
+  showToast(`Proposta ${id} marcada como "${novoStatus}".`, novoStatus === 'Aprovado' ? 'success' : 'warn');
+}
+
+function renderTabelaCobranca() {
+  const lista = getStorage(STORAGE_KEYS.COBRANCA, DEFAULT_COBRANCA);
+  const tbody = document.getElementById('tabelaCobrancaBody');
+
+  tbody.innerHTML = lista.map(item => {
+    const tagClass = item.status === 'Acordo enviado' ? 'up' : item.diasAtraso > 20 ? 'warn' : 'gold';
+    return `
+      <tr>
+        <td><strong>${item.cliente}</strong></td>
+        <td class="mono">${item.contrato}</td>
+        <td><span class="tag ${item.diasAtraso > 20 ? 'warn' : 'gold'}">${item.diasAtraso} dias</span></td>
+        <td class="mono"><strong>${formatBRL(item.valor)}</strong></td>
+        <td><span class="tag ${tagClass}">${item.status}</span></td>
+        <td>
+          <div class="row-flex" style="gap: 6px;">
+            <button type="button" class="btn btn-outline btn-sm" onclick="enviarLembreteCobranca('${item.id}')">PIX Lembrete</button>
+            <button type="button" class="btn btn-navy btn-sm" onclick="proporAcordoCobranca('${item.id}')">Acordo</button>
+          </div>
+        </td>
+      </tr>
+    `;
+  }).join('');
+}
+
+function enviarLembreteCobranca(id) {
+  const lista = getStorage(STORAGE_KEYS.COBRANCA, DEFAULT_COBRANCA);
+  const idx = lista.findIndex(i => i.id === id);
+  if (idx !== -1) {
+    lista[idx].status = 'Notificado';
+    setStorage(STORAGE_KEYS.COBRANCA, lista);
+    renderTabelaCobranca();
+  }
+  showToast('Link de pagamento PIX e boleto enviados ao cliente.', 'success');
+}
+
+function proporAcordoCobranca(id) {
+  const lista = getStorage(STORAGE_KEYS.COBRANCA, DEFAULT_COBRANCA);
+  const item = lista.find(i => i.id === id);
+  if (!item) return;
+
+  const valorComDesconto = item.valor * 0.85;
+  openModal({
+    title: `Propor Acordo — ${item.cliente}`,
+    bodyHtml: `
+      <p style="margin: 0 0 12px; font-size: 13.5px; color: var(--slate);">
+        Contrato <strong class="mono">${item.contrato}</strong> com <strong>${item.diasAtraso} dias</strong> em aberto.
+      </p>
+      <div class="card" style="background: var(--cream); margin-bottom: 12px;">
+        <div style="font-size: 12px; color: var(--slate);">Proposta pré-calculada (15% de desconto nos encargos):</div>
+        <div class="mono" style="font-size: 20px; font-weight: 700; margin-top: 4px;">${formatBRL(valorComDesconto)} à vista</div>
+      </div>
+    `,
+    footerHtml: `
+      <button type="button" class="btn btn-outline btn-sm" onclick="closeModal()">Fechar</button>
+      <button type="button" class="btn btn-lime btn-sm" onclick="confirmarAcordoCobranca('${item.id}')">Enviar proposta</button>
+    `
+  });
+}
+
+function confirmarAcordoCobranca(id) {
+  const lista = getStorage(STORAGE_KEYS.COBRANCA, DEFAULT_COBRANCA);
+  const idx = lista.findIndex(i => i.id === id);
+  if (idx !== -1) {
+    lista[idx].status = 'Acordo enviado';
+    setStorage(STORAGE_KEYS.COBRANCA, lista);
+    renderTabelaCobranca();
+  }
+  const kpi = document.getElementById('kpiAcordosAtivos');
+  if (kpi) kpi.textContent = Number(kpi.textContent || 12) + 1;
+  closeModal();
+  showToast('Proposta de acordo enviada com sucesso!', 'success');
+}
+
+function renderTabelaFraude() {
+  const lista = getStorage(STORAGE_KEYS.FRAUDE, DEFAULT_FRAUDE);
+  const criticos = lista.filter(i => i.risco === 'Alto' && i.status === 'Pendente').length;
+  document.getElementById('kpiFraudeCriticos').textContent = criticos;
+
+  const tbody = document.getElementById('tabelaFraudeBody');
+  tbody.innerHTML = lista.map(item => {
+    const riscoClass = item.risco === 'Alto' ? 'warn' : 'gold';
+    const statusClass = item.status === 'Bloqueado' ? 'warn' : item.status === 'Liberado' ? 'up' : 'neutral';
+    return `
+      <tr>
+        <td class="mono"><strong>${item.id}</strong></td>
+        <td class="mono">${item.usuario}</td>
+        <td>${item.anomalia}</td>
+        <td><span class="tag ${riscoClass}">${item.risco}</span></td>
+        <td><span class="tag ${statusClass}">${item.status}</span></td>
+        <td>
+          <div class="row-flex" style="gap: 6px;">
+            <button type="button" class="btn btn-danger btn-sm" onclick="acaoFraude('${item.id}', 'Bloqueado')">Bloquear</button>
+            <button type="button" class="btn btn-outline btn-sm" onclick="acaoFraude('${item.id}', 'Liberado')">Liberar</button>
+          </div>
+        </td>
+      </tr>
+    `;
+  }).join('');
+}
+
+function acaoFraude(id, novoStatus) {
+  const lista = getStorage(STORAGE_KEYS.FRAUDE, DEFAULT_FRAUDE);
+  const idx = lista.findIndex(i => i.id === id);
+  if (idx === -1) return;
+
+  lista[idx].status = novoStatus;
+  setStorage(STORAGE_KEYS.FRAUDE, lista);
+  renderTabelaFraude();
+  showToast(`Alerta ${id} atualizado para "${novoStatus}".`, novoStatus === 'Bloqueado' ? 'danger' : 'success');
+}
+
+/* ==========================================================================
+   MEU PERFIL (EDIÇÃO DE DADOS, SENHA E ALTERNÂNCIA DE ROLE)
+   ========================================================================== */
+function salvarDadosPerfil() {
+  if (!currentUser) return;
+  const novoNome = document.getElementById('perfilNomeInput').value.trim();
+  const novaPergunta = document.getElementById('perfilPerguntaInput').value.trim();
+  const novaResposta = document.getElementById('perfilRespostaInput').value.trim();
+
+  if (novoNome.length < 2 || !novaPergunta || !novaResposta) {
+    showToast('Preencha nome, pergunta e resposta de segurança.', 'warn');
+    return;
+  }
+
+  const users = getStorage(STORAGE_KEYS.USERS, DEFAULT_USERS);
+  const idx = users.findIndex(u => u.email.toLowerCase() === currentUser.email.toLowerCase());
+  if (idx !== -1) {
+    users[idx].nome = novoNome;
+    users[idx].pergunta = novaPergunta;
+    users[idx].resposta = novaResposta;
+    setStorage(STORAGE_KEYS.USERS, users);
+    currentUser = users[idx];
+    atualizarDadosUsuarioUI();
+    showToast('Dados cadastrais atualizados!', 'success');
+  }
+}
+
+function alterarSenhaPerfil() {
+  if (!currentUser) return;
+  const novaSenha = document.getElementById('perfilNovaSenha').value;
+  if (novaSenha.length < 6) {
+    showToast('A senha deve ter no mínimo 6 caracteres.', 'warn');
+    return;
+  }
+
+  const users = getStorage(STORAGE_KEYS.USERS, DEFAULT_USERS);
+  const idx = users.findIndex(u => u.email.toLowerCase() === currentUser.email.toLowerCase());
+  if (idx !== -1) {
+    users[idx].senha = novaSenha;
+    setStorage(STORAGE_KEYS.USERS, users);
+    currentUser = users[idx];
+    document.getElementById('perfilNovaSenha').value = '';
+    document.getElementById('perfilMeter').style.width = '0%';
+    showToast('Senha atualizada com sucesso!', 'success');
+  }
+}
+
+function alternarRoleAtual(novoRole) {
+  if (!currentUser) return;
+  currentUser.role = novoRole;
+
+  const users = getStorage(STORAGE_KEYS.USERS, DEFAULT_USERS);
+  const idx = users.findIndex(u => u.email.toLowerCase() === currentUser.email.toLowerCase());
+  if (idx !== -1) {
+    users[idx].role = novoRole;
+    setStorage(STORAGE_KEYS.USERS, users);
+  }
+
+  atualizarDadosUsuarioUI();
+  requestAnimationFrame(atualizarNavPill);
+  showToast(`Modo alterado para ${novoRole === 'admin' ? 'Administrador' : 'Cliente'}.`, 'success');
+}
+
+/* ==========================================================================
+   GRÁFICOS INTERATIVOS (CHART.JS)
+   ========================================================================== */
+function renderDashboardCharts(period = '6m') {
+  if (typeof Chart === 'undefined') return;
+  const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
+  const gridColor = isDark ? 'rgba(255, 255, 255, 0.08)' : 'rgba(15, 27, 45, 0.08)';
+  const tickColor = isDark ? '#94A3B8' : '#6B7280';
+
+  const ctxEvol = document.getElementById('chartEvolucao');
+  const ctxCart = document.getElementById('chartCarteira');
+  if (!ctxEvol || !ctxCart) return;
+
+  if (chartEvolucaoInstance) chartEvolucaoInstance.destroy();
+  if (chartCarteiraInstance) chartCarteiraInstance.destroy();
+
+  const labels = period === '12m'
+    ? ['Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun', 'Jul', 'Ago', 'Set', 'Out', 'Nov', 'Dez']
+    : ['Jul', 'Ago', 'Set', 'Out', 'Nov', 'Dez'];
+
+  const saldoData = period === '12m'
+    ? [18000, 17300, 16580, 15850, 15100, 14320, 13520, 12700, 12480, 11600, 10720, 9830]
+    : [16580, 15850, 15100, 14320, 13410, 12480];
+
+  const amortData = period === '12m'
+    ? [0, 700, 1420, 2150, 2900, 3680, 4480, 5300, 5520, 6400, 7280, 8170]
+    : [1420, 2150, 2900, 3680, 4590, 5520];
+
+  chartEvolucaoInstance = new Chart(ctxEvol, {
+    type: 'line',
+    data: {
+      labels,
+      datasets: [
+        {
+          label: 'Saldo Devedor (R$)',
+          data: saldoData,
+          borderColor: isDark ? '#C6FF3D' : '#0F1B2D',
+          backgroundColor: isDark ? 'rgba(198, 255, 61, 0.12)' : 'rgba(15, 27, 45, 0.08)',
+          borderWidth: 2.5,
+          tension: 0.35,
+          fill: true
+        },
+        {
+          label: 'Capital Amortizado (R$)',
+          data: amortData,
+          borderColor: '#9FD923',
+          backgroundColor: 'transparent',
+          borderDash: [5, 5],
+          borderWidth: 2,
+          tension: 0.35
+        }
+      ]
     },
-    {
-      email: 'jonathas@email.com',
-      senha: '123',
-      nome: 'Jonathas Silva',
-      pergunta: 'Qual a sua cor favorita?',
-      role: 'cliente',
-      cobrancaEstagio: 'Em dia',
-      cobrancaDiasAtraso: 0,
-      fraudeOcorrencia: 'Nenhuma anomalia',
-      fraudeRisco: 'Baixo',
-      fraudeStatus: 'Normal',
-      contrato: {
-        valorContratado: 6000,
-        saldoDevedor: 4320,
-        valorParcela: 480,
-        parcelasPagas: 4,
-        totalParcelas: 12,
-        vencimento: '05/10/2026',
-        status: 'Em dia',
-        taxa: 2.3,
-        dataSolicitacao: '12/06/2026',
-        score: 785
-      }
-    },
-    {
-      email: 'marina@email.com',
-      senha: '123',
-      nome: 'Marina Castro',
-      pergunta: 'Em qual cidade você nasceu?',
-      role: 'cliente',
-      cobrancaEstagio: 'Lembrete enviado',
-      cobrancaDiasAtraso: 4,
-      fraudeOcorrencia: 'Acesso de novo dispositivo',
-      fraudeRisco: 'Medio',
-      fraudeStatus: 'Analisar',
-      contrato: {
-        valorContratado: 3500,
-        saldoDevedor: 3500,
-        valorParcela: 345,
-        parcelasPagas: 0,
-        totalParcelas: 12,
-        vencimento: '15/10/2026',
-        status: 'Aprovado',
-        taxa: 2.1,
-        dataSolicitacao: '01/09/2026',
-        score: 812
-      }
-    },
-    {
-      email: 'rodrigo@email.com',
-      senha: '123',
-      nome: 'Rodrigo Paes',
-      pergunta: 'Qual sua comida favorita?',
-      role: 'cliente',
-      cobrancaEstagio: 'Cobrança extrajudicial',
-      cobrancaDiasAtraso: 42,
-      fraudeOcorrencia: 'Múltiplos IPs geograficamente distantes',
-      fraudeRisco: 'Alto',
-      fraudeStatus: 'Bloqueado',
-      contrato: {
-        valorContratado: 12000,
-        saldoDevedor: 12000,
-        valorParcela: 850,
-        parcelasPagas: 0,
-        totalParcelas: 18,
-        vencimento: '20/10/2026',
-        status: 'Revisão manual',
-        taxa: 2.8,
-        dataSolicitacao: '28/08/2026',
-        score: 540
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      plugins: {
+        legend: { labels: { color: tickColor, font: { family: 'Inter', size: 11 } } }
+      },
+      scales: {
+        x: { grid: { display: false }, ticks: { color: tickColor } },
+        y: { grid: { color: gridColor }, ticks: { color: tickColor } }
       }
     }
+  });
+
+  chartCarteiraInstance = new Chart(ctxCart, {
+    type: 'doughnut',
+    data: {
+      labels: ['Principal Amortizado', 'Saldo Principal', 'Juros Projetados'],
+      datasets: [{
+        data: [5520, 12480, 2190],
+        backgroundColor: ['#C6FF3D', isDark ? '#2B446B' : '#0F1B2D', '#D4A54A'],
+        borderWidth: 0
+      }]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      cutout: '68%',
+      plugins: {
+        legend: {
+          position: 'bottom',
+          labels: { color: tickColor, padding: 14, font: { family: 'Inter', size: 11 } }
+        }
+      }
+    }
+  });
+}
+
+/* ==========================================================================
+   EMISSÃO DE COMPROVANTE EM PDF (JSPDF)
+   ========================================================================== */
+function gerarComprovantePDF(tipo = 'contrato') {
+  if (!window.jspdf || !window.jspdf.jsPDF) {
+    showToast('Biblioteca PDF indisponível no momento.', 'danger');
+    return;
+  }
+
+  const { jsPDF } = window.jspdf;
+  const doc = new jsPDF();
+  const contrato = getStorage(STORAGE_KEYS.CONTRACT, DEFAULT_CONTRACT);
+  const nomeCliente = currentUser ? currentUser.nome : 'Cliente Nexta';
+  const emailCliente = currentUser ? currentUser.email : 'cliente@nexta.com';
+  const dataEmissao = new Date().toLocaleString('pt-BR');
+
+  // Cabeçalho Navy
+  doc.setFillColor(15, 27, 45);
+  doc.rect(0, 0, 210, 36, 'F');
+
+  doc.setTextColor(198, 255, 61);
+  doc.setFontSize(18);
+  doc.setFont('helvetica', 'bold');
+  doc.text('NEXTA FINANCE', 16, 22);
+
+  doc.setTextColor(255, 255, 255);
+  doc.setFontSize(10);
+  doc.setFont('helvetica', 'normal');
+  doc.text(`Comprovante Digital • ${tipo.toUpperCase()}`, 140, 22);
+
+  // Corpo
+  doc.setTextColor(20, 24, 31);
+  doc.setFontSize(13);
+  doc.setFont('helvetica', 'bold');
+  doc.text('Dados do Titular e da Operação', 16, 52);
+
+  doc.setFontSize(10.5);
+  doc.setFont('helvetica', 'normal');
+  doc.text(`Titular: ${nomeCliente}`, 16, 63);
+  doc.text(`E-mail: ${emailCliente}`, 16, 70);
+  doc.text(`Data/Hora de Emissão: ${dataEmissao}`, 16, 77);
+
+  doc.setDrawColor(228, 225, 216);
+  doc.line(16, 84, 194, 84);
+
+  if (tipo === 'simulacao') {
+    const val = document.getElementById('simValorDisplay').textContent;
+    const prz = document.getElementById('simPrazoDisplay').textContent;
+    const sis = document.getElementById('simSistema').value;
+    const tot = document.getElementById('simTotalPagar').textContent;
+
+    doc.setFont('helvetica', 'bold');
+    doc.text('Resumo da Simulação de Crédito', 16, 95);
+    doc.setFont('helvetica', 'normal');
+    doc.text(`Valor Solicitado: ${val}`, 16, 105);
+    doc.text(`Prazo Selecionado: ${prz} (${sis})`, 16, 112);
+    doc.text(`Total Estimado a Pagar: ${tot}`, 16, 119);
+  } else {
+    doc.setFont('helvetica', 'bold');
+    doc.text(`Contrato Ativo: #${contrato.codigo}`, 16, 95);
+    doc.setFont('helvetica', 'normal');
+    doc.text(`Finalidade: ${contrato.finalidade}`, 16, 105);
+    doc.text(`Valor Contratado: ${formatBRL(contrato.valorOriginal)}`, 16, 112);
+    doc.text(`Saldo Devedor Atualizado: ${formatBRL(contrato.saldoDevedor)}`, 16, 119);
+    doc.text(`Parcelas Pagas: ${contrato.parcelasPagas} de ${contrato.totalParcelas}`, 16, 126);
+    doc.text(`Valor da Parcela Mensal: ${formatBRL(contrato.valorParcela)}`, 16, 133);
+  }
+
+  // Autenticação
+  const hash = Math.random().toString(36).substring(2, 14).toUpperCase();
+  doc.setFillColor(245, 243, 237);
+  doc.rect(16, 150, 178, 24, 'F');
+  doc.setFontSize(9);
+  doc.setTextColor(107, 114, 128);
+  doc.text('Autenticação Digital Nexta Core:', 20, 160);
+  doc.setFont('courier', 'bold');
+  doc.setTextColor(15, 27, 45);
+  doc.text(`NX-AUTH-${hash}-2026`, 20, 167);
+
+  doc.save(`Comprovante_Nexta_${tipo}.pdf`);
+  showToast('Comprovante PDF gerado e baixado!', 'success');
+}
+
+/* ==========================================================================
+   MODAL GLOBAL, TOASTS, RIPPLE, OBSERVERS E PALETA DE COMANDO (CTRL+K)
+   ========================================================================== */
+function openModal({ title, bodyHtml, footerHtml = '' }) {
+  const modal = document.getElementById('globalModal');
+  document.getElementById('modalTitle').textContent = title;
+  document.getElementById('modalBody').innerHTML = bodyHtml;
+  document.getElementById('modalFooter').innerHTML = footerHtml;
+  modal.classList.add('active');
+  modal.focus();
+}
+
+function closeModal() {
+  const modal = document.getElementById('globalModal');
+  modal.classList.remove('active');
+}
+
+document.getElementById('globalModal').addEventListener('click', (e) => {
+  if (e.target.id === 'globalModal') closeModal();
+});
+
+function showToast(message, type = 'success') {
+  const container = document.getElementById('toast-container');
+  if (!container) return;
+
+  const toast = document.createElement('div');
+  toast.className = `toast toast-${type}`;
+  const icon = type === 'danger' ? '✕' : type === 'warn' ? '!' : '✓';
+  toast.innerHTML = `<strong style="color: var(--lime);">${icon}</strong> <span>${message}</span>`;
+  container.appendChild(toast);
+
+  setTimeout(() => {
+    if (toast.parentNode) toast.parentNode.removeChild(toast);
+  }, 3000);
+}
+
+// Efeito Ripple nos botões .btn
+document.addEventListener('click', (e) => {
+  const btn = e.target.closest('.btn');
+  if (!btn || btn.disabled) return;
+
+  const rect = btn.getBoundingClientRect();
+  const size = Math.max(rect.width, rect.height);
+  const ripple = document.createElement('span');
+  ripple.className = 'ripple-effect';
+  ripple.style.width = ripple.style.height = `${size}px`;
+  ripple.style.left = `${e.clientX - rect.left - size / 2}px`;
+  ripple.style.top = `${e.clientY - rect.top - size / 2}px`;
+
+  btn.appendChild(ripple);
+  setTimeout(() => ripple.remove(), 650);
+});
+
+// IntersectionObserver para animações de entrada
+function initScrollObservers() {
+  const elements = document.querySelectorAll('.page.active .card-scroll-in, .page.active .scroll-reveal');
+  if (!('IntersectionObserver' in window)) {
+    elements.forEach(el => {
+      el.classList.add('in-view', 'revealed');
+    });
+    return;
+  }
+
+  const observer = new IntersectionObserver((entries, obs) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('in-view', 'revealed');
+        obs.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.08 });
+
+  elements.forEach(el => {
+    observer.observe(el);
+    // Garante visibilidade mesmo em viewports curtas
+    setTimeout(() => el.classList.add('in-view', 'revealed'), 180);
+  });
+}
+
+// Paleta de Busca Rápida (Ctrl+K / Cmd+K)
+function getAvailableCommands() {
+  const isAdmin = currentUser && currentUser.role === 'admin';
+  const cmds = [
+    { label: 'Ir para Painel', hint: 'Dashboard', action: () => go('dashboard') },
+    { label: 'Simular Empréstimo (Price / SAC)', hint: 'Simulador', action: () => go('simulador') },
+    { label: 'Acompanhar Contrato Ativo', hint: 'Contrato', action: () => go('acompanhar') },
+    { label: 'Amortizar / Antecipar Parcelas', hint: 'Ação rápida', action: () => { go('acompanhar'); abrirModalAmortizacao(); } },
+    { label: 'Baixar Comprovante em PDF', hint: 'Documento', action: () => gerarComprovantePDF('contrato') },
+    { label: 'Alternar Tema Claro / Escuro', hint: 'Aparência', action: () => toggleTheme() },
+    { label: 'Meu Perfil e Segurança', hint: 'Conta', action: () => go('perfil') },
+    { label: 'Sobre o Nexta Finance', hint: 'Institucional', action: () => go('sobre') }
   ];
 
-  /* ---------- PERSISTÊNCIA LOCALSTORAGE ---------- */
-  function getUsers() {
-    const stored = localStorage.getItem('nexta_users');
-    if (!stored) {
-      localStorage.setItem('nexta_users', JSON.stringify(defaultUsers));
-      return defaultUsers;
-    }
-    const parsed = JSON.parse(stored);
-    
-    return parsed.map(u => ({
-      cobrancaEstagio: u.cobrancaEstagio || 'Em dia',
-      cobrancaDiasAtraso: u.cobrancaDiasAtraso || 0,
-      fraudeOcorrencia: u.fraudeOcorrencia || 'Sem ocorrências',
-      fraudeRisco: u.fraudeRisco || 'Baixo',
-      fraudeStatus: u.fraudeStatus || 'Normal',
-      pergunta: u.pergunta || 'Qual sua pergunta de segurança?',
-      ...u
-    }));
+  if (isAdmin) {
+    cmds.splice(3, 0,
+      { label: 'Análise de Crédito (Fila Admin)', hint: 'Operação', action: () => go('credito') },
+      { label: 'Central de Cobrança', hint: 'Operação', action: () => go('cobranca') },
+      { label: 'Central Antifraude', hint: 'Segurança', action: () => go('fraude') }
+    );
   }
+  return cmds;
+}
 
-  function saveUsers(users) {
-    localStorage.setItem('nexta_users', JSON.stringify(users));
-  }
+function abrirMenuComando() {
+  if (!currentUser) return;
+  cmdSelectedIndex = 0;
+  cmdFilteredCommands = getAvailableCommands();
 
-  function updateUserInStorage(userObj) {
-    const users = getUsers();
-    const idx = users.findIndex(u => u.email.toLowerCase() === userObj.email.toLowerCase());
-    if (idx !== -1) {
-      users[idx] = userObj;
-      saveUsers(users);
-    }
-  }
-
-  /* ---------- SISTEMA DE TOASTS ---------- */
-  function showToast(message, type = 'success') {
-    const container = document.getElementById('toast-container');
-    const toast = document.createElement('div');
-    toast.className = `toast toast-${type}`;
-    
-    let icon = '✓';
-    if (type === 'danger') icon = '✕';
-    if (type === 'warn') icon = '⚠';
-
-    toast.innerHTML = `<span>${icon}</span> <span>${message}</span>`;
-    container.appendChild(toast);
-
-    setTimeout(() => {
-      if (toast.parentNode) toast.parentNode.removeChild(toast);
-    }, 3000);
-  }
-
-  /* ---------- SISTEMA DE MODAIS ---------- */
-  function openModal(title, bodyHTML, actionsHTML) {
-    document.getElementById('modalTitle').textContent = title;
-    document.getElementById('modalBody').innerHTML = bodyHTML;
-    document.getElementById('modalFooter').innerHTML = actionsHTML;
-    
-    const overlay = document.getElementById('globalModal');
-    overlay.classList.add('active');
-    overlay.focus();
-  }
-
-  function closeModal() {
-    document.getElementById('globalModal').classList.remove('active');
-  }
-
-  document.addEventListener('keydown', (e) => {
-    if (e.key === 'Escape') closeModal();
+  openModal({
+    title: 'Busca Rápida Nexta (⌘K)',
+    bodyHtml: `
+      <input type="text" class="cmd-search-input" id="cmdSearchInput" placeholder="Digite um comando ou página..." oninput="filtrarComandos(this.value)" onkeydown="navegarComandos(event)">
+      <div class="cmd-list" id="cmdListContainer"></div>
+    `,
+    footerHtml: `<span style="font-size: 11.5px; color: var(--slate);">Use ↑ ↓ para navegar e Enter para executar</span>`
   });
 
-  /* ---------- MICRO-INTERAÇÃO DE RIPPLE NOS BOTÕES ---------- */
-  document.addEventListener('click', (e) => {
-    const btn = e.target.closest('.btn');
-    if (!btn) return;
-    const rect = btn.getBoundingClientRect();
-    const circle = document.createElement('span');
-    const diameter = Math.max(rect.width, rect.height);
-    const radius = diameter / 2;
-    circle.style.width = circle.style.height = `${diameter}px`;
-    circle.style.left = `${e.clientX - rect.left - radius}px`;
-    circle.style.top = `${e.clientY - rect.top - radius}px`;
-    circle.classList.add('ripple-effect');
-    
-    const existing = btn.querySelector('.ripple-effect');
-    if (existing) existing.remove();
-    
-    btn.appendChild(circle);
-  });
+  renderListaComandos();
+  setTimeout(() => {
+    const input = document.getElementById('cmdSearchInput');
+    if (input) input.focus();
+  }, 50);
+}
 
-  /* ---------- NÚMEROS ANIMADOS (COUNT-UP) ---------- */
-  function animateCountUp(element, targetValue, prefix = '', suffix = '', isCurrency = false, duration = 1000) {
-    if (!element) return;
-    const startValue = 0;
-    const startTime = performance.now();
+function filtrarComandos(query) {
+  const q = query.trim().toLowerCase();
+  const all = getAvailableCommands();
+  cmdFilteredCommands = q ? all.filter(c => c.label.toLowerCase().includes(q) || c.hint.toLowerCase().includes(q)) : all;
+  cmdSelectedIndex = 0;
+  renderListaComandos();
+}
 
-    function updateCount(currentTime) {
-      const elapsedTime = currentTime - startTime;
-      const progress = Math.min(elapsedTime / duration, 1);
-      const easeProgress = 1 - Math.pow(1 - progress, 3);
-      const currentValue = startValue + (targetValue - startValue) * easeProgress;
+function renderListaComandos() {
+  const container = document.getElementById('cmdListContainer');
+  if (!container) return;
 
-      if (isCurrency) {
-        element.textContent = `${prefix}${currentValue.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}${suffix}`;
-      } else if (Number.isInteger(targetValue)) {
-        element.textContent = `${prefix}${Math.floor(currentValue)}${suffix}`;
-      } else {
-        element.textContent = `${prefix}${currentValue.toFixed(1)}${suffix}`;
-      }
-
-      if (progress < 1) {
-        requestAnimationFrame(updateCount);
-      }
-    }
-    requestAnimationFrame(updateCount);
+  if (cmdFilteredCommands.length === 0) {
+    container.innerHTML = `<div style="padding: 16px; text-align: center; color: var(--slate); font-size: 13px;">Nenhum comando encontrado.</div>`;
+    return;
   }
 
-  /* ---------- TILT 3D SUTIL NOS CARDS ---------- */
-  function init3DTilt() {
-    if (window.matchMedia('(hover: hover) and (pointer: fine)').matches) {
-      document.querySelectorAll('.card').forEach(card => {
-        card.removeEventListener('mousemove', handleTiltMove);
-        card.removeEventListener('mouseleave', handleTiltLeave);
-        card.addEventListener('mousemove', handleTiltMove);
-        card.addEventListener('mouseleave', handleTiltLeave);
-      });
-    }
+  container.innerHTML = cmdFilteredCommands.map((cmd, idx) => `
+    <div class="cmd-item ${idx === cmdSelectedIndex ? 'selected' : ''}" onclick="executarComando(${idx})">
+      <span>${cmd.label}</span>
+      <span class="mono" style="font-size: 11px; color: var(--slate);">${cmd.hint}</span>
+    </div>
+  `).join('');
+}
+
+function navegarComandos(e) {
+  if (cmdFilteredCommands.length === 0) return;
+  if (e.key === 'ArrowDown') {
+    e.preventDefault();
+    cmdSelectedIndex = (cmdSelectedIndex + 1) % cmdFilteredCommands.length;
+    renderListaComandos();
+  } else if (e.key === 'ArrowUp') {
+    e.preventDefault();
+    cmdSelectedIndex = (cmdSelectedIndex - 1 + cmdFilteredCommands.length) % cmdFilteredCommands.length;
+    renderListaComandos();
+  } else if (e.key === 'Enter') {
+    e.preventDefault();
+    executarComando(cmdSelectedIndex);
   }
+}
 
-  function handleTiltMove(e) {
-    const card = e.currentTarget;
-    const rect = card.getBoundingClientRect();
-    const x = e.clientX - rect.left - rect.width / 2;
-    const y = e.clientY - rect.top - rect.height / 2;
-    const rotateX = (-y / rect.height) * 6;
-    const rotateY = (x / rect.width) * 6;
-    card.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) translateY(-2px)`;
-    card.style.boxShadow = `0 12px 24px rgba(0,0,0,0.12)`;
+function executarComando(idx) {
+  const cmd = cmdFilteredCommands[idx];
+  closeModal();
+  if (cmd && typeof cmd.action === 'function') {
+    cmd.action();
   }
+}
 
-  function handleTiltLeave(e) {
-    const card = e.currentTarget;
-    card.style.transform = '';
-    card.style.boxShadow = '';
-  }
-
-  /* ---------- CELEBRAÇÃO VISUAL (CONFETES) ---------- */
-  function dispararConfetes() {
-    const canvas = document.createElement('canvas');
-    canvas.style.position = 'fixed';
-    canvas.style.inset = '0';
-    canvas.style.width = '100vw';
-    canvas.style.height = '100vh';
-    canvas.style.pointerEvents = 'none';
-    canvas.style.zIndex = '9999';
-    document.body.appendChild(canvas);
-
-    const ctx = canvas.getContext('2d');
-    canvas.width = window.innerWidth;
-    canvas.height = window.innerHeight;
-
-    const particles = [];
-    const colors = ['#C6FF3D', '#0F1B2D', '#D4A54A', '#3B82F6', '#E4572E'];
-    for (let i = 0; i < 90; i++) {
-      particles.push({
-        x: canvas.width / 2,
-        y: canvas.height / 2,
-        vx: (Math.random() - 0.5) * 14,
-        vy: (Math.random() - 0.7) * 16,
-        size: Math.random() * 8 + 4,
-        color: colors[Math.floor(Math.random() * colors.length)],
-        rotation: Math.random() * 360,
-        rSpeed: (Math.random() - 0.5) * 12
-      });
-    }
-
-    let start = null;
-    function render(timestamp) {
-      if (!start) start = timestamp;
-      const elapsed = timestamp - start;
-      ctx.clearRect(0, 0, canvas.width, canvas.height);
-
-      particles.forEach(p => {
-        p.x += p.vx;
-        p.y += p.vy;
-        p.vy += 0.35;
-        p.rotation += p.rSpeed;
-        ctx.save();
-        ctx.translate(p.x, p.y);
-        ctx.rotate((p.rotation * Math.PI) / 180);
-        ctx.fillStyle = p.color;
-        ctx.fillRect(-p.size / 2, -p.size / 2, p.size, p.size);
-        ctx.restore();
-      });
-
-      if (elapsed < 1800) {
-        requestAnimationFrame(render);
-      } else {
-        canvas.remove();
-      }
-    }
-    requestAnimationFrame(render);
-  }
-
-  /* ---------- MENU DE COMANDO RÁPIDO (CMD+K) ---------- */
-  document.addEventListener('keydown', (e) => {
-    if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === 'k') {
-      e.preventDefault();
-      abrirMenuComando();
-    }
-  });
-
-  function abrirMenuComando() {
-    const isClient = currentUser && currentUser.role === 'cliente';
-    const isAdmin = currentUser && currentUser.role === 'admin';
-
-    const items = [
-      { name: 'Painel Principal', page: 'dashboard', show: isClient },
-      { name: 'Simular Empréstimo', page: 'simulador', show: isClient },
-      { name: 'Acompanhar Contrato e Amortização', page: 'acompanhar', show: isClient },
-      { name: 'Análise de Crédito', page: 'credito', show: isAdmin },
-      { name: 'Central de Cobrança', page: 'cobranca', show: isAdmin },
-      { name: 'Central Antifraude', page: 'fraude', show: isAdmin },
-      { name: 'Meu Perfil', page: 'perfil', show: true },
-      { name: 'Sobre a Nexta Finance', page: 'sobre', show: true },
-      { name: 'Alternar Tema (Claro / Escuro)', action: 'theme', show: true }
-    ].filter(i => i.show);
-
-    const body = `
-      <div>
-        <input type="text" class="cmd-search-input" id="cmdSearchInput" placeholder="Digite para navegar..." oninput="filtrarCmdList()">
-        <div class="cmd-list" id="cmdList">
-          ${items.map(item => `
-            <div class="cmd-item" onclick="executarCmdItem('${item.page || ''}', '${item.action || ''}')">
-              <span>${item.name}</span>
-              <span style="font-size:11px; color:var(--slate);">Ir →</span>
-            </div>
-          `).join('')}
-        </div>
-      </div>
-    `;
-
-    openModal('Navegação Rápida', body, `<button class="btn btn-outline btn-sm" onclick="closeModal()">Fechar</button>`);
-    setTimeout(() => {
-      const input = document.getElementById('cmdSearchInput');
-      if (input) input.focus();
-    }, 100);
-  }
-
-  function filtrarCmdList() {
-    const q = document.getElementById('cmdSearchInput').value.toLowerCase();
-    const cmdItems = document.querySelectorAll('.cmd-item');
-    cmdItems.forEach(item => {
-      const text = item.textContent.toLowerCase();
-      item.style.display = text.includes(q) ? 'flex' : 'none';
-    });
-  }
-
-  function executarCmdItem(page, action) {
+// Atalhos globais de teclado (Ctrl+K / Cmd+K e Escape)
+document.addEventListener('keydown', (e) => {
+  if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'k') {
+    e.preventDefault();
+    abrirMenuComando();
+  } else if (e.key === 'Escape') {
     closeModal();
-    if (action === 'theme') {
-      toggleTheme();
-      return;
-    }
-    if (page) go(page);
-  }
-
-  /* ---------- SCROLL REVEAL & ITEM 4: INTERATIVIDADE DE SCROLL E PARALLAX ---------- */
-  function initScrollReveal() {
-    const observer = new IntersectionObserver((entries) => {
-      entries.forEach(entry => {
-        if (entry.isIntersecting) {
-          entry.target.classList.add('revealed');
-          observer.unobserve(entry.target);
-        }
-      });
-    }, { threshold: 0.1 });
-
-    document.querySelectorAll('.scroll-reveal').forEach(el => {
-      el.classList.remove('revealed');
-      observer.observe(el);
-    });
-  }
-
-  function initDashboardScrollObserver() {
-    const observer = new IntersectionObserver((entries) => {
-      entries.forEach(entry => {
-        if (entry.isIntersecting) {
-          entry.target.classList.add('in-view');
-        }
-      });
-    }, { threshold: 0.15 });
-
-    document.querySelectorAll('.card-scroll-in').forEach(card => {
-      card.classList.remove('in-view');
-      observer.observe(card);
-    });
-  }
-
-  function initParallaxAndScrollListeners() {
-    const content = document.getElementById('content');
-    const parallaxElem = document.querySelector('.parallax-elem');
-    let ticking = false;
-
-    if (!content || !parallaxElem) return;
-
-    content.addEventListener('scroll', () => {
-      if (!ticking) {
-        window.requestAnimationFrame(() => {
-          const scrollTop = content.scrollTop;
-          // Move o gráfico SVG decorativo numa velocidade mais lenta que a rolagem normal
-          parallaxElem.style.transform = `translateY(${scrollTop * 0.22}px) rotate(${scrollTop * 0.02}deg)`;
-          ticking = false;
-        });
-        ticking = true;
-      }
-    });
-  }
-
-  /* ---------- INICIALIZAÇÃO & SESSÃO ---------- */
-  document.addEventListener('DOMContentLoaded', () => {
-    const savedTheme = localStorage.getItem('nexta_theme') || 'light';
-    setTheme(savedTheme);
-
-    const users = getUsers();
-    const savedSessionEmail = localStorage.getItem('nexta_session');
-    
-    initParallaxAndScrollListeners();
-
-    if (savedSessionEmail) {
-      const user = users.find(u => u.email.toLowerCase() === savedSessionEmail.toLowerCase());
-      if (user) {
-        currentUser = user;
-        iniciarApp();
-        return;
-      }
-    }
-    mostrarTela('login');
-  });
-
-  /* ---------- GERENCIAMENTO DE TEMA ---------- */
-  function setTheme(theme) {
-    document.documentElement.setAttribute('data-theme', theme);
-    localStorage.setItem('nexta_theme', theme);
-    
-    const icon = document.getElementById('themeIcon');
-    const text = document.getElementById('themeText');
-    if (theme === 'dark') {
-      icon.textContent = '☀️';
-      text.textContent = 'Claro';
-    } else {
-      icon.textContent = '🌙';
-      text.textContent = 'Escuro';
-    }
-  }
-
-  function toggleTheme() {
-    const current = document.documentElement.getAttribute('data-theme');
-    setTheme(current === 'dark' ? 'light' : 'dark');
-  }
-
-  /* ---------- VALIDAÇÃO DE FORMULÁRIOS ---------- */
-  function validarEmail(email) {
-    return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
-  }
-
-  function testarForcaSenha(senha, elementId) {
-    const fill = document.getElementById(elementId);
-    if (!fill) return;
-
-    let score = 0;
-    if (senha.length >= 6) score++;
-    if (/[A-Z]/.test(senha)) score++;
-    if (/[0-9]/.test(senha)) score++;
-    if (/[^A-Za-z0-9]/.test(senha)) score++;
-
-    if (senha.length === 0) {
-      fill.style.width = '0%';
-    } else if (score <= 1) {
-      fill.style.width = '33%'; fill.style.backgroundColor = 'var(--danger)';
-    } else if (score === 2) {
-      fill.style.width = '66%'; fill.style.backgroundColor = 'var(--gold)';
-    } else {
-      fill.style.width = '100%'; fill.style.backgroundColor = 'var(--lime-dark)';
-    }
-  }
-
-  function validarFormLogin() {
-    const email = document.getElementById('loginEmail').value.trim();
-    const senha = document.getElementById('loginSenha').value.trim();
-    const btn = document.getElementById('btnLoginSubmit');
-    const err = document.getElementById('errLoginEmail');
-
-    const emailOk = validarEmail(email);
-    err.style.display = email.length > 0 && !emailOk ? 'block' : 'none';
-
-    btn.disabled = !(emailOk && senha.length > 0);
-  }
-
-  function validarFormCadastro() {
-    const nome = document.getElementById('cadNome').value.trim();
-    const email = document.getElementById('cadEmail').value.trim();
-    const senha = document.getElementById('cadSenha').value.trim();
-    const pergunta = document.getElementById('cadPergunta').value.trim();
-    const btn = document.getElementById('btnCadSubmit');
-    const err = document.getElementById('errCadEmail');
-
-    const emailOk = validarEmail(email);
-    err.style.display = email.length > 0 && !emailOk ? 'block' : 'none';
-
-    btn.disabled = !(nome && emailOk && senha.length >= 6 && pergunta);
-  }
-
-  /* ---------- AUTENTICAÇÃO & FLUXOS ---------- */
-  function mostrarTela(tela) {
-    document.getElementById('viewLogin').style.display = 'none';
-    document.getElementById('viewCadastro').style.display = 'none';
-    document.getElementById('viewEsqueci').style.display = 'none';
-
-    if (tela === 'login') document.getElementById('viewLogin').style.display = 'block';
-    if (tela === 'cadastro') document.getElementById('viewCadastro').style.display = 'block';
-    if (tela === 'esqueci') {
-      document.getElementById('viewEsqueci').style.display = 'block';
-      document.getElementById('esqueciPasso1').style.display = 'block';
-      document.getElementById('esqueciPasso2').style.display = 'none';
-    }
-  }
-
-  function tentarLogin() {
-    const email = document.getElementById('loginEmail').value.trim();
-    const senha = document.getElementById('loginSenha').value.trim();
-
-    const users = getUsers();
-    const user = users.find(u => u.email.toLowerCase() === email.toLowerCase() && u.senha === senha);
-
-    if (user) {
-      currentUser = user;
-      localStorage.setItem('nexta_session', user.email);
-      showToast(`Bem-vindo de volta, ${user.nome.split(' ')[0]}!`);
-      iniciarApp();
-    } else {
-      showToast('E-mail ou senha incorretos.', 'danger');
-    }
-  }
-
-  function criarConta() {
-    const nome = document.getElementById('cadNome').value.trim();
-    const email = document.getElementById('cadEmail').value.trim();
-    const senha = document.getElementById('cadSenha').value.trim();
-    const pergunta = document.getElementById('cadPergunta').value.trim();
-
-    const users = getUsers();
-    if (users.some(u => u.email.toLowerCase() === email.toLowerCase())) {
-      showToast('E-mail já cadastrado no sistema.', 'danger');
-      return;
-    }
-
-    const newUser = {
-      email, senha, nome, pergunta,
-      role: 'cliente',
-      contrato: null,
-      ultimaSimulacao: null,
-      cobrancaEstagio: 'Em dia',
-      cobrancaDiasAtraso: 0,
-      fraudeOcorrencia: 'Conta nova sem histórico',
-      fraudeRisco: 'Baixo',
-      fraudeStatus: 'Normal'
-    };
-
-    users.push(newUser);
-    saveUsers(users);
-
-    currentUser = newUser;
-    localStorage.setItem('nexta_session', newUser.email);
-    showToast('Conta criada com sucesso!');
-    iniciarApp();
-  }
-
-  let emailRecuperacao = '';
-  
-  function buscarConta() {
-    const email = document.getElementById('recEmail').value.trim();
-    const users = getUsers();
-    const user = users.find(u => u.email.toLowerCase() === email.toLowerCase());
-
-    if (!user) {
-      showToast('E-mail não encontrado no sistema.', 'danger');
-      return;
-    }
-
-    emailRecuperacao = email;
-    const perguntaTexto = user.pergunta || 'Qual sua pergunta de segurança?';
-    document.getElementById('perguntaLabel').textContent = `Pergunta de segurança: "${perguntaTexto}"`;
-    document.getElementById('esqueciPasso1').style.display = 'none';
-    document.getElementById('esqueciPasso2').style.display = 'block';
-  }
-
-  function redefinirSenha() {
-    const resposta = document.getElementById('recResposta').value.trim();
-    const novaSenha = document.getElementById('recNovaSenha').value.trim();
-
-    if (!resposta || !novaSenha) {
-      showToast('Preencha todos os campos.', 'warn');
-      return;
-    }
-
-    const users = getUsers();
-    const idx = users.findIndex(u => u.email.toLowerCase() === emailRecuperacao.toLowerCase());
-
-    if (idx !== -1) {
-      users[idx].senha = novaSenha;
-      saveUsers(users);
-      showToast('Senha redefinida com sucesso! Faça login.');
-      mostrarTela('login');
-    }
-  }
-
-  function confirmarSair() {
-    localStorage.removeItem('nexta_session');
-    currentUser = null;
-    document.getElementById('app').style.display = 'none';
-    mostrarTela('login');
-    showToast('Você saiu da sua conta.');
-  }
-
-  function toggleMenu(open) {
-    const sidebar = document.getElementById('sidebar');
-    const overlay = document.getElementById('sidebarOverlay');
-    if (open) {
-      sidebar.classList.add('open');
-      overlay.classList.add('open');
-    } else {
-      sidebar.classList.remove('open');
-      overlay.classList.remove('open');
-    }
-  }
-
-  /* ---------- AVATAR & RENDERIZAÇÃO ---------- */
-  function stringToColor(str) {
-    let hash = 0;
-    for (let i = 0; i < str.length; i++) hash = str.charCodeAt(i) + ((hash << 5) - hash);
-    const c = (hash & 0x00FFFFFF).toString(16).toUpperCase();
-    return '#' + '00000'.substring(0, 6 - c.length) + c;
-  }
-
-  function iniciarApp() {
-    document.getElementById('loginScreen').style.display = 'none';
-    document.getElementById('app').style.display = 'flex';
-
-    const initials = currentUser.nome.split(' ').map(n => n[0]).join('').substring(0,2).toUpperCase();
-    const avatarBg = stringToColor(currentUser.email);
-
-    const sidebarAvatar = document.getElementById('sidebarAvatar');
-    sidebarAvatar.textContent = initials;
-    sidebarAvatar.style.backgroundColor = avatarBg;
-
-    document.getElementById('loggedAs').textContent = currentUser.nome;
-    document.getElementById('loggedRole').textContent = currentUser.role === 'admin' ? 'Operador Interno' : 'Cliente';
-    document.getElementById('welcomeUser').textContent = `Olá, ${currentUser.nome.split(' ')[0]} 👋`;
-
-    const navCliente = document.getElementById('navClienteGroup');
-    const navAdmin = document.getElementById('navAdminGroup');
-
-    document.getElementById('perfilNome').value = currentUser.nome;
-    document.getElementById('perfilEmail').value = currentUser.email;
-
-    const lastPage = localStorage.getItem('nexta_last_page') || (currentUser.role === 'admin' ? 'credito' : 'dashboard');
-
-    if (currentUser.role === 'admin') {
-      navCliente.style.display = 'none';
-      navAdmin.style.display = 'block';
-      document.getElementById('crumbRole').textContent = 'Interno';
-      renderAdminCredito();
-      renderAdminCobranca();
-      renderAdminFraude();
-      go(lastPage === 'dashboard' || lastPage === 'simulador' || lastPage === 'acompanhar' ? 'credito' : lastPage);
-    } else {
-      navAdmin.style.display = 'none';
-      navCliente.style.display = 'block';
-      document.getElementById('crumbRole').textContent = 'Cliente';
-      renderClienteDashboard();
-      renderClienteAcompanhar();
-      go(lastPage === 'credito' || lastPage === 'cobranca' || lastPage === 'fraude' ? 'dashboard' : lastPage);
-    }
-  }
-
-  /* ITEM 1 — CORREÇÃO DO BUG NA PÍLULA DE NAVEGAÇÃO DA SIDEBAR */
-  function atualizarNavPill(pageId) {
-    document.querySelectorAll('.nav-pill').forEach(p => p.style.opacity = '0');
-    
-    const activeItem = document.querySelector(`.nav-item[data-page="${pageId}"]`);
-    if (!activeItem) return;
-
-    const parentGroup = activeItem.closest('.nav-group');
-    if (!parentGroup) return;
-
-    const pill = parentGroup.querySelector('.nav-pill');
-    if (!pill) return;
-
-    const itemOffsetTop = activeItem.offsetTop;
-    const itemHeight = activeItem.offsetHeight;
-
-    pill.style.transform = `translateY(${itemOffsetTop}px)`;
-    pill.style.height = `${itemHeight}px`;
-    pill.style.opacity = '1';
-  }
-
-  function go(pageId) {
-    const pages = document.querySelectorAll('.page');
-    pages.forEach(p => p.classList.remove('active'));
-
-    const target = document.getElementById('page-' + pageId);
-    if (target) target.classList.add('active');
-
-    const navItems = document.querySelectorAll('.nav-item');
-    navItems.forEach(item => {
-      item.classList.toggle('active', item.getAttribute('data-page') === pageId);
-    });
-
-    atualizarNavPill(pageId);
-
-    const pageTitles = {
-      dashboard: 'Painel',
-      simulador: 'Simular empréstimo',
-      acompanhar: 'Acompanhar contrato',
-      credito: 'Análise de crédito',
-      cobranca: 'Central de cobrança',
-      fraude: 'Central antifraude',
-      perfil: 'Meu perfil',
-      sobre: 'Sobre o Nexta'
-    };
-
-    document.getElementById('crumbPage').textContent = pageTitles[pageId] || pageId;
-    localStorage.setItem('nexta_last_page', pageId);
-
-    init3DTilt();
-
-    if (pageId === 'dashboard') {
-      renderClienteDashboard();
-      initDashboardScrollObserver();
-    }
-    if (pageId === 'credito') renderChartCredito();
-    if (pageId === 'cobranca') renderChartCobranca();
-    if (pageId === 'fraude') renderChartFraude();
-    if (pageId === 'sobre') initScrollReveal();
-
     toggleMenu(false);
   }
+});
 
-  /* ITEM 3 — PAINEL DO CLIENTE REESTRUTURADO (HUB DE RESUMO COMPLETO) */
-  function renderClienteDashboard() {
-    const c = currentUser.contrato;
-    
-    // 1. Métricas principais
-    if (!c) {
-      document.getElementById('dashSaldoDevedor').textContent = 'R$ 0,00';
-      document.getElementById('dashSubDevedor').textContent = 'Nenhum contrato ativo';
-      document.getElementById('dashProximaParcela').textContent = 'R$ 0,00';
-      document.getElementById('dashSubParcela').textContent = 'Sem parcelas pendentes';
-      document.getElementById('dashStatusTag').innerHTML = `<span class="tag gold">Sem contrato</span>`;
-      document.getElementById('dashSubStatus').textContent = 'Faça uma simulação abaixo';
-      document.getElementById('dashProgressoTexto').textContent = '0 de 0 parcelas pagas';
-      document.getElementById('dashProgressBar').style.width = '0%';
-    } else {
-      const totalFormatado = Number(c.valorContratado).toLocaleString('pt-BR');
-      const pct = Math.round((c.parcelasPagas / c.totalParcelas) * 100);
-
-      animateCountUp(document.getElementById('dashSaldoDevedor'), c.saldoDevedor, 'R$ ', '', true);
-      animateCountUp(document.getElementById('dashProximaParcela'), c.valorParcela, 'R$ ', '', true);
-
-      document.getElementById('dashSubDevedor').textContent = `de R$ ${totalFormatado},00 contratados`;
-      document.getElementById('dashSubParcela').textContent = `vence em ${c.vencimento}`;
-      
-      let tagClass = (c.status === 'Em dia' || c.status === 'Aprovado') ? 'up' : 'warn';
-      document.getElementById('dashStatusTag').innerHTML = `<span class="tag ${tagClass}">${c.status}</span>`;
-      document.getElementById('dashSubStatus').textContent = c.status === 'Em dia' ? 'nenhuma pendência no momento' : 'situação sob análise';
-      
-      document.getElementById('dashProgressoTexto').textContent = `${c.parcelasPagas} de ${c.totalParcelas} parcelas pagas (${pct}%)`;
-      document.getElementById('dashProgressBar').style.width = `${pct}%`;
-    }
-
-    // 2. Mini-resumo da Timeline (2 mais recentes)
-    const miniTl = document.getElementById('dashMiniTimeline');
-    if (!c) {
-      miniTl.innerHTML = `
-        <div class="tl-item active">
-          <div class="tl-dot"></div>
-          <div class="tl-title">Sem contratos ativos</div>
-          <div class="tl-sub">Nenhum evento recente registrado.</div>
-        </div>
-      `;
-    } else {
-      miniTl.innerHTML = `
-        <div class="tl-item done">
-          <div class="tl-dot"></div>
-          <div class="tl-title">Solicitação Processada</div>
-          <div class="tl-sub">${c.dataSolicitacao} — R$ ${Number(c.valorContratado).toLocaleString('pt-BR')},00</div>
-        </div>
-        <div class="tl-item active">
-          <div class="tl-dot"></div>
-          <div class="tl-title">Contrato Vigente (${c.status})</div>
-          <div class="tl-sub">${c.parcelasPagas}/${c.totalParcelas} pagas · Taxa ${c.taxa}% a.m.</div>
-        </div>
-      `;
-    }
-
-    // 3. Card do Simulador com a Última Simulação Salva
-    const simBox = document.getElementById('dashSimulacaoResumoBox');
-    const simBtn = document.getElementById('dashBtnSimular');
-    const simSaved = currentUser.ultimaSimulacao;
-
-    if (simSaved) {
-      simBox.innerHTML = `
-        <div style="background:var(--cream); padding:12px 14px; border-radius:10px; border:1px solid var(--line);">
-          <div style="font-size:11px; text-transform:uppercase; font-weight:700; color:var(--slate);">Última Simulação Salva</div>
-          <div style="font-size:18px; font-weight:700; color:var(--ink); margin:4px 0;">
-            ${simSaved.parcelas}x de R$ ${Number(simSaved.valorParcela).toLocaleString('pt-BR', {minimumFractionDigits: 2, maximumFractionDigits: 2})}
-          </div>
-          <div style="font-size:12px; color:var(--slate);">
-            Valor Solicitado: <strong>R$ ${Number(simSaved.valor).toLocaleString('pt-BR')}</strong> · Taxa: <strong>${simSaved.taxa}% a.m.</strong>
-          </div>
-        </div>
-      `;
-      simBtn.textContent = 'Refazer / Nova Simulação';
-    } else {
-      simBox.innerHTML = `
-        <p style="font-size:13px; color:var(--slate); line-height:1.5; margin:0 0 10px;">
-          Você ainda não realizou simulações. Calcule taxas personalizadas em tempo real.
-        </p>
-      `;
-      simBtn.textContent = 'Simular pela Primeira Vez';
-    }
-  }
-
-  function renderClienteAcompanhar() {
-    const c = currentUser.contrato;
-    const tlBox = document.getElementById('timelineList');
-    const tbody = document.getElementById('parcelasTableBody');
-
-    if (!c) {
-      tlBox.innerHTML = `
-        <div class="tl-item active">
-          <div class="tl-dot"></div>
-          <div class="tl-title">Sem contratos ativos</div>
-          <div class="tl-sub">Acesse o simulador para solicitar seu empréstimo.</div>
-        </div>`;
-      
-      document.getElementById('detValor').textContent = 'R$ 0,00';
-      document.getElementById('detTaxa').textContent = '0,0% a.m.';
-      document.getElementById('detJuros').textContent = 'R$ 0,00';
-      document.getElementById('detTotal').textContent = 'R$ 0,00';
-      document.getElementById('btnAbrirAmortizacao').disabled = true;
-
-      tbody.innerHTML = `<tr><td colspan="5"><div class="empty-state">Nenhuma parcela a exibir.</div></td></tr>`;
-      return;
-    }
-
-    document.getElementById('btnAbrirAmortizacao').disabled = c.saldoDevedor <= 0;
-
-    const totalContrato = c.valorParcela * c.totalParcelas;
-    const jurosTotal = Math.max(0, totalContrato - c.valorContratado);
-
-    tlBox.innerHTML = `
-      <div class="tl-item done">
-        <div class="tl-dot"></div>
-        <div class="tl-title">Solicitação Recebida</div>
-        <div class="tl-sub">${c.dataSolicitacao} — R$ ${Number(c.valorContratado).toLocaleString('pt-BR')},00</div>
-      </div>
-      <div class="tl-item done">
-        <div class="tl-dot"></div>
-        <div class="tl-title">Análise de Crédito</div>
-        <div class="tl-sub">Score Processado: ${c.score}</div>
-      </div>
-      <div class="tl-item active">
-        <div class="tl-dot"></div>
-        <div class="tl-title">Contrato Ativo (${c.status})</div>
-        <div class="tl-sub">Taxa: ${c.taxa}% a.m. em ${c.totalParcelas} parcelas</div>
-      </div>
-    `;
-
-    document.getElementById('detValor').textContent = `R$ ${Number(c.valorContratado).toLocaleString('pt-BR')},00`;
-    document.getElementById('detTaxa').textContent = `${c.taxa}% a.m.`;
-    document.getElementById('detJuros').textContent = `R$ ${Number(jurosTotal).toLocaleString('pt-BR', {minimumFractionDigits:2})}`;
-    document.getElementById('detTotal').textContent = `R$ ${Number(totalContrato).toLocaleString('pt-BR', {minimumFractionDigits:2})}`;
-
-    tbody.innerHTML = '';
-    for (let i = 1; i <= c.totalParcelas; i++) {
-      const isPaga = i <= c.parcelasPagas;
-      const statusTag = isPaga ? '<span class="tag up">Paga</span>' : (i === c.parcelasPagas + 1 ? '<span class="tag gold">Pendente</span>' : '<span class="tag">A vencer</span>');
-      
-      const tr = document.createElement('tr');
-      tr.innerHTML = `
-        <td class="mono">#${i}</td>
-        <td>${i === c.parcelasPagas + 1 ? c.vencimento : '—'}</td>
-        <td class="mono">R$ ${Number(c.valorParcela).toLocaleString('pt-BR', {minimumFractionDigits:2})}</td>
-        <td>${statusTag}</td>
-        <td>
-          ${isPaga ? `<button class="btn btn-outline btn-sm" onclick="showToast('Comprovante da parcela #${i} emitido.')">Comprovante</button>` : `<button class="btn btn-lime btn-sm" onclick="pagarParcela(${i})" ${i !== c.parcelasPagas + 1 ? 'disabled' : ''}>Pagar</button>`}
-        </td>
-      `;
-      tbody.appendChild(tr);
-    }
-  }
-
-  function pagarParcela(numParcela) {
-    const c = currentUser.contrato;
-    if (!c) return;
-
-    c.parcelasPagas += 1;
-    c.saldoDevedor -= c.valorParcela;
-    if (c.saldoDevedor < 0) c.saldoDevedor = 0;
-
-    updateUserInStorage(currentUser);
-    showToast(`Parcela #${numParcela} paga com sucesso!`);
-    renderClienteDashboard();
-    renderClienteAcompanhar();
-  }
-
-  /* ---------- AMORTIZAÇÃO DE EMPRÉSTIMO ---------- */
-  function abrirModalAmortizacao() {
-    const c = currentUser.contrato;
-    if (!c || c.saldoDevedor <= 0) {
-      showToast('Nenhum contrato ativo disponível para amortização.', 'warn');
-      return;
-    }
-
-    selectedAmortType = 'prazo';
-
-    const body = `
-      <div>
-        <p style="font-size:13px; color:var(--slate); margin-bottom:14px;">
-          Antecipe pagamentos para reduzir juros totais ou diminuir o valor das parcelas mensais.
-        </p>
-
-        <div class="form-group">
-          <label for="inputValorAmortizar">Valor extra para amortizar (R$)</label>
-          <input type="number" id="inputValorAmortizar" placeholder="Ex: 1000" min="100" max="${Math.floor(c.saldoDevedor)}" oninput="calcularAmortizacaoEmTempoReal()">
-        </div>
-
-        <div style="margin-bottom:12px; font-weight:600; font-size:13px;">Escolha a modalidade de amortização:</div>
-
-        <div class="amort-option-card selected" id="cardOptPrazo" onclick="selecionarOpcaoAmort('prazo')">
-          <div class="row-flex" style="justify-content:space-between; margin-bottom:4px;">
-            <strong style="font-size:14px;">1. Reduzir Prazo (Manter Parcela)</strong>
-            <span class="tag up">Recomendado</span>
-          </div>
-          <div style="font-size:12.5px; color:var(--slate);" id="descOptPrazo">
-            Digite um valor para simular a redução no número de parcelas restantes.
-          </div>
-        </div>
-
-        <div class="amort-option-card" id="cardOptParcela" onclick="selecionarOpcaoAmort('parcela')">
-          <div class="row-flex" style="justify-content:space-between; margin-bottom:4px;">
-            <strong style="font-size:14px;">2. Reduzir Valor da Parcela</strong>
-            <span class="tag gold">Alívio de caixa</span>
-          </div>
-          <div style="font-size:12.5px; color:var(--slate);" id="descOptParcela">
-            Digite um valor para simular a redução do valor mensal das parcelas futuras.
-          </div>
-        </div>
-
-        <div id="economizometroBox" style="background:var(--cream); border:1px solid var(--line); border-radius:10px; padding:12px 14px; margin-top:14px; display:none;">
-          <div style="font-size:11px; text-transform:uppercase; letter-spacing:.06em; color:var(--slate); font-weight:700;">Calculadora de Economia</div>
-          <div style="font-size:18px; font-weight:700; color:var(--lime-dark); margin-top:2px;" id="economiaValor">R$ 0,00</div>
-          <div style="font-size:12px; color:var(--slate);" id="economiaSub">juros economizados com esta antecipação</div>
-        </div>
-      </div>
-    `;
-
-    const actions = `
-      <button class="btn btn-outline btn-sm" onclick="closeModal()">Cancelar</button>
-      <button class="btn btn-lime btn-sm" onclick="confirmarAmortizacao()">Confirmar Amortização</button>
-    `;
-
-    openModal('Amortização Antecipada', body, actions);
-  }
-
-  function selecionarOpcaoAmort(tipo) {
-    selectedAmortType = tipo;
-    document.getElementById('cardOptPrazo').classList.toggle('selected', tipo === 'prazo');
-    document.getElementById('cardOptParcela').classList.toggle('selected', tipo === 'parcela');
-  }
-
-  function calcularAmortizacaoEmTempoReal() {
-    const c = currentUser.contrato;
-    if (!c) return;
-
-    const valorExtra = parseFloat(document.getElementById('inputValorAmortizar').value) || 0;
-    const descPrazo = document.getElementById('descOptPrazo');
-    const descParcela = document.getElementById('descOptParcela');
-    const econBox = document.getElementById('economizometroBox');
-    const econValor = document.getElementById('economiaValor');
-
-    if (valorExtra <= 0) {
-      descPrazo.textContent = 'Digite um valor para simular a redução no número de parcelas restantes.';
-      descParcela.textContent = 'Digite um valor para simular a redução do valor mensal das parcelas futuras.';
-      econBox.style.display = 'none';
-      return;
-    }
-
-    const parcelasRestantes = c.totalParcelas - c.parcelasPagas;
-
-    const saldoAtualEstimado = c.saldoDevedor;
-    const novoSaldoPrazo = Math.max(0, saldoAtualEstimado - valorExtra);
-    const novasParcelasRestantes = Math.max(1, Math.ceil(novoSaldoPrazo / c.valorParcela));
-    const economiaPrazo = Math.max(0, (parcelasRestantes * c.valorParcela) - (novasParcelasRestantes * c.valorParcela + valorExtra));
-
-    descPrazo.innerHTML = `
-      De <strong>${parcelasRestantes} parcelas restantes</strong> de R$ ${c.valorParcela.toFixed(2)} para 
-      <strong style="color:var(--lime-dark);">${novasParcelasRestantes} parcelas</strong> de R$ ${c.valorParcela.toFixed(2)}.
-    `;
-
-    const novoSaldoParcela = Math.max(0, saldoAtualEstimado - valorExtra);
-    const novaParcelaValor = novoSaldoParcela / Math.max(1, parcelasRestantes);
-    const economiaParcela = Math.max(0, (parcelasRestantes * c.valorParcela) - (parcelasRestantes * novaParcelaValor + valorExtra));
-
-    descParcela.innerHTML = `
-      Parcela reduzida de R$ ${c.valorParcela.toFixed(2)} para 
-      <strong style="color:var(--lime-dark);">R$ ${novaParcelaValor.toFixed(2)}</strong>, mantendo ${parcelasRestantes} parcelas.
-    `;
-
-    const economiaAtual = selectedAmortType === 'prazo' ? economiaPrazo : economiaParcela;
-    econBox.style.display = 'block';
-    econValor.textContent = `R$ ${economiaAtual.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
-  }
-
-  function confirmarAmortizacao() {
-    const c = currentUser.contrato;
-    const valorExtra = parseFloat(document.getElementById('inputValorAmortizar').value) || 0;
-
-    if (valorExtra <= 0) {
-      showToast('Digite um valor válido para amortizar.', 'warn');
-      return;
-    }
-
-    if (valorExtra > c.saldoDevedor) {
-      showToast('O valor de amortização não pode ser maior que o saldo devedor.', 'warn');
-      return;
-    }
-
-    const parcelasRestantes = c.totalParcelas - c.parcelasPagas;
-
-    if (selectedAmortType === 'prazo') {
-      const novoSaldo = Math.max(0, c.saldoDevedor - valorExtra);
-      const novasRestantes = Math.max(1, Math.ceil(novoSaldo / c.valorParcela));
-      c.totalParcelas = c.parcelasPagas + novasRestantes;
-      c.saldoDevedor = novoSaldo;
-      showToast(`Amortização confirmada! Prazo reduzido para ${novasRestantes} parcelas restantes.`);
-    } else {
-      const novoSaldo = Math.max(0, c.saldoDevedor - valorExtra);
-      c.valorParcela = novoSaldo / Math.max(1, parcelasRestantes);
-      c.saldoDevedor = novoSaldo;
-      showToast(`Amortização confirmada! Nova parcela mensal: R$ ${c.valorParcela.toFixed(2)}.`);
-    }
-
-    updateUserInStorage(currentUser);
-    closeModal();
-    renderClienteDashboard();
-    renderClienteAcompanhar();
-  }
-
-  function gerarComprovantePDF() {
-    const c = currentUser.contrato;
-    if (!c) {
-      showToast('Nenhum contrato ativo para gerar comprovante.', 'warn');
-      return;
-    }
-
-    const { jsPDF } = window.jspdf;
-    const doc = new jsPDF();
-
-    doc.setFont("helvetica", "bold");
-    doc.setFontSize(20);
-    doc.text("Nexta Finance — Comprovante de Contrato", 20, 20);
-
-    doc.setFontSize(12);
-    doc.setFont("helvetica", "normal");
-    doc.text(`Cliente: ${currentUser.nome}`, 20, 40);
-    doc.text(`E-mail: ${currentUser.email}`, 20, 48);
-    doc.text(`Data de Solicitacao: ${c.dataSolicitacao}`, 20, 56);
-    doc.text(`Status Atual: ${c.status}`, 20, 64);
-
-    doc.line(20, 72, 190, 72);
-
-    doc.text(`Valor Contratado: R$ ${Number(c.valorContratado).toLocaleString('pt-BR')},00`, 20, 84);
-    doc.text(`Taxa de Juros: ${c.taxa}% a.m.`, 20, 92);
-    doc.text(`Quantidade de Parcelas: ${c.totalParcelas}x`, 20, 100);
-    doc.text(`Valor da Parcela: R$ ${Number(c.valorParcela).toLocaleString('pt-BR', {minimumFractionDigits:2})}`, 20, 108);
-
-    doc.save(`Contrato_Nexta_${currentUser.nome.replace(/\s+/g, '_')}.pdf`);
-    showToast('Comprovante PDF gerado com sucesso!');
-  }
-
-  /* ---------- SIMULADOR DETERMINÍSTICO ---------- */
-  function atualizarSimulacao() {
-    const valor = document.getElementById('valorRange').value;
-    document.getElementById('valorAtual').textContent = 'R$ ' + Number(valor).toLocaleString('pt-BR');
-    document.getElementById('solicitarBox').style.display = 'none';
-  }
-
-  /* ITEM 2 — REAJUSTE DO DIVISOR DE SCORE PARA RANGE ATÉ 180 */
-  function calcularScoreDeterministico(email, valor, parcelas) {
-    let hash = 0;
-    for (let i = 0; i < email.length; i++) hash += email.charCodeAt(i);
-    const valFactor = Math.floor((valor / 100000) * 160);
-    const parFactor = Math.floor((parcelas / 180) * 40); // Ajustado para 180
-    let score = (850 + (hash % 90)) - valFactor + parFactor;
-    return Math.min(Math.max(score, 350), 980);
-  }
-
-  function executarSimulacaoComLoading() {
-    document.getElementById('simNormalState').style.display = 'none';
-    document.getElementById('simLoadingState').style.display = 'block';
-
-    setTimeout(() => {
-      document.getElementById('simLoadingState').style.display = 'none';
-      document.getElementById('simNormalState').style.display = 'block';
-      analisarCredito();
-    }, 800);
-  }
-
-  function analisarCredito() {
-    const valor = parseInt(document.getElementById('valorRange').value);
-    const parcelas = parseInt(document.getElementById('parcelasSelect').value);
-    const email = currentUser ? currentUser.email : 'anon@nexta.com';
-
-    const score = calcularScoreDeterministico(email, valor, parcelas);
-    const taxaMensal = 0.018 + (valor / 100000) * 0.008;
-    const i = taxaMensal;
-    const n = parcelas;
-    const pmt = valor * ((i * Math.pow(1 + i, n)) / (Math.pow(1 + i, n) - 1));
-
-    latestSimulation = { valor, parcelas, valorParcela: pmt, taxa: (taxaMensal * 100).toFixed(1), score };
-
-    /* ITEM 3: REGISTRA A ÚLTIMA SIMULAÇÃO NO OBJETO DO USUÁRIO */
-    if (currentUser) {
-      currentUser.ultimaSimulacao = latestSimulation;
-      updateUserInStorage(currentUser);
-    }
-
-    const arc = document.getElementById('gaugeArc');
-    
-    animateCountUp(document.getElementById('gaugeScore'), score);
-
-    const offset = 251 - (251 * (score / 1000));
-    arc.style.strokeDashoffset = offset;
-
-    if (score < 600) {
-      arc.style.stroke = '#E4572E';
-    } else if (score < 750) {
-      arc.style.stroke = '#D4A54A';
-    } else {
-      arc.style.stroke = '#9FD923';
-    }
-
-    document.getElementById('resultadoSim').innerHTML = `
-      <div style="font-size:13px; color:var(--ink); margin-bottom:4px;"><strong>Resultado Pré-Aprovado:</strong></div>
-      <div style="font-size:18px; font-weight:700; color:var(--ink);">${parcelas}x de R$ ${Number(pmt).toLocaleString('pt-BR', {minimumFractionDigits: 2, maximumFractionDigits: 2})}</div>
-      <div style="font-size:12px; color:var(--slate); margin-top:2px;">Taxa: ${latestSimulation.taxa}% a.m.</div>
-    `;
-
-    document.getElementById('solicitarBox').style.display = 'block';
-  }
-
-  function solicitarEmprestimo() {
-    if (!latestSimulation || !currentUser) return;
-
-    const hoje = new Date();
-    const dataStr = `${String(hoje.getDate()).padStart(2,'0')}/${String(hoje.getMonth()+1).padStart(2,'0')}/${hoje.getFullYear()}`;
-    const proxMes = new Date(hoje.setMonth(hoje.getMonth() + 1));
-    const vencStr = `${String(proxMes.getDate()).padStart(2,'0')}/${String(proxMes.getMonth()+1).padStart(2,'0')}/${proxMes.getFullYear()}`;
-
-    currentUser.contrato = {
-      valorContratado: latestSimulation.valor,
-      saldoDevedor: latestSimulation.valorParcela * latestSimulation.parcelas,
-      valorParcela: latestSimulation.valorParcela,
-      parcelasPagas: 0,
-      totalParcelas: latestSimulation.parcelas,
-      vencimento: vencStr,
-      status: 'Em dia',
-      taxa: latestSimulation.taxa,
-      dataSolicitacao: dataStr,
-      score: latestSimulation.score
-    };
-
-    updateUserInStorage(currentUser);
-    dispararConfetes();
-
-    showToast('Empréstimo contratado com sucesso!');
-
-    setTimeout(() => {
-      renderClienteDashboard();
-      renderClienteAcompanhar();
-      go('dashboard');
-    }, 1200);
-  }
-
-  /* ---------- OPERAÇÕES INTERNAS / ADMIN ---------- */
-  function renderAdminCredito() {
-    const users = getUsers();
-    const tbody = document.getElementById('creditoTableBody');
-    if (!tbody) return;
-    tbody.innerHTML = '';
-
-    let clientesCount = 0;
-    users.forEach(u => {
-      if (u.role === 'admin') return;
-      clientesCount++;
-
-      const initials = u.nome.split(' ').map(n => n[0]).join('').substring(0,2).toUpperCase();
-      const c = u.contrato;
-
-      let valorStr = c ? `R$ ${Number(c.valorContratado).toLocaleString('pt-BR')}` : 'Sem proposta';
-      let scoreTag = c ? `<span class="tag ${c.score > 700 ? 'up' : 'warn'}">${c.score} pts</span>` : '<span class="tag">—</span>';
-      let statusTag = c ? `<span class="tag ${c.status === 'Em dia' ? 'up' : 'gold'}">${c.status}</span>` : '<span class="tag">Novo</span>';
-
-      const tr = document.createElement('tr');
-      tr.innerHTML = `
-        <td><div class="row-flex"><span class="avatar" style="background:${stringToColor(u.email)}">${initials}</span><strong>${u.nome}</strong></div></td>
-        <td class="mono">${valorStr}</td>
-        <td>${scoreTag}</td>
-        <td>${statusTag}</td>
-        <td><button class="btn btn-outline btn-sm" onclick="showToast('Proposta de ${u.nome.split(' ')[0]} revisada.')">Analisar</button></td>
-      `;
-      tbody.appendChild(tr);
-    });
-
-    document.getElementById('totalCadastrosCount').textContent = clientesCount;
-  }
-
-  function renderAdminCobranca() {
-    const users = getUsers();
-    const tbody = document.getElementById('cobrancaTableBody');
-    if (!tbody) return;
-    tbody.innerHTML = '';
-
-    let emRisco = 0;
-
-    users.forEach(u => {
-      if (u.role === 'admin') return;
-
-      if (u.cobrancaDiasAtraso > 0) emRisco++;
-
-      const initials = u.nome.split(' ').map(n => n[0]).join('').substring(0,2).toUpperCase();
-      const c = u.contrato;
-      const valorAtraso = c ? c.valorParcela * Math.max(1, Math.floor(u.cobrancaDiasAtraso / 30)) : 0;
-
-      const tr = document.createElement('tr');
-      tr.innerHTML = `
-        <td><div class="row-flex"><span class="avatar" style="background:${stringToColor(u.email)}">${initials}</span><strong>${u.nome}</strong></div></td>
-        <td class="mono">R$ ${Number(valorAtraso).toLocaleString('pt-BR', {minimumFractionDigits:2})}</td>
-        <td><span class="tag ${u.cobrancaDiasAtraso > 15 ? 'warn' : (u.cobrancaDiasAtraso > 0 ? 'gold' : 'up')}">${u.cobrancaDiasAtraso} dias</span></td>
-        <td>${u.cobrancaEstagio}</td>
-        <td><button class="btn btn-outline btn-sm" onclick="showToast('Notificação enviada para ${u.nome.split(' ')[0]}')">Notificar</button></td>
-      `;
-      tbody.appendChild(tr);
-    });
-
-    document.getElementById('cobrancaEmRiscoCount').textContent = emRisco;
-  }
-
-  function renderAdminFraude() {
-    const users = getUsers();
-    const tbody = document.getElementById('fraudeTableBody');
-    if (!tbody) return;
-    tbody.innerHTML = '';
-
-    let alertasCount = 0;
-
-    users.forEach(u => {
-      if (u.role === 'admin') return;
-      if (u.fraudeRisco === 'Medio' || u.fraudeRisco === 'Alto') alertasCount++;
-
-      const initials = u.nome.split(' ').map(n => n[0]).join('').substring(0,2).toUpperCase();
-      let riscoTag = `<span class="tag ${u.fraudeRisco === 'Alto' ? 'warn' : (u.fraudeRisco === 'Medio' ? 'gold' : 'up')}">${u.fraudeRisco}</span>`;
-
-      const tr = document.createElement('tr');
-      tr.innerHTML = `
-        <td><div class="row-flex"><span class="avatar" style="background:${stringToColor(u.email)}">${initials}</span><strong>${u.nome}</strong></div></td>
-        <td>${u.fraudeOcorrencia}</td>
-        <td>${riscoTag}</td>
-        <td>${u.fraudeStatus}</td>
-        <td><button class="btn btn-outline btn-sm" onclick="showToast('Status antifraude verificado para ${u.nome.split(' ')[0]}')">Auditar</button></td>
-      `;
-      tbody.appendChild(tr);
-    });
-
-    document.getElementById('fraudeAlertasCount').textContent = alertasCount;
-  }
-
-  /* ---------- RENDERIZAÇÃO DOS GRÁFICOS (CHART.JS) ---------- */
-  function renderChartCredito() {
-    const ctx = document.getElementById('chartCredito');
-    if (!ctx) return;
-    if (chartCreditoInstance) chartCreditoInstance.destroy();
-
-    const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
-    const gridColor = isDark ? 'rgba(255,255,255,0.08)' : 'rgba(0,0,0,0.06)';
-    const textColor = isDark ? '#94A3B8' : '#6B7280';
-
-    chartCreditoInstance = new Chart(ctx, {
-      type: 'bar',
-      data: {
-        labels: ['Triagem Inicial', 'Score Engine', 'Verificação Antifraude', 'Emissão do Contrato'],
-        datasets: [
-          { label: 'Processo Manual (Minutos)', data: [45, 120, 90, 60], backgroundColor: '#E4572E' },
-          { label: 'Nexta Automação (Segundos)', data: [2, 5, 8, 3], backgroundColor: '#9FD923' }
-        ]
-      },
-      options: {
-        responsive: true,
-        maintainAspectRatio: false,
-        scales: {
-          x: { grid: { color: gridColor }, ticks: { color: textColor } },
-          y: { grid: { color: gridColor }, ticks: { color: textColor } }
-        },
-        plugins: { legend: { labels: { color: textColor } } }
-      }
-    });
-  }
-
-  function renderChartCobranca() {
-    const ctx = document.getElementById('chartCobranca');
-    if (!ctx) return;
-    if (chartCobrancaInstance) chartCobrancaInstance.destroy();
-
-    const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
-    const gridColor = isDark ? 'rgba(255,255,255,0.08)' : 'rgba(0,0,0,0.06)';
-    const textColor = isDark ? '#94A3B8' : '#6B7280';
-
-    chartCobrancaInstance = new Chart(ctx, {
-      type: 'line',
-      data: {
-        labels: ['Mai', 'Jun', 'Jul', 'Ago', 'Set', 'Out'],
-        datasets: [{
-          label: 'Inadimplência (%)',
-          data: [6.8, 5.9, 5.2, 4.4, 4.1, 3.8],
-          borderColor: '#C6FF3D',
-          backgroundColor: 'rgba(198, 255, 61, 0.15)',
-          fill: true,
-          tension: 0.35,
-          pointRadius: 5
-        }]
-      },
-      options: {
-        responsive: true,
-        maintainAspectRatio: false,
-        scales: {
-          x: { grid: { color: gridColor }, ticks: { color: textColor } },
-          y: { grid: { color: gridColor }, ticks: { color: textColor } }
-        },
-        plugins: { legend: { labels: { color: textColor } } }
-      }
-    });
-  }
-
-  function renderChartFraude() {
-    const ctx = document.getElementById('chartFraude');
-    if (!ctx) return;
-    if (chartFraudeInstance) chartFraudeInstance.destroy();
-
-    const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
-    const textColor = isDark ? '#F0F4F8' : '#14181F';
-
-    chartFraudeInstance = new Chart(ctx, {
-      type: 'doughnut',
-      data: {
-        labels: ['Acesso de Dispositivo Suspeito', 'Multi-IP Geográfico', 'Documentação Divergente', 'Padrão Normal'],
-        datasets: [{
-          data: [12, 5, 3, 80],
-          backgroundColor: ['#D4A54A', '#E4572E', '#3B82F6', '#9FD923'],
-          borderWidth: 0
-        }]
-      },
-      options: {
-        responsive: true,
-        maintainAspectRatio: false,
-        plugins: { legend: { position: 'right', labels: { color: textColor, font: { size: 11 } } } }
-      }
-    });
-  }
-
-  /* ---------- EDICÃO DE PERFIL E SEGURANÇA ---------- */
-  function salvarDadosPerfil() {
-    const nome = document.getElementById('perfilNome').value.trim();
-    if (!nome) {
-      showToast('O nome não pode estar em branco.', 'warn');
-      return;
-    }
-
-    currentUser.nome = nome;
-    updateUserInStorage(currentUser);
-    document.getElementById('loggedAs').textContent = nome;
-    document.getElementById('welcomeUser').textContent = `Olá, ${nome.split(' ')[0]} 👋`;
-
-    const initials = nome.split(' ').map(n => n[0]).join('').substring(0,2).toUpperCase();
-    document.getElementById('sidebarAvatar').textContent = initials;
-
-    showToast('Dados salvos com sucesso!');
-  }
-
-  function alterarSenhaPerfil() {
-    const atual = document.getElementById('senhaAtual').value.trim();
-    const nova = document.getElementById('novaSenha').value.trim();
-
-    if (atual !== currentUser.senha) {
-      showToast('Senha atual incorreta.', 'danger');
-      return;
-    }
-
-    if (nova.length < 6) {
-      showToast('A nova senha deve ter pelo menos 6 caracteres.', 'warn');
-      return;
-    }
-
-    currentUser.senha = nova;
-    updateUserInStorage(currentUser);
-    document.getElementById('senhaAtual').value = '';
-    document.getElementById('novaSenha').value = '';
-    document.getElementById('perfilMeter').style.width = '0%';
-    showToast('Senha alterada com sucesso!');
-  }
+// Inicializa ao carregar o DOM
+document.addEventListener('DOMContentLoaded', initApp);
 </script>
 </body>
 </html>
